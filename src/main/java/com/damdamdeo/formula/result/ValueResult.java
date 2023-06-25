@@ -16,8 +16,13 @@ public final class ValueResult implements Result {
     }
 
     @Override
-    public String result() {
-        return value.value();
+    public Value value() {
+        return value;
+    }
+
+    @Override
+    public boolean isNumeric() {
+        return value.isNumeric();
     }
 
     @Override
@@ -31,5 +36,12 @@ public final class ValueResult implements Result {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return "ValueResult{" +
+                "value=" + value +
+                '}';
     }
 }

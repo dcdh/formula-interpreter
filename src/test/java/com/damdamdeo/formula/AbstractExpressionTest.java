@@ -8,7 +8,7 @@ public abstract class AbstractExpressionTest {
 
     @BeforeEach
     public void setup() {
-        executor = new Executor(new Validator());
+        executor = new Executor(new Validator(), new NumericalContext());
     }
 
     protected Formula formula4Test(final String formula) {

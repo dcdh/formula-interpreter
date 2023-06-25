@@ -4,19 +4,23 @@ import com.damdamdeo.formula.structuredreference.Value;
 
 import java.util.Objects;
 
-public final class VoidResult implements Result {
-    private final Value value = new Value("");
-
+public final class ErrorResult implements Result {
+    private final Value value = new Value("#VALUE!");
     @Override
     public Value value() {
         return value;
     }
 
     @Override
+    public boolean isError() {
+        return true;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VoidResult that = (VoidResult) o;
+        ErrorResult that = (ErrorResult) o;
         return Objects.equals(value, that.value);
     }
 
