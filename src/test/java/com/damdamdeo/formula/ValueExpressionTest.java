@@ -3,6 +3,7 @@ package com.damdamdeo.formula;
 import com.damdamdeo.formula.result.ExecutionResult;
 import com.damdamdeo.formula.result.MatchedToken;
 import com.damdamdeo.formula.result.ValueResult;
+import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -24,7 +25,7 @@ public class ValueExpressionTest extends AbstractExpressionTest {
         // Given
 
         // When
-        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula));
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), new StructuredData());
 
         // Then
         assertThat(executionResult).isEqualTo(

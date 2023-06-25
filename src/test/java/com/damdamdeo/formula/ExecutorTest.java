@@ -1,5 +1,6 @@
 package com.damdamdeo.formula;
 
+import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.syntax.SyntaxError;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ public class ExecutorTest {
 
     @Test
     public void shouldFailOnUnrecognizedToken() {
-        assertThatThrownBy(() -> executor.execute(new Formula("!!!!#boom")))
+        assertThatThrownBy(() -> executor.execute(new Formula("!!!!#boom"), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
                         new SyntaxError(1, 4, "token recognition error at: '#'"));
@@ -27,7 +28,7 @@ public class ExecutorTest {
 
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
-        assertThatThrownBy(() -> executor.execute(new Formula("Hello\nWorld")))
+        assertThatThrownBy(() -> executor.execute(new Formula("Hello\nWorld"), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
                         new SyntaxError(2, 0, "extraneous input 'World' expecting <EOF>"));
