@@ -26,11 +26,13 @@ add_arithmetic_operations_expr: left=structured_reference_expr operation=operati
 operation_expr: ADD
               | SUB
               | DIV
+              | MUL
               ;
 
 ADD: '+' ;
 SUB: '-' ;
 DIV: '/' ;
+MUL: '*' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;

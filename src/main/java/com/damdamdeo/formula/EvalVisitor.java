@@ -54,6 +54,8 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
                 operation = Operation.SUB;
             } else if (operationExpr.DIV() != null) {
                 operation = Operation.DIV;
+            } else if (operationExpr.MUL() != null) {
+                operation = Operation.MUL;
             } else {
                 throw new IllegalStateException("Should not be here");
             }

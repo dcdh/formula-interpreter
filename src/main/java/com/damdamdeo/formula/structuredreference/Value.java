@@ -54,4 +54,14 @@ public record Value(String value) {
                         .divide(new BigDecimal(valueToAdd.value()), numericalContext.scale(), numericalContext.roundingMode())
         );
     }
+
+    public Value multiply(final Value valueToAdd,
+                          final NumericalContext numericalContext) {
+        return new Value(
+                new BigDecimal(value)
+                        .multiply(new BigDecimal(valueToAdd.value()))
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
+        );
+    }
+
 }
