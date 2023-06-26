@@ -38,7 +38,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return super.visitAddArithmeticOperationsExpr(ctx);
     }
 
-    private Result computeAddOperation(final Result left, final Result right) {
+    private Result compute(final FormulaParser.Operation_exprContext operationExpr, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -47,7 +47,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         } else if (!left.isNumeric() || !right.isNumeric()) {
             result = new ErrorResult();
         } else {
-            final Value value = left.value().add(right.value(), numericalContext);
+            final Operation operation;
+            if (operationExpr.ADD() != null) {
+                operation = Operation.ADD;
+            } else {
+                throw new IllegalStateException("Should not be here");
+            }
+            final Value value = operation.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
         }
         return result;
@@ -56,9 +62,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitStructuredReferenceAddStructuredReference(final FormulaParser.StructuredReferenceAddStructuredReferenceContext ctx) {
         appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.structured_reference_expr(0));
-        final Result right = this.visit(ctx.structured_reference_expr(1));
-        final Result result = computeAddOperation(left, right);
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
+        final Result result = compute(ctx.operation, left, right);
         this.result = result;
         return result;
     }
@@ -66,9 +72,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitStructuredReferenceAddValue(final FormulaParser.StructuredReferenceAddValueContext ctx) {
         appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.structured_reference_expr());
-        final Result right = this.visit(ctx.value_expr());
-        final Result result = computeAddOperation(left, right);
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
+        final Result result = compute(ctx.operation, left, right);
         this.result = result;
         return result;
     }
@@ -76,9 +82,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitValueAddStructuredReference(final FormulaParser.ValueAddStructuredReferenceContext ctx) {
         appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.value_expr());
-        final Result right = this.visit(ctx.structured_reference_expr());
-        final Result result = computeAddOperation(left, right);
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
+        final Result result = compute(ctx.operation, left, right);
         this.result = result;
         return result;
     }
@@ -86,9 +92,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitValueAddValue(final FormulaParser.ValueAddValueContext ctx) {
         appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.value_expr(0));
-        final Result right = this.visit(ctx.value_expr(1));
-        final Result result = computeAddOperation(left, right);
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
+        final Result result = compute(ctx.operation, left, right);
         this.result = result;
         return result;
     }
