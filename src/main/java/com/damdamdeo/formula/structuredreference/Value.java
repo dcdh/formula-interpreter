@@ -30,50 +30,50 @@ public record Value(String value) {
         }
     }
 
-    public Value add(final Value valueToAdd,
+    public Value add(final Value augend,
                      final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToAdd.isNumeric()) {
+        if (!isNumeric() || !augend.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new Value(
                 new BigDecimal(value)
-                        .add(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
+                        .add(new BigDecimal(augend.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
 
-    public Value subtract(final Value valueToAdd,
+    public Value subtract(final Value subtrahend,
                           final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToAdd.isNumeric()) {
+        if (!isNumeric() || !subtrahend.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new Value(
                 new BigDecimal(value)
-                        .subtract(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
+                        .subtract(new BigDecimal(subtrahend.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
 
-    public Value divide(final Value valueToAdd,
+    public Value divide(final Value divisor,
                         final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToAdd.isNumeric()) {
+        if (!isNumeric() || !divisor.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new Value(
                 new BigDecimal(value)
-                        .divide(new BigDecimal(valueToAdd.value()), numericalContext.scale(), numericalContext.roundingMode())
+                        .divide(new BigDecimal(divisor.value()), numericalContext.scale(), numericalContext.roundingMode())
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
 
-    public Value multiply(final Value valueToAdd,
+    public Value multiply(final Value multiplicand,
                           final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToAdd.isNumeric()) {
+        if (!isNumeric() || !multiplicand.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new Value(
                 new BigDecimal(value)
-                        .multiply(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
+                        .multiply(new BigDecimal(multiplicand.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
