@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
+public class OperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+,920",
