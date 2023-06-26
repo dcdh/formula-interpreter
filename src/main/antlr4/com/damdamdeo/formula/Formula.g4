@@ -35,6 +35,7 @@ comparators_expr: left=structured_reference_expr comparator=type_comparator_expr
 
 type_comparator_expr: GT
                     | GTE
+                    | EQ
                     ;
 
 ADD: '+' ;
@@ -43,6 +44,7 @@ DIV: '/' ;
 MUL: '*' ;
 GT: '>' ;
 GTE: '>=' ;
+EQ: '=' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;
