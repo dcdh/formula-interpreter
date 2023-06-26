@@ -3,6 +3,7 @@ package com.damdamdeo.formula.structuredreference;
 import com.damdamdeo.formula.NumericalContext;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Objects;
 
 public record Value(String value) {
@@ -33,7 +34,7 @@ public record Value(String value) {
                      final NumericalContext numericalContext) {
         return new Value(
                 new BigDecimal(value)
-                        .add(new BigDecimal(valueToAdd.value()))
+                        .add(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
@@ -42,7 +43,7 @@ public record Value(String value) {
                           final NumericalContext numericalContext) {
         return new Value(
                 new BigDecimal(value)
-                        .subtract(new BigDecimal(valueToAdd.value()))
+                        .subtract(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
@@ -52,6 +53,7 @@ public record Value(String value) {
         return new Value(
                 new BigDecimal(value)
                         .divide(new BigDecimal(valueToAdd.value()), numericalContext.scale(), numericalContext.roundingMode())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
 
@@ -59,7 +61,7 @@ public record Value(String value) {
                           final NumericalContext numericalContext) {
         return new Value(
                 new BigDecimal(value)
-                        .multiply(new BigDecimal(valueToAdd.value()))
+                        .multiply(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
