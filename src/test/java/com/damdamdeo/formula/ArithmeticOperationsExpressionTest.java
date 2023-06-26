@@ -17,7 +17,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+,920",
-            "-,400"
+            "-,400",
+            "/,2.538462"
     })
     public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
                                                                                             final String expectedValue) throws SyntaxErrorException {
@@ -47,7 +48,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+,920",
-            "-,400"
+            "-,400",
+            "/,2.538462"
     })
     public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
@@ -76,7 +78,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+,920",
-            "-,400"
+            "-,400",
+            "/,2.538462"
     })
     public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
@@ -105,7 +108,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+,920",
-            "-,400"
+            "-,400",
+            "/,2.538462"
     })
     public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
                                                                 final String expectedValue) throws SyntaxErrorException {
@@ -130,7 +134,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+",
-            "-"
+            "-",
+            "/"
     })
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) throws SyntaxErrorException {
         // Given
@@ -158,7 +163,8 @@ public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "+",
-            "-"
+            "-",
+            "/"
     })
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
         // Given

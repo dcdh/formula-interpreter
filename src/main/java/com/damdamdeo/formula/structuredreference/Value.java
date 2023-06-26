@@ -47,4 +47,11 @@ public record Value(String value) {
         );
     }
 
+    public Value divide(final Value valueToAdd,
+                        final NumericalContext numericalContext) {
+        return new Value(
+                new BigDecimal(value)
+                        .divide(new BigDecimal(valueToAdd.value()), numericalContext.scale(), numericalContext.roundingMode())
+        );
+    }
 }
