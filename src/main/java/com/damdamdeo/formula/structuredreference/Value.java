@@ -92,4 +92,17 @@ public record Value(String value) {
                 .compareTo(new BigDecimal(valueToCheck.value())
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())) > 0 ? Value.TRUE : Value.FALSE;
     }
+
+    public Value greaterThanOrEqualTo(final Value valueToCheck,
+                                      final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToCheck.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
+        return new BigDecimal(value)
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheck.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) >= 0 ? Value.TRUE : Value.FALSE;
+    }
+
+
 }

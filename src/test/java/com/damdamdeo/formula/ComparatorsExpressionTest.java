@@ -19,7 +19,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             "660,>,260,true",
             "260,>,660,false",
-            "260,>,260,false"
+            "260,>,260,false",
+            "660,>=,260,true",
+            "260,>=,660,false",
+            "260,>=,260,true"
     })
     public void shouldExecuteComparisonForStructuredReferenceLeftAndStructuredReferenceRight(final String leftValue,
                                                                                              final String givenComparison,
@@ -42,9 +45,9 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
+                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
                         )));
     }
 
@@ -52,7 +55,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             "660,>,260,true",
             "260,>,660,false",
-            "260,>,260,false"
+            "260,>,260,false",
+            "660,>=,260,true",
+            "260,>=,660,false",
+            "260,>=,260,true"
     })
     public void shouldExecuteComparisonForStructuredReferenceLeftAndValueRight(final String leftValue,
                                                                                final String givenComparison,
@@ -74,9 +80,9 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s%s", givenComparison, rightValue), 1, 0, 26),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s%s", givenComparison, rightValue), 1, 0, 25 + givenComparison.length()),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken(rightValue, 1, 24, 26)
+                                new MatchedToken(rightValue, 1, 23 + givenComparison.length(), 25 + givenComparison.length())
                         )));
     }
 
@@ -84,7 +90,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             "660,>,260,true",
             "260,>,660,false",
-            "260,>,260,false"
+            "260,>,260,false",
+            "660,>=,260,true",
+            "260,>=,660,false",
+            "260,>=,260,true"
     })
     public void shouldExecuteComparisonForValueLeftAndStructuredReferenceRight(final String leftValue,
                                                                                final String givenComparison,
@@ -106,9 +115,9 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken(String.format("%s%s[@[South Sales Amount]]", leftValue, givenComparison), 1, 0, 26),
+                                new MatchedToken(String.format("%s%s[@[South Sales Amount]]", leftValue, givenComparison), 1, 0, 25 + givenComparison.length()),
                                 new MatchedToken(leftValue, 1, 0, 2),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 4, 26)
+                                new MatchedToken("[@[South Sales Amount]]", 1, 3 + givenComparison.length(), 25 + givenComparison.length())
                         )));
     }
 
@@ -116,7 +125,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             "660,>,260,true",
             "260,>,660,false",
-            "260,>,260,false"
+            "260,>,260,false",
+            "660,>=,260,true",
+            "260,>=,660,false",
+            "260,>=,260,true"
     })
     public void shouldExecuteComparisonForValueLeftAndValueRight(final String leftValue,
                                                                  final String givenComparison,
@@ -134,15 +146,16 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken(String.format("%s%s%s", leftValue, givenComparison, rightValue), 1, 0, 6),
+                                new MatchedToken(String.format("%s%s%s", leftValue, givenComparison, rightValue), 1, 0, 5 + givenComparison.length()),
                                 new MatchedToken(leftValue, 1, 0, 2),
-                                new MatchedToken(rightValue, 1, 4, 6)
+                                new MatchedToken(rightValue, 1, 3 + givenComparison.length(), 5 + givenComparison.length())
                         )));
     }
 
     @ParameterizedTest
     @CsvSource({
-            ">"
+            ">",
+            ">="
     })
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenComparison) throws SyntaxErrorException {
         // Given
@@ -161,15 +174,16 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new UnknownReferenceResult(),
                         List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
+                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
                         )));
     }
 
     @ParameterizedTest
     @CsvSource({
-            ">"
+            ">",
+            ">="
     })
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) throws SyntaxErrorException {
         // Given
@@ -189,9 +203,9 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 new ExecutionResult(
                         new ErrorResult(),
                         List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
+                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
                         )));
     }
 

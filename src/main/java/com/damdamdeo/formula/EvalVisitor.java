@@ -111,6 +111,8 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             final Comparator comparator;
             if (typeComparatorExpr.GT() != null) {
                 comparator = Comparator.GT;
+            } else if (typeComparatorExpr.GTE() != null) {
+                comparator = Comparator.GTE;
             } else {
                 throw new IllegalStateException("Should not be here");
             }

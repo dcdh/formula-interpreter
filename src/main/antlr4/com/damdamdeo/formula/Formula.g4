@@ -33,13 +33,16 @@ comparators_expr: left=structured_reference_expr comparator=type_comparator_expr
                 | left=value_expr comparator=type_comparator_expr right=value_expr #valueAddValue
                 ;
 
-type_comparator_expr: GT ;
+type_comparator_expr: GT
+                    | GTE
+                    ;
 
 ADD: '+' ;
 SUB: '-' ;
 DIV: '/' ;
 MUL: '*' ;
 GT: '>' ;
+GTE: '>=' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;
