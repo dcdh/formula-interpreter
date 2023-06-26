@@ -23,9 +23,12 @@ add_arithmetic_operations_expr: left=structured_reference_expr operation=operati
                               | left=value_expr operation=operation_expr right=value_expr #valueAddValue
                               ;
 
-operation_expr: ADD ;
+operation_expr: ADD
+              | SUB
+              ;
 
 ADD: '+' ;
+SUB: '-' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;

@@ -50,6 +50,8 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             final Operation operation;
             if (operationExpr.ADD() != null) {
                 operation = Operation.ADD;
+            } else if (operationExpr.SUB() != null) {
+                operation = Operation.SUB;
             } else {
                 throw new IllegalStateException("Should not be here");
             }

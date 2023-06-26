@@ -6,18 +6,23 @@ import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
 import com.damdamdeo.formula.structuredreference.Value;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTest {
-
-    @Test
-    public void shouldAddForStructuredReferenceLeftAndStructuredReferenceRight() throws SyntaxErrorException {
+public class ArithmeticOperationsExpressionTest extends AbstractExpressionTest {
+    @ParameterizedTest
+    @CsvSource({
+            "+,920",
+            "-,400"
+    })
+    public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
+                                                                                            final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "[@[North Sales Amount]]+[@[South Sales Amount]]";
+        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
@@ -31,18 +36,23 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult("920"),
+                        new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken("[@[North Sales Amount]]+[@[South Sales Amount]]", 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
                                 new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
                         )));
     }
 
-    @Test
-    public void shouldAddForStructuredReferenceLeftAndValueRight() throws SyntaxErrorException {
+    @ParameterizedTest
+    @CsvSource({
+            "+,920",
+            "-,400"
+    })
+    public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
+                                                                              final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "[@[North Sales Amount]]+260";
+        final String givenFormula = String.format("[@[North Sales Amount]]%s260", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
@@ -55,18 +65,23 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult("920"),
+                        new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken("[@[North Sales Amount]]+260", 1, 0, 26),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s260", givenOperation), 1, 0, 26),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
                                 new MatchedToken("260", 1, 24, 26)
                         )));
     }
 
-    @Test
-    public void shouldAddForValueLeftAndStructuredReferenceRight() throws SyntaxErrorException {
+    @ParameterizedTest
+    @CsvSource({
+            "+,920",
+            "-,400"
+    })
+    public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
+                                                                              final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "660+[@[South Sales Amount]]";
+        final String givenFormula = String.format("660%s[@[South Sales Amount]]", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("South Sales Amount"), new Value("260"))
@@ -79,18 +94,23 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult("920"),
+                        new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken("660+[@[South Sales Amount]]", 1, 0, 26),
+                                new MatchedToken(String.format("660%s[@[South Sales Amount]]", givenOperation), 1, 0, 26),
                                 new MatchedToken("660", 1, 0, 2),
                                 new MatchedToken("[@[South Sales Amount]]", 1, 4, 26)
                         )));
     }
 
-    @Test
-    public void shouldAddForValueLeftAndValueRight() throws SyntaxErrorException {
+    @ParameterizedTest
+    @CsvSource({
+            "+,920",
+            "-,400"
+    })
+    public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
+                                                                final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "660+260";
+        final String givenFormula = String.format("660%s260", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
@@ -99,18 +119,22 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult("920"),
+                        new ValueResult(expectedValue),
                         List.of(
-                                new MatchedToken("660+260", 1, 0, 6),
+                                new MatchedToken(String.format("660%s260", givenOperation), 1, 0, 6),
                                 new MatchedToken("660", 1, 0, 2),
                                 new MatchedToken("260", 1, 4, 6)
                         )));
     }
 
-    @Test
-    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown() throws SyntaxErrorException {
+    @ParameterizedTest
+    @CsvSource({
+            "+",
+            "-"
+    })
+    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "[@[North Sales Amount]]+[@[South Sales Amount]]";
+        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
@@ -125,16 +149,20 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
                 new ExecutionResult(
                         new UnknownReferenceResult(),
                         List.of(
-                                new MatchedToken("[@[North Sales Amount]]+[@[South Sales Amount]]", 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
                                 new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
                         )));
     }
 
-    @Test
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical() throws SyntaxErrorException {
+    @ParameterizedTest
+    @CsvSource({
+            "+",
+            "-"
+    })
+    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
         // Given
-        final String givenFormula = "[@[North Sales Amount]]+[@[South Sales Amount]]";
+        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
@@ -150,7 +178,7 @@ public class AddArithmeticOperationsExpressionTest extends AbstractExpressionTes
                 new ExecutionResult(
                         new ErrorResult(),
                         List.of(
-                                new MatchedToken("[@[North Sales Amount]]+[@[South Sales Amount]]", 1, 0, 46),
+                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
                                 new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
                                 new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
                         )));

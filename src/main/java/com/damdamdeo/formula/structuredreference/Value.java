@@ -37,4 +37,14 @@ public record Value(String value) {
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())
         );
     }
+
+    public Value subtract(final Value valueToAdd,
+                          final NumericalContext numericalContext) {
+        return new Value(
+                new BigDecimal(value)
+                        .subtract(new BigDecimal(valueToAdd.value()))
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
+        );
+    }
+
 }
