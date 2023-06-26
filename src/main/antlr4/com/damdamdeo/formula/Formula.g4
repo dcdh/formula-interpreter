@@ -37,6 +37,7 @@ type_comparator_expr: GT
                     | GTE
                     | EQ
                     | LT
+                    | LTE
                     ;
 
 ADD: '+' ;
@@ -47,6 +48,7 @@ GT: '>' ;
 GTE: '>=' ;
 EQ: '=' ;
 LT: '<' ;
+LTE: '<=' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;

@@ -27,6 +27,12 @@ public enum Comparator {
         public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
             return left.lessThan(right, numericalContext);
         }
+    },
+    LTE {
+        @Override
+        public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            return left.lessThanOrEqualTo(right, numericalContext);
+        }
     };
 
 
