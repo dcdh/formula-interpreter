@@ -32,6 +32,9 @@ public record Value(String value) {
 
     public Value add(final Value valueToAdd,
                      final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToAdd.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
         return new Value(
                 new BigDecimal(value)
                         .add(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
@@ -41,6 +44,9 @@ public record Value(String value) {
 
     public Value subtract(final Value valueToAdd,
                           final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToAdd.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
         return new Value(
                 new BigDecimal(value)
                         .subtract(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
@@ -50,6 +56,9 @@ public record Value(String value) {
 
     public Value divide(final Value valueToAdd,
                         final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToAdd.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
         return new Value(
                 new BigDecimal(value)
                         .divide(new BigDecimal(valueToAdd.value()), numericalContext.scale(), numericalContext.roundingMode())
@@ -59,6 +68,9 @@ public record Value(String value) {
 
     public Value multiply(final Value valueToAdd,
                           final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToAdd.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
         return new Value(
                 new BigDecimal(value)
                         .multiply(new BigDecimal(valueToAdd.value()), new MathContext(numericalContext.precision(), numericalContext.roundingMode()))
