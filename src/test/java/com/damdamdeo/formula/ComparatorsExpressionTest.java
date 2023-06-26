@@ -25,7 +25,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
             "260,>=,260,true",
             "660,=,260,false",
             "260,=,660,false",
-            "260,=,260,true"
+            "260,=,260,true",
+            "660,<,260,false",
+            "260,<,660,true",
+            "260,<,260,false"
     })
     public void shouldExecuteComparisonForStructuredReferenceLeftAndStructuredReferenceRight(final String leftValue,
                                                                                              final String givenComparison,
@@ -64,7 +67,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
             "260,>=,260,true",
             "660,=,260,false",
             "260,=,660,false",
-            "260,=,260,true"
+            "260,=,260,true",
+            "660,<,260,false",
+            "260,<,660,true",
+            "260,<,260,false"
     })
     public void shouldExecuteComparisonForStructuredReferenceLeftAndValueRight(final String leftValue,
                                                                                final String givenComparison,
@@ -102,7 +108,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
             "260,>=,260,true",
             "660,=,260,false",
             "260,=,660,false",
-            "260,=,260,true"
+            "260,=,260,true",
+            "660,<,260,false",
+            "260,<,660,true",
+            "260,<,260,false"
     })
     public void shouldExecuteComparisonForValueLeftAndStructuredReferenceRight(final String leftValue,
                                                                                final String givenComparison,
@@ -140,7 +149,10 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
             "260,>=,260,true",
             "660,=,260,false",
             "260,=,660,false",
-            "260,=,260,true"
+            "260,=,260,true",
+            "660,<,260,false",
+            "260,<,660,true",
+            "260,<,260,false"
     })
     public void shouldExecuteComparisonForValueLeftAndValueRight(final String leftValue,
                                                                  final String givenComparison,
@@ -168,7 +180,8 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             ">",
             ">=",
-            "="
+            "=",
+            "<"
     })
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenComparison) throws SyntaxErrorException {
         // Given
@@ -197,7 +210,8 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     @CsvSource({
             ">",
             ">=",
-            "="
+            "=",
+            "<"
     })
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) throws SyntaxErrorException {
         // Given
