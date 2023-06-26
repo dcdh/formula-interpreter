@@ -7,6 +7,10 @@ import java.math.MathContext;
 import java.util.Objects;
 
 public record Value(String value) {
+
+    public static Value TRUE = new Value("true");
+    public static Value FALSE = new Value("false");
+
     public Value(String value) {
         this.value = Objects.requireNonNull(value);
     }
@@ -78,4 +82,14 @@ public record Value(String value) {
         );
     }
 
+    public Value greaterThan(final Value valueToCheck,
+                             final NumericalContext numericalContext) {
+        if (!isNumeric() || !valueToCheck.isNumeric()) {
+            throw new IllegalStateException("Should not be here");
+        }
+        return new BigDecimal(value)
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheck.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) > 0 ? Value.TRUE : Value.FALSE;
+    }
 }

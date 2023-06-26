@@ -3,6 +3,7 @@ grammar Formula;
 prog: expr EOF ;
 
 expr: operations_expr
+    | comparators_expr
     | structured_reference_expr
     | value_expr
     ;
@@ -26,10 +27,19 @@ type_operation_expr: ADD
                    | MUL
                    ;
 
+comparators_expr: left=structured_reference_expr comparator=type_comparator_expr right=structured_reference_expr #structuredReferenceAddStructuredReference
+                | left=structured_reference_expr comparator=type_comparator_expr right=value_expr #structuredReferenceAddValue
+                | left=value_expr comparator=type_comparator_expr right=structured_reference_expr #valueAddStructuredReference
+                | left=value_expr comparator=type_comparator_expr right=value_expr #valueAddValue
+                ;
+
+type_comparator_expr: GT ;
+
 ADD: '+' ;
 SUB: '-' ;
 DIV: '/' ;
 MUL: '*' ;
+GT: '>' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
 WS  : [ \t\r\n] -> skip ;
