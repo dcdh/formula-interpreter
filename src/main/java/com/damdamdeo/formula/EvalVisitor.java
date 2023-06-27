@@ -69,7 +69,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return result;
     }
 
-    private Result compare(final FormulaParser.Type_comparatorContext typeComparator, final Result left, final Result right) {
+    private Result compare(final FormulaParser.ComparatorContext co, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -79,15 +79,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Comparator comparator;
-            if (typeComparator.GT() != null) {
+            if (co.GT() != null) {
                 comparator = Comparator.GT;
-            } else if (typeComparator.GTE() != null) {
+            } else if (co.GTE() != null) {
                 comparator = Comparator.GTE;
-            } else if (typeComparator.EQ() != null) {
+            } else if (co.EQ() != null) {
                 comparator = Comparator.EQ;
-            } else if (typeComparator.LT() != null) {
+            } else if (co.LT() != null) {
                 comparator = Comparator.LT;
-            } else if (typeComparator.LTE() != null) {
+            } else if (co.LTE() != null) {
                 comparator = Comparator.LTE;
             } else {
                 throw new IllegalStateException("Should not be here");
@@ -99,41 +99,11 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitStructuredReferenceAddStructuredReference(final FormulaParser.StructuredReferenceAddStructuredReferenceContext ctx) {
+    public Result visitComparatorsLeftCoRight(final FormulaParser.ComparatorsLeftCoRightContext ctx) {
         appendMatchedToken(ctx);
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
-        final Result result = compare(ctx.comparator, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitStructuredReferenceAddValue(final FormulaParser.StructuredReferenceAddValueContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compare(ctx.comparator, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitValueAddStructuredReference(final FormulaParser.ValueAddStructuredReferenceContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compare(ctx.comparator, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitValueAddValue(final FormulaParser.ValueAddValueContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compare(ctx.comparator, left, right);
+        final Result result = compare(ctx.co, left, right);
         this.result = result;
         return result;
     }

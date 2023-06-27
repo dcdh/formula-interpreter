@@ -3,7 +3,7 @@ grammar Formula;
 prog: expr EOF ;
 
 expr: operations
-    | comparators
+    | comparisons
     | structured_reference
     | value
     ;
@@ -28,18 +28,19 @@ operator: ADD
         | MUL
         ;
 
-comparators: left=structured_reference comparator=type_comparator right=structured_reference #structuredReferenceAddStructuredReference
-           | left=structured_reference comparator=type_comparator right=value #structuredReferenceAddValue
-           | left=value comparator=type_comparator right=structured_reference #valueAddStructuredReference
-           | left=value comparator=type_comparator right=value #valueAddValue
+comparisons: left=comparend co=comparator right=comparend #comparatorsLeftCoRight
            ;
 
-type_comparator: GT
-               | GTE
-               | EQ
-               | LT
-               | LTE
-               ;
+comparend: structured_reference
+          | value
+          ;
+
+comparator: GT
+          | GTE
+          | EQ
+          | LT
+          | LTE
+          ;
 
 ADD: '+' ;
 SUB: '-' ;
