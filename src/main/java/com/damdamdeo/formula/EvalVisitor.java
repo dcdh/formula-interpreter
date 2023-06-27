@@ -32,7 +32,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return super.visitExpr(ctx);
     }
 
-    private Result compute(final FormulaParser.Type_operation_exprContext typeOperationExpr, final Result left, final Result right) {
+    private Result compute(final FormulaParser.Type_operationContext typeOperation, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -42,13 +42,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Operation operation;
-            if (typeOperationExpr.ADD() != null) {
+            if (typeOperation.ADD() != null) {
                 operation = Operation.ADD;
-            } else if (typeOperationExpr.SUB() != null) {
+            } else if (typeOperation.SUB() != null) {
                 operation = Operation.SUB;
-            } else if (typeOperationExpr.DIV() != null) {
+            } else if (typeOperation.DIV() != null) {
                 operation = Operation.DIV;
-            } else if (typeOperationExpr.MUL() != null) {
+            } else if (typeOperation.MUL() != null) {
                 operation = Operation.MUL;
             } else {
                 throw new IllegalStateException("Should not be here");
@@ -99,7 +99,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return result;
     }
 
-    private Result compare(final FormulaParser.Type_comparator_exprContext typeComparatorExpr, final Result left, final Result right) {
+    private Result compare(final FormulaParser.Type_comparatorContext typeComparator, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -109,15 +109,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Comparator comparator;
-            if (typeComparatorExpr.GT() != null) {
+            if (typeComparator.GT() != null) {
                 comparator = Comparator.GT;
-            } else if (typeComparatorExpr.GTE() != null) {
+            } else if (typeComparator.GTE() != null) {
                 comparator = Comparator.GTE;
-            } else if (typeComparatorExpr.EQ() != null) {
+            } else if (typeComparator.EQ() != null) {
                 comparator = Comparator.EQ;
-            } else if (typeComparatorExpr.LT() != null) {
+            } else if (typeComparator.LT() != null) {
                 comparator = Comparator.LT;
-            } else if (typeComparatorExpr.LTE() != null) {
+            } else if (typeComparator.LTE() != null) {
                 comparator = Comparator.LTE;
             } else {
                 throw new IllegalStateException("Should not be here");
@@ -169,7 +169,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitStructuredReferenceExpr(final FormulaParser.StructuredReferenceExprContext ctx) {
+    public Result visitStructuredReference(final FormulaParser.StructuredReferenceContext ctx) {
         appendMatchedToken(ctx);
         Result result;
         try {
@@ -186,7 +186,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitValueExpr(final FormulaParser.ValueExprContext ctx) {
+    public Result visitVal(final FormulaParser.ValContext ctx) {
         appendMatchedToken(ctx);
         final Result result = new ValueResult(ctx.VALUE().getText());
         this.result = result;
