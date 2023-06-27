@@ -4,7 +4,6 @@ import com.damdamdeo.formula.result.*;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
-import com.damdamdeo.formula.structuredreference.Value;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

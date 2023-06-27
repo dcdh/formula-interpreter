@@ -7,7 +7,6 @@ import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
-import com.damdamdeo.formula.structuredreference.Value;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 

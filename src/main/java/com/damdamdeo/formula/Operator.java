@@ -1,7 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.structuredreference.Value;
-
 public enum Operator {
 
     ADD {

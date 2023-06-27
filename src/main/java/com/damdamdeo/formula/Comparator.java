@@ -1,7 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.structuredreference.Value;
-
 public enum Comparator {
 
     GT {
@@ -36,6 +34,6 @@ public enum Comparator {
     };
 
 
-    public abstract Value execute(com.damdamdeo.formula.structuredreference.Value left, Value right, NumericalContext numericalContext);
+    public abstract Value execute(Value left, Value right, NumericalContext numericalContext);
 
 }

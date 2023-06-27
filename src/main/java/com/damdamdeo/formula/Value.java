@@ -1,6 +1,4 @@
-package com.damdamdeo.formula.structuredreference;
-
-import com.damdamdeo.formula.NumericalContext;
+package com.damdamdeo.formula;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.result;
 
-import com.damdamdeo.formula.structuredreference.Value;
+import com.damdamdeo.formula.Value;
 
 public interface Result {
     Value value();

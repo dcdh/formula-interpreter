@@ -1,5 +1,7 @@
 package com.damdamdeo.formula.structuredreference;
 
+import com.damdamdeo.formula.Value;
+
 import java.util.Objects;
 
 public record StructuredDatum(Reference reference, Value value) {
