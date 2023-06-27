@@ -2,7 +2,7 @@ package com.damdamdeo.formula;
 
 import com.damdamdeo.formula.structuredreference.Value;
 
-public enum Operation {
+public enum Operator {
 
     ADD {
         @Override

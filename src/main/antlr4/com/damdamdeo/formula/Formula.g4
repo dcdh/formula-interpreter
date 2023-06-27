@@ -15,17 +15,18 @@ structured_reference: STRUCTURED_REFERENCE  #structuredReference
 value: VALUE #val
      ;
 
-operations: left=structured_reference operation=type_operation right=structured_reference #structuredReferenceOperationStructuredReference
-          | left=structured_reference operation=type_operation right=value #structuredReferenceOperationValue
-          | left=value operation=type_operation right=structured_reference #valueOperationStructuredReference
-          | left=value operation=type_operation right=value #valueOperationValue
+operations: left=operand op=operator right=operand #operationsLeftOpRight
           ;
 
-type_operation: ADD
-              | SUB
-              | DIV
-              | MUL
-              ;
+operand: structured_reference
+       | value
+       ;
+
+operator: ADD
+        | SUB
+        | DIV
+        | MUL
+        ;
 
 comparators: left=structured_reference comparator=type_comparator right=structured_reference #structuredReferenceAddStructuredReference
            | left=structured_reference comparator=type_comparator right=value #structuredReferenceAddValue

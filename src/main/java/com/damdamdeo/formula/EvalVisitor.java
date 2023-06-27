@@ -32,7 +32,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return super.visitExpr(ctx);
     }
 
-    private Result compute(final FormulaParser.Type_operationContext typeOperation, final Result left, final Result right) {
+    private Result compute(final FormulaParser.OperatorContext op, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -41,60 +41,30 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         } else if (!left.isNumeric() || !right.isNumeric()) {
             result = new ErrorResult();
         } else {
-            final Operation operation;
-            if (typeOperation.ADD() != null) {
-                operation = Operation.ADD;
-            } else if (typeOperation.SUB() != null) {
-                operation = Operation.SUB;
-            } else if (typeOperation.DIV() != null) {
-                operation = Operation.DIV;
-            } else if (typeOperation.MUL() != null) {
-                operation = Operation.MUL;
+            final Operator operator;
+            if (op.ADD() != null) {
+                operator = Operator.ADD;
+            } else if (op.SUB() != null) {
+                operator = Operator.SUB;
+            } else if (op.DIV() != null) {
+                operator = Operator.DIV;
+            } else if (op.MUL() != null) {
+                operator = Operator.MUL;
             } else {
                 throw new IllegalStateException("Should not be here");
             }
-            final Value value = operation.execute(left.value(), right.value(), numericalContext);
+            final Value value = operator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
         }
         return result;
     }
 
     @Override
-    public Result visitStructuredReferenceOperationStructuredReference(final FormulaParser.StructuredReferenceOperationStructuredReferenceContext ctx) {
+    public Result visitOperationsLeftOpRight(final FormulaParser.OperationsLeftOpRightContext ctx) {
         appendMatchedToken(ctx);
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.operation, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitStructuredReferenceOperationValue(final FormulaParser.StructuredReferenceOperationValueContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.operation, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitValueOperationStructuredReference(final FormulaParser.ValueOperationStructuredReferenceContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.operation, left, right);
-        this.result = result;
-        return result;
-    }
-
-    @Override
-    public Result visitValueOperationValue(final FormulaParser.ValueOperationValueContext ctx) {
-        appendMatchedToken(ctx);
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.operation, left, right);
+        final Result result = compute(ctx.op, left, right);
         this.result = result;
         return result;
     }
