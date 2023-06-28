@@ -4,6 +4,7 @@ import com.damdamdeo.formula.result.*;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.UnknownReferenceException;
+import org.antlr.v4.runtime.Token;
 
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return super.visitExpr(ctx);
     }
 
-    private Result compute(final FormulaParser.OperatorContext op, final Result left, final Result right) {
+    private Result compute(final Token token, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -35,16 +36,21 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Operator operator;
-            if (op.ADD() != null) {
-                operator = Operator.ADD;
-            } else if (op.SUB() != null) {
-                operator = Operator.SUB;
-            } else if (op.DIV() != null) {
-                operator = Operator.DIV;
-            } else if (op.MUL() != null) {
-                operator = Operator.MUL;
-            } else {
-                throw new IllegalStateException("Should not be here");
+            switch(token.getType()) {
+                case FormulaParser.ADD:
+                    operator = Operator.ADD;
+                    break;
+                case FormulaParser.SUB:
+                    operator = Operator.SUB;
+                    break;
+                case FormulaParser.DIV:
+                    operator = Operator.DIV;
+                    break;
+                case FormulaParser.MUL:
+                    operator = Operator.MUL;
+                    break;
+                default:
+                    throw new IllegalStateException("Should not be here");
             }
             final Value value = operator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
@@ -56,12 +62,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitOperationsLeftOpRight(final FormulaParser.OperationsLeftOpRightContext ctx) {
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.op, left, right);
+        final Result result = compute(ctx.operator, left, right);
         this.result = result;
         return result;
     }
 
-    private Result compare(final FormulaParser.ComparatorContext co, final Result left, final Result right) {
+    private Result compare(final Token token, final Result left, final Result right) {
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -71,18 +77,24 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Comparator comparator;
-            if (co.GT() != null) {
-                comparator = Comparator.GT;
-            } else if (co.GTE() != null) {
-                comparator = Comparator.GTE;
-            } else if (co.EQ() != null) {
-                comparator = Comparator.EQ;
-            } else if (co.LT() != null) {
-                comparator = Comparator.LT;
-            } else if (co.LTE() != null) {
-                comparator = Comparator.LTE;
-            } else {
-                throw new IllegalStateException("Should not be here");
+            switch (token.getType()) {
+                case FormulaParser.GT:
+                    comparator = Comparator.GT;
+                    break;
+                case FormulaParser.GTE:
+                    comparator = Comparator.GTE;
+                    break;
+                case FormulaParser.EQ:
+                    comparator = Comparator.EQ;
+                    break;
+                case FormulaParser.LT:
+                    comparator = Comparator.LT;
+                    break;
+                case FormulaParser.LTE:
+                    comparator = Comparator.LTE;
+                    break;
+                default:
+                    throw new IllegalStateException("Should not be here");
             }
             final Value value = comparator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
@@ -94,7 +106,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitComparatorsLeftCoRight(final FormulaParser.ComparatorsLeftCoRightContext ctx) {
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
-        final Result result = compare(ctx.co, left, right);
+        final Result result = compare(ctx.comparator, left, right);
         this.result = result;
         return result;
     }

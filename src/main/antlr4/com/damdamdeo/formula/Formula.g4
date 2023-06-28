@@ -11,30 +11,17 @@ argument : STRUCTURED_REFERENCE  #argumentStructuredReference
          | VALUE #argumentValue
          ;
 
-operations: left=operand op=operator right=operand #operationsLeftOpRight
+operations: left=operand operator=(ADD | SUB | DIV | MUL) right=operand #operationsLeftOpRight
           ;
 
 operand: argument
        ;
 
-operator: ADD
-        | SUB
-        | DIV
-        | MUL
-        ;
-
-comparisons: left=comparend co=comparator right=comparend #comparatorsLeftCoRight
+comparisons: left=comparend comparator=(GT | GTE | EQ | LT | LTE) right=comparend #comparatorsLeftCoRight
            ;
 
 comparend: argument
          ;
-
-comparator: GT
-          | GTE
-          | EQ
-          | LT
-          | LTE
-          ;
 
 ADD: '+' ;
 SUB: '-' ;
