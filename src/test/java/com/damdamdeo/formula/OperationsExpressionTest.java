@@ -18,15 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OperationsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
-            "+,920",
-            "-,400",
-            "/,2.538462",
-            "*,171600"
+            "ADD,920",
+            "SUB,400",
+            "DIV,2.538462",
+            "MUL,171600"
     })
     public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
                                                                                             final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
@@ -45,15 +45,15 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+,920",
-            "-,400",
-            "/,2.538462",
-            "*,171600"
+            "ADD,920",
+            "SUB,400",
+            "DIV,2.538462",
+            "MUL,171600"
     })
     public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("[@[North Sales Amount]]%s260", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],260)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
@@ -71,15 +71,15 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+,920",
-            "-,400",
-            "/,2.538462",
-            "*,171600"
+            "ADD,920",
+            "SUB,400",
+            "DIV,2.538462",
+            "MUL,171600"
     })
     public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("660%s[@[South Sales Amount]]", givenOperation);
+        final String givenFormula = String.format("%s(660,[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("South Sales Amount"), new Value("260"))
@@ -97,15 +97,15 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+,920",
-            "-,400",
-            "/,2.538462",
-            "*,171600"
+            "ADD,920",
+            "SUB,400",
+            "DIV,2.538462",
+            "MUL,171600"
     })
     public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
                                                                 final String expectedValue) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("660%s260", givenOperation);
+        final String givenFormula = String.format("%s(660,260)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
@@ -119,14 +119,14 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+",
-            "-",
-            "/",
-            "*"
+            "ADD",
+            "SUB",
+            "DIV",
+            "MUL"
     })
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
@@ -144,14 +144,14 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "+",
-            "-",
-            "/",
-            "*"
+            "ADD",
+            "SUB",
+            "DIV",
+            "MUL"
     })
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
         // Given
-        final String givenFormula = String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),

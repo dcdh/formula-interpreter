@@ -21,15 +21,7 @@ public record Value(String value) {
         if (value.startsWith("#")) {
             return false;
         }
-        if (!value.matches("[0-9.]+")) {
-            return false;
-        }
-        try {
-            new BigDecimal(value);
-            return true;
-        } catch (final NumberFormatException numberFormatException) {
-            return false;
-        }
+        return value.matches("\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?");
     }
 
     public Value add(final Value augend,

@@ -10,3 +10,6 @@ Simple implementation of Excel formula
 - https://stackoverflow.com/questions/30976962/nested-boolean-expression-parser-using-antlr
 - https://en.wikipedia.org/wiki/Operation_(mathematics)
 - https://github.com/bkiers/Mu/tree/master
+- https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigDecimal.html#%3Cinit%3E(java.lang.String)
+- https://support.microsoft.com/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188
+- 

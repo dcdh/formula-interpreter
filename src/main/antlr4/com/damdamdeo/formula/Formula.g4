@@ -1,18 +1,19 @@
 grammar Formula;
 
-prog: expr EOF ;
+program: expr EOF ;
 
-expr: operations
+expr: functions
     | comparisons
     | argument
     ;
 
-argument : STRUCTURED_REFERENCE  #argumentStructuredReference
-         | VALUE #argumentValue
-         ;
+argument: STRUCTURED_REFERENCE  #argumentStructuredReference
+        | VALUE #argumentValue
+        | NUMERIC #argumentNumeric
+        ;
 
-operations: left=operand operator=(ADD | SUB | DIV | MUL) right=operand #operationsLeftOpRight
-          ;
+functions: operator=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')' #functionsOperatorLeftOpRight
+         ;
 
 operand: argument
        ;
@@ -23,10 +24,10 @@ comparisons: left=comparend comparator=(GT | GTE | EQ | LT | LTE) right=comparen
 comparend: argument
          ;
 
-ADD: '+' ;
-SUB: '-' ;
-DIV: '/' ;
-MUL: '*' ;
+ADD: 'ADD' ;
+SUB: 'SUB' ;
+DIV: 'DIV' ;
+MUL: 'MUL' ;
 GT: '>' ;
 GTE: '>=' ;
 EQ: '=' ;
@@ -34,4 +35,5 @@ LT: '<' ;
 LTE: '<=' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()€% ]+']]' ;
 VALUE : [a-zA-Z0-9 ]+ ;
+NUMERIC : '-'?[0-9]+'.'?[0-9]*('E'[0-9]+|'E+'[0-9]+|'E-'[0-9]+)? ;
 WS  : [ \t\r\n] -> skip ;

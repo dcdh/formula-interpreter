@@ -19,7 +19,7 @@ public class Validator {
         final FormulaParser parser = new FormulaParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrorListener);
-        ParseTree tree = parser.prog();
+        ParseTree tree = parser.program();
         if (syntaxErrorListener.hasSyntaxError()) {
             throw new SyntaxErrorException(syntaxErrorListener.syntaxError());
         }

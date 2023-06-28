@@ -21,3 +21,41 @@ Each time the grammar is changed the antlr goal must be re-executed before runni
 ### Token
 
 **Token** = TOKEN_REF, RULE_REF, LEXER_CHAR_SET, STRING_LITERAL, BEGIN_ACTION, OPTIONS, LPAREN, RPAREN, OR, DOT, NOT
+
+## Issue
+
+### Minus operation
+
+```antlrv4
+grammar Formula;
+
+program: expr EOF ;
+
+expr: operations
+    | argument
+    ;
+
+argument : NUMERIC #argumentNumeric
+         | VALUE #argumentValue
+         ;
+
+operand: argument
+       ;
+
+operations: left=operand op=operator right=operand
+          ;
+
+operator: SUB
+        ;
+
+SUB: '-' ;
+VALUE : [a-zA-Z0-9 ]+ ;
+NUMERIC : '-'?[0-9]+ ;
+WS  : [ \t\r\n] -> skip ;
+```
+
+This works `1000--26000`
+
+This does not work `1000-26000`
+
+Because

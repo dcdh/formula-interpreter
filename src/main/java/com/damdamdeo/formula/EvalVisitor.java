@@ -59,7 +59,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitOperationsLeftOpRight(final FormulaParser.OperationsLeftOpRightContext ctx) {
+    public Result visitFunctionsOperatorLeftOpRight(final FormulaParser.FunctionsOperatorLeftOpRightContext ctx) {
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
         final Result result = compute(ctx.operator, left, right);
@@ -130,6 +130,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         final Result result = new ValueResult(ctx.VALUE().getText());
+        this.result = result;
+        return result;
+    }
+
+    @Override
+    public Result visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
+        final Result result = new ValueResult(ctx.NUMERIC().getText());
         this.result = result;
         return result;
     }
