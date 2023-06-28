@@ -22,7 +22,7 @@ public final class Executor {
         final ParseTree tree = validator.validate(formula);
         final EvalVisitor visitor = new EvalVisitor(structuredData, numericalContext);
         visitor.visit(tree);
-        return new ExecutionResult(visitor.result(), visitor.matchedTokens());
+        return new ExecutionResult(visitor.result());
     }
 
 }

@@ -1,6 +1,9 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.result.*;
+import com.damdamdeo.formula.result.ErrorResult;
+import com.damdamdeo.formula.result.ExecutionResult;
+import com.damdamdeo.formula.result.UnknownReferenceResult;
+import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
@@ -37,12 +40,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -68,12 +66,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s260", givenOperation), 1, 0, 26),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("260", 1, 24, 26)
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -99,12 +92,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("660%s[@[South Sales Amount]]", givenOperation), 1, 0, 26),
-                                new MatchedToken("660", 1, 0, 2),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 4, 26)
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -126,12 +114,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("660%s260", givenOperation), 1, 0, 6),
-                                new MatchedToken("660", 1, 0, 2),
-                                new MatchedToken("260", 1, 4, 6)
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -156,12 +139,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new UnknownReferenceResult(),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
-                        )));
+                        new UnknownReferenceResult()));
     }
 
     @ParameterizedTest
@@ -187,12 +165,7 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ErrorResult(),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenOperation), 1, 0, 46),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 24, 46)
-                        )));
+                        new ErrorResult()));
     }
 
 }

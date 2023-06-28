@@ -1,7 +1,10 @@
 package com.damdamdeo.formula;
 
 
-import com.damdamdeo.formula.result.*;
+import com.damdamdeo.formula.result.ErrorResult;
+import com.damdamdeo.formula.result.ExecutionResult;
+import com.damdamdeo.formula.result.UnknownReferenceResult;
+import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
@@ -51,12 +54,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -95,12 +93,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s%s", givenComparison, rightValue), 1, 0, 25 + givenComparison.length()),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken(rightValue, 1, 23 + givenComparison.length(), 25 + givenComparison.length())
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -139,12 +132,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("%s%s[@[South Sales Amount]]", leftValue, givenComparison), 1, 0, 25 + givenComparison.length()),
-                                new MatchedToken(leftValue, 1, 0, 2),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 3 + givenComparison.length(), 25 + givenComparison.length())
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -179,12 +167,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ValueResult(expectedValue),
-                        List.of(
-                                new MatchedToken(String.format("%s%s%s", leftValue, givenComparison, rightValue), 1, 0, 5 + givenComparison.length()),
-                                new MatchedToken(leftValue, 1, 0, 2),
-                                new MatchedToken(rightValue, 1, 3 + givenComparison.length(), 5 + givenComparison.length())
-                        )));
+                        new ValueResult(expectedValue)));
     }
 
     @ParameterizedTest
@@ -210,12 +193,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new UnknownReferenceResult(),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
-                        )));
+                        new UnknownReferenceResult()));
     }
 
     @ParameterizedTest
@@ -242,12 +220,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
-                        new ErrorResult(),
-                        List.of(
-                                new MatchedToken(String.format("[@[North Sales Amount]]%s[@[South Sales Amount]]", givenComparison), 1, 0, 45 + givenComparison.length()),
-                                new MatchedToken("[@[North Sales Amount]]", 1, 0, 22),
-                                new MatchedToken("[@[South Sales Amount]]", 1, 23 + givenComparison.length(), 45 + givenComparison.length())
-                        )));
+                        new ErrorResult()));
     }
 
 }

@@ -4,17 +4,12 @@ import com.damdamdeo.formula.result.*;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.UnknownReferenceException;
-import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     private Result result = new VoidResult();
-
-    private final List<MatchedToken> matchedTokens = new ArrayList<>();
 
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
@@ -27,7 +22,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitExpr(final FormulaParser.ExprContext ctx) {
-        appendMatchedToken(ctx);
         return super.visitExpr(ctx);
     }
 
@@ -60,7 +54,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitOperationsLeftOpRight(final FormulaParser.OperationsLeftOpRightContext ctx) {
-        appendMatchedToken(ctx);
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
         final Result result = compute(ctx.op, left, right);
@@ -99,7 +92,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitComparatorsLeftCoRight(final FormulaParser.ComparatorsLeftCoRightContext ctx) {
-        appendMatchedToken(ctx);
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
         final Result result = compare(ctx.co, left, right);
@@ -109,7 +101,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitStructuredReference(final FormulaParser.StructuredReferenceContext ctx) {
-        appendMatchedToken(ctx);
         Result result;
         try {
             final String reference = ctx.STRUCTURED_REFERENCE().getText()
@@ -126,7 +117,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitVal(final FormulaParser.ValContext ctx) {
-        appendMatchedToken(ctx);
         final Result result = new ValueResult(ctx.VALUE().getText());
         this.result = result;
         return result;
@@ -136,14 +126,4 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return result;
     }
 
-    public List<MatchedToken> matchedTokens() {
-        return matchedTokens.stream().distinct().toList();
-    }
-
-    void appendMatchedToken(final ParserRuleContext ctx) {
-        matchedTokens.add(new MatchedToken(ctx.getText(),
-                ctx.getStart().getLine(),
-                ctx.getStart().getStartIndex(),
-                ctx.getStop().getStopIndex()));
-    }
 }
