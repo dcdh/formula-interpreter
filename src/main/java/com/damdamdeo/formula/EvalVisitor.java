@@ -129,7 +129,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        final Result result = new ValueResult(ctx.VALUE().getText());
+        final Result result = new ValueResult(ctx.VALUE().getText().replaceAll("^\"|\"$", ""));
         this.result = result;
         return result;
     }

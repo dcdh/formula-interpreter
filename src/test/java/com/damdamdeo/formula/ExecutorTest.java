@@ -19,18 +19,18 @@ public class ExecutorTest {
 
     @Test
     public void shouldFailOnUnrecognizedToken() {
-        assertThatThrownBy(() -> executor.execute(new Formula("!!!!#boom"), new StructuredData()))
+        assertThatThrownBy(() -> executor.execute(new Formula("\"!!!!#boom\""), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
-                        new SyntaxError(1, 4, "token recognition error at: '#'"));
+                        new SyntaxError(1, 11, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
     }
 
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
-        assertThatThrownBy(() -> executor.execute(new Formula("Hello\nWorld"), new StructuredData()))
+        assertThatThrownBy(() -> executor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
-                        new SyntaxError(2, 0, "extraneous input 'World' expecting <EOF>"));
+                        new SyntaxError(2, 0, "extraneous input '\"World\"' expecting <EOF>"));
     }
 
 }

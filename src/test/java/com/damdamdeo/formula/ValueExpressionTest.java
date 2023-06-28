@@ -13,9 +13,10 @@ public class ValueExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Hello World,Hello World",
-            "AZERTY,AZERTY",
-            "10,10"
+            "\"Hello World\",Hello World",
+            "\"AZERTY\",AZERTY",
+            "10,10",
+            "\"-+E.09()%\",-+E.09()%"
     })
     public void shouldReturnInputValue(final String givenFormula,
                                        final String expectedResult) throws SyntaxErrorException {
