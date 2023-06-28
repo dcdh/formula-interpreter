@@ -100,7 +100,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitStructuredReference(final FormulaParser.StructuredReferenceContext ctx) {
+    public Result visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         Result result;
         try {
             final String reference = ctx.STRUCTURED_REFERENCE().getText()
@@ -116,7 +116,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitVal(final FormulaParser.ValContext ctx) {
+    public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         final Result result = new ValueResult(ctx.VALUE().getText());
         this.result = result;
         return result;

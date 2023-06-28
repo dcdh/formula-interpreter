@@ -4,22 +4,17 @@ prog: expr EOF ;
 
 expr: operations
     | comparisons
-    | structured_reference
-    | value
+    | argument
     ;
 
-
-structured_reference: STRUCTURED_REFERENCE  #structuredReference
-                    ;
-
-value: VALUE #val
-     ;
+argument : STRUCTURED_REFERENCE  #argumentStructuredReference
+         | VALUE #argumentValue
+         ;
 
 operations: left=operand op=operator right=operand #operationsLeftOpRight
           ;
 
-operand: structured_reference
-       | value
+operand: argument
        ;
 
 operator: ADD
@@ -31,9 +26,8 @@ operator: ADD
 comparisons: left=comparend co=comparator right=comparend #comparatorsLeftCoRight
            ;
 
-comparend: structured_reference
-          | value
-          ;
+comparend: argument
+         ;
 
 comparator: GT
           | GTE
