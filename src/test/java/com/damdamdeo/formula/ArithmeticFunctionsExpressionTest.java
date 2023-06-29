@@ -10,20 +10,17 @@ import com.damdamdeo.formula.structuredreference.StructuredDatum;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
-    @CsvSource({
-            "ADD,920",
-            "SUB,400",
-            "DIV,2.538462",
-            "MUL,171600"
-    })
+    @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
                                                                                             final String expectedValue) throws SyntaxErrorException {
         // Given
@@ -45,12 +42,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "ADD,920",
-            "SUB,400",
-            "DIV,2.538462",
-            "MUL,171600"
-    })
+    @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
         // Given
@@ -71,12 +63,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "ADD,920",
-            "SUB,400",
-            "DIV,2.538462",
-            "MUL,171600"
-    })
+    @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
                                                                               final String expectedValue) throws SyntaxErrorException {
         // Given
@@ -97,12 +84,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "ADD,920",
-            "SUB,400",
-            "DIV,2.538462",
-            "MUL,171600"
-    })
+    @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
                                                                 final String expectedValue) throws SyntaxErrorException {
         // Given
@@ -116,6 +98,15 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
                         new ValueResult(expectedValue)));
+    }
+
+    private static Stream<Arguments> provideOperationsWithExpectedValues() {
+        return Stream.of(
+                Arguments.of("ADD", "920"),
+                Arguments.of("SUB", "400"),
+                Arguments.of("DIV", "2.538462"),
+                Arguments.of("MUL", "171600")
+        );
     }
 
     @Test
@@ -134,12 +125,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "ADD",
-            "SUB",
-            "DIV",
-            "MUL"
-    })
+    @MethodSource("provideOperations")
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) throws SyntaxErrorException {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -159,12 +145,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "ADD",
-            "SUB",
-            "DIV",
-            "MUL"
-    })
+    @MethodSource("provideOperations")
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -184,4 +165,12 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
                         new ErrorResult()));
     }
 
+    private static Stream<Arguments> provideOperations() {
+        return Stream.of(
+                Arguments.of("ADD"),
+                Arguments.of("SUB"),
+                Arguments.of("DIV"),
+                Arguments.of("MUL")
+        );
+    }
 }
