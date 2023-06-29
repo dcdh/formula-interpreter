@@ -132,8 +132,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 Arguments.of("260", "LT", "260", "false"),
                 Arguments.of("660", "LTE", "260", "false"),
                 Arguments.of("260", "LTE", "660", "true"),
-                Arguments.of("260", "LTE", "260", "true")
-        );
+                Arguments.of("260", "LTE", "260", "true"));
     }
 
     @ParameterizedTest
@@ -177,4 +176,27 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                         new ErrorResult()));
     }
 
+    @ParameterizedTest
+    @MethodSource("provideComparatorFunctionsUsingArithmeticsFunction")
+    public void shouldUseComparisonsFunctions(final String givenFormula) throws SyntaxErrorException {
+        // Given
+        final StructuredData givenStructuredData = new StructuredData(
+                List.of(
+                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                )
+        );
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult).isEqualTo(
+                new ExecutionResult(
+                        new ValueResult("true")));
+    }
+
+    private static Stream<Arguments> provideComparatorFunctionsUsingArithmeticsFunction() {
+        return Stream.of(
+                Arguments.of("LTE(ADD(100,160),ADD(100,160))"));
+    }
 }

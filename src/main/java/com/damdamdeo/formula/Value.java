@@ -9,6 +9,8 @@ public record Value(String value) {
     public static Value TRUE = new Value("true");
     public static Value FALSE = new Value("false");
 
+    public static Value ONE = new Value("1");
+
     public Value(String value) {
         this.value = Objects.requireNonNull(value)
                 .replaceAll("^\"|\"$", "");
@@ -23,6 +25,14 @@ public record Value(String value) {
             return false;
         }
         return value.matches("\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?");
+    }
+
+    public boolean isTrue() {
+        return this.equals(TRUE);
+    }
+
+    public boolean isOne() {
+        return this.equals(ONE);
     }
 
     public Value add(final Value augend,
@@ -149,6 +159,14 @@ public record Value(String value) {
                 .setScale(numericalContext.scale(), numericalContext.roundingMode())
                 .compareTo(new BigDecimal(valueToCheck.value())
                         .setScale(numericalContext.scale(), numericalContext.roundingMode())) <= 0 ? Value.TRUE : Value.FALSE;
+    }
+
+    public Value or(final Value valueToCheck) {
+        return (isTrue() || isOne()) || (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
+    }
+
+    public Value and(final Value valueToCheck) {
+        return (isTrue() || isOne())  && (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
     }
 
 }

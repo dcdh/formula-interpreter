@@ -4,7 +4,6 @@ import com.damdamdeo.formula.result.*;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.UnknownReferenceException;
-import org.antlr.v4.runtime.Token;
 
 import java.util.Objects;
 
@@ -26,7 +25,10 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
         return super.visitExpr(ctx);
     }
 
-    private Result compute(final Token token, final Result left, final Result right) {
+    @Override
+    public Result visitArithmeticFunctionsOperatorLeftOpRight(final FormulaParser.ArithmeticFunctionsOperatorLeftOpRightContext ctx) {
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -36,7 +38,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final Operator operator;
-            switch(token.getType()) {
+            switch (ctx.operator.getType()) {
                 case FormulaParser.ADD:
                     operator = Operator.ADD;
                     break;
@@ -55,19 +57,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             final Value value = operator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
         }
-        return result;
-    }
-
-    @Override
-    public Result visitArithmeticFunctionsOperatorLeftOpRight(final FormulaParser.ArithmeticFunctionsOperatorLeftOpRightContext ctx) {
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = compute(ctx.operator, left, right);
         this.result = result;
         return result;
     }
 
-    private Result numericalCompare(final Token token, final Result left, final Result right) {
+    @Override
+    public Result visitComparisonFunctionsNumerical(final FormulaParser.ComparisonFunctionsNumericalContext ctx) {
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
         final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
@@ -77,7 +74,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             result = new ErrorResult();
         } else {
             final NumericalComparator numericalComparator;
-            switch (token.getType()) {
+            switch (ctx.numericalComparator.getType()) {
                 case FormulaParser.GT:
                     numericalComparator = NumericalComparator.GT;
                     break;
@@ -96,17 +93,22 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             final Value value = numericalComparator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
         }
+        this.result = result;
         return result;
     }
 
-    private Result equalityCompare(final Token token, final Result left, final Result right) {
+    @Override
+    public Result visitComparisonFunctionsEquality(final FormulaParser.ComparisonFunctionsEqualityContext ctx) {
+        final Result left = this.visit(ctx.left);
+        final Result right = this.visit(ctx.right);
+        final Result result;
         if (left.isUnknown() || right.isUnknown()) {
             result = new UnknownReferenceResult();
         } else if (left.isError() || right.isError()) {
             result = new ErrorResult();
         } else {
             final EqualityComparator equalityComparator;
-            switch (token.getType()) {
+            switch (ctx.equalityComparator.getType()) {
                 case FormulaParser.EQ:
                     equalityComparator = EqualityComparator.EQ;
                     break;
@@ -119,26 +121,36 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
             final Value value = equalityComparator.execute(left.value(), right.value(), numericalContext);
             result = new ValueResult(value);
         }
-        return result;
-    }
-
-    @Override
-    public Result visitComparisonFunctionsNumerical(final FormulaParser.ComparisonFunctionsNumericalContext ctx) {
-        final Result left = this.visit(ctx.left);
-        final Result right = this.visit(ctx.right);
-        final Result result = numericalCompare(ctx.numericalComparator, left, right);
         this.result = result;
         return result;
     }
 
     @Override
-    public Result visitComparisonFunctionsEquality(final FormulaParser.ComparisonFunctionsEqualityContext ctx) {
+    public Result visitLogicalOperatorFunction(final FormulaParser.LogicalOperatorFunctionContext ctx) {
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
-        final Result result = equalityCompare(ctx.equalityComparator, left, right);
+        final Result result;
+        if (left.isUnknown() || right.isUnknown()) {
+            result = new UnknownReferenceResult();
+        } else if (left.isError() || right.isError()) {
+            result = new ErrorResult();
+        } else {
+            final LogicalOperator logicalOperator;
+            switch (ctx.logicalOperator.getType()) {
+                case FormulaParser.AND:
+                    logicalOperator = LogicalOperator.AND;
+                    break;
+                case FormulaParser.OR:
+                    logicalOperator = LogicalOperator.OR;
+                    break;
+                default:
+                    throw new IllegalStateException("Should not be here");
+            }
+            final Value value = logicalOperator.execute(left.value(), right.value());
+            result = new ValueResult(value);
+        }
         this.result = result;
         return result;
-
     }
 
     @Override

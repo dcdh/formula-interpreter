@@ -4,6 +4,7 @@ program: expr EOF ;
 
 expr: arithmetic_functions
     | comparison_functions
+    | logical_functions
     | argument
     ;
 
@@ -27,6 +28,13 @@ comparend: argument
          | arithmetic_functions
          ;
 
+logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=logical_operand')' #logicalOperatorFunction
+                 ;
+
+logical_operand: argument
+               | comparison_functions
+               ;
+
 ADD: 'ADD' ;
 SUB: 'SUB' ;
 DIV: 'DIV' ;
@@ -37,6 +45,8 @@ EQ: 'EQ' ;
 NEQ: 'NEQ' ;
 LT: 'LT' ;
 LTE: 'LTE' ;
+AND: 'AND' ;
+OR: 'OR';
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()% ]+']]' ;
 VALUE : '"'[a-zA-Z0-9 ()%\\+.-]+'"' ;
 NUMERIC : '-'?[0-9]+'.'?[0-9]*('E'[0-9]+|'E+'[0-9]+|'E-'[0-9]+)? ;
