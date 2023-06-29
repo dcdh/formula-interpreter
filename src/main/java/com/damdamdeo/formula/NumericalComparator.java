@@ -1,6 +1,6 @@
 package com.damdamdeo.formula;
 
-public enum Comparator {
+public enum NumericalComparator {
 
     GT {
         @Override
@@ -12,12 +12,6 @@ public enum Comparator {
         @Override
         public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
             return left.greaterThanOrEqualTo(right, numericalContext);
-        }
-    },
-    EQ {
-        @Override
-        public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
-            return left.equalTo(right, numericalContext);
         }
     },
     LT {

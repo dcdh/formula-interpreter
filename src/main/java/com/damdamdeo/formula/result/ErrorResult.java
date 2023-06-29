@@ -28,4 +28,11 @@ public final class ErrorResult implements Result {
     public int hashCode() {
         return Objects.hash(value);
     }
+
+    @Override
+    public String toString() {
+        return "ErrorResult{" +
+                "value=" + value +
+                '}';
+    }
 }

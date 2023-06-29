@@ -10,7 +10,8 @@ public record Value(String value) {
     public static Value FALSE = new Value("false");
 
     public Value(String value) {
-        this.value = Objects.requireNonNull(value);
+        this.value = Objects.requireNonNull(value)
+                .replaceAll("^\"|\"$", "");
     }
 
     public Value(BigDecimal value) {
@@ -96,13 +97,36 @@ public record Value(String value) {
 
     public Value equalTo(final Value valueToCheck,
                          final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToCheck.isNumeric()) {
-            throw new IllegalStateException("Should not be here");
+        if (!isNumeric() && valueToCheck.isNumeric()) {
+            return Value.FALSE;
         }
-        return new BigDecimal(value)
-                .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                .compareTo(new BigDecimal(valueToCheck.value())
-                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) == 0 ? Value.TRUE : Value.FALSE;
+        if (isNumeric() && !valueToCheck.isNumeric()) {
+            return Value.FALSE;
+        }
+        if (isNumeric() && isNumeric()) {
+            return new BigDecimal(value)
+                    .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                    .compareTo(new BigDecimal(valueToCheck.value())
+                            .setScale(numericalContext.scale(), numericalContext.roundingMode())) == 0 ? Value.TRUE : Value.FALSE;
+        }
+        return value.equals(valueToCheck.value()) ? Value.TRUE : Value.FALSE;
+    }
+
+    public Value notEqualTo(final Value valueToCheck,
+                            final NumericalContext numericalContext) {
+        if (!isNumeric() && valueToCheck.isNumeric()) {
+            return Value.TRUE;
+        }
+        if (isNumeric() && !valueToCheck.isNumeric()) {
+            return Value.TRUE;
+        }
+        if (isNumeric() && isNumeric()) {
+            return new BigDecimal(value)
+                    .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                    .compareTo(new BigDecimal(valueToCheck.value())
+                            .setScale(numericalContext.scale(), numericalContext.roundingMode())) != 0 ? Value.TRUE : Value.FALSE;
+        }
+        return value.equals(valueToCheck.value()) ? Value.FALSE : Value.TRUE;
     }
 
     public Value lessThan(final Value valueToCheck,
