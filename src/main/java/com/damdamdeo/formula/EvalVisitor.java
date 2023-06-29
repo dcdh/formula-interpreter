@@ -59,7 +59,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitFunctionsOperatorLeftOpRight(final FormulaParser.FunctionsOperatorLeftOpRightContext ctx) {
+    public Result visitArithmeticFunctionsOperatorLeftOpRight(final FormulaParser.ArithmeticFunctionsOperatorLeftOpRightContext ctx) {
         final Result left = this.visit(ctx.left);
         final Result right = this.visit(ctx.right);
         final Result result = compute(ctx.operator, left, right);

@@ -8,6 +8,7 @@ import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OperationsExpressionTest extends AbstractExpressionTest {
+public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @CsvSource({
             "ADD,920",
@@ -115,6 +116,21 @@ public class OperationsExpressionTest extends AbstractExpressionTest {
         assertThat(executionResult).isEqualTo(
                 new ExecutionResult(
                         new ValueResult(expectedValue)));
+    }
+
+    @Test
+    public void shouldCompoundArithmeticFunctions() throws SyntaxErrorException {
+        // Given
+        final String givenFormula = "DIV(ADD(2,MUL(2,4)),2)";
+        final StructuredData givenStructuredData = new StructuredData(List.of());
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult).isEqualTo(
+                new ExecutionResult(
+                        new ValueResult("5")));
     }
 
     @ParameterizedTest

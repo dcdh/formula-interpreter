@@ -2,7 +2,7 @@ grammar Formula;
 
 program: expr EOF ;
 
-expr: functions
+expr: arithmetic_functions
     | comparisons
     | argument
     ;
@@ -12,10 +12,11 @@ argument: STRUCTURED_REFERENCE  #argumentStructuredReference
         | NUMERIC #argumentNumeric
         ;
 
-functions: operator=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')' #functionsOperatorLeftOpRight
-         ;
+arithmetic_functions: operator=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')' #arithmeticFunctionsOperatorLeftOpRight
+                    ;
 
 operand: argument
+       | arithmetic_functions
        ;
 
 comparisons: left=comparend comparator=(GT | GTE | EQ | LT | LTE) right=comparend #comparatorsLeftCoRight
