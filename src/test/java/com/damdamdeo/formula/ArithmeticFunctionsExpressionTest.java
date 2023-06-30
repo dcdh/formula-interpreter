@@ -1,9 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.result.ErrorResult;
-import com.damdamdeo.formula.result.ExecutionResult;
-import com.damdamdeo.formula.result.UnknownReferenceResult;
-import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
@@ -36,9 +32,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedValue)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedValue));
     }
 
     @ParameterizedTest
@@ -57,9 +52,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedValue)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedValue));
     }
 
     @ParameterizedTest
@@ -78,9 +72,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedValue)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedValue));
     }
 
     @ParameterizedTest
@@ -95,9 +88,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedValue)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedValue));
     }
 
     private static Stream<Arguments> provideOperationsWithExpectedValues() {
@@ -119,9 +111,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult("5")));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("5"));
     }
 
     @ParameterizedTest
@@ -139,9 +130,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new UnknownReferenceResult()));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#REF!"));
     }
 
     @ParameterizedTest
@@ -160,9 +150,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ErrorResult()));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#VALUE!"));
     }
 
     private static Stream<Arguments> provideOperations() {

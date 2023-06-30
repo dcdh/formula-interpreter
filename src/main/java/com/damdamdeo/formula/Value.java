@@ -4,12 +4,37 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
 
-public record Value(String value) {
+public record Value(String value) implements Result {
 
-    public static Value TRUE = new Value("true");
-    public static Value FALSE = new Value("false");
+    private static Value TRUE = new Value("true");
+    private static Value FALSE = new Value("false");
+    private static Value ONE = new Value("1");
+    private static Value UNKNOWN = new Value("#REF!");
+    private static Value ERROR = new Value("#VALUE!");
 
-    public static Value ONE = new Value("1");
+    public static Value of() {
+        return new Value("");
+    }
+
+    public static Value ofUnknown() {
+        return UNKNOWN;
+    }
+
+    public static Value ofError() {
+        return ERROR;
+    }
+
+    public static Value ofTrue() {
+        return Value.TRUE;
+    }
+
+    public static Value ofFalse() {
+        return Value.FALSE;
+    }
+
+    public static Value of(final String value) {
+        return new Value(value);
+    }
 
     public Value(String value) {
         this.value = Objects.requireNonNull(value)
@@ -20,6 +45,14 @@ public record Value(String value) {
         this(value.stripTrailingZeros().toPlainString());
     }
 
+    public boolean isUnknown() {
+        return UNKNOWN.equals(this);
+    }
+
+    public boolean isError() {
+        return ERROR.equals(this);
+    }
+
     public boolean isNumeric() {
         if (value.startsWith("#")) {
             return false;
@@ -28,11 +61,11 @@ public record Value(String value) {
     }
 
     public boolean isTrue() {
-        return this.equals(TRUE);
+        return TRUE.equals(this);
     }
 
     public boolean isOne() {
-        return this.equals(ONE);
+        return ONE.equals(this);
     }
 
     public Value add(final Value augend,
@@ -166,7 +199,7 @@ public record Value(String value) {
     }
 
     public Value and(final Value valueToCheck) {
-        return (isTrue() || isOne())  && (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
+        return (isTrue() || isOne()) && (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
     }
 
 }

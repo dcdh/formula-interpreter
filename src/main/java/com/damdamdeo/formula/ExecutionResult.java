@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.result;
+package com.damdamdeo.formula;
 
 public record ExecutionResult(Result result) {
 }

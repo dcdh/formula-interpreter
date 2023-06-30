@@ -1,7 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.result.ExecutionResult;
-import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,9 +24,8 @@ public class ValueExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), new StructuredData());
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedResult)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedResult));
     }
 
 }

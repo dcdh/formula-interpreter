@@ -1,8 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.result.ExecutionResult;
-import com.damdamdeo.formula.result.UnknownReferenceResult;
-import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
@@ -27,8 +24,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(new ValueResult("10%")));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("10%"));
     }
 
     @Test
@@ -41,8 +38,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(new UnknownReferenceResult()));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#REF!"));
     }
 
 }

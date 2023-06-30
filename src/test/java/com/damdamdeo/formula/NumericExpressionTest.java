@@ -1,7 +1,5 @@
 package com.damdamdeo.formula;
 
-import com.damdamdeo.formula.result.ExecutionResult;
-import com.damdamdeo.formula.result.ValueResult;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,7 +35,7 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), new StructuredData());
 
         // Then
-        assertThat(executionResult.result().isNumeric()).isTrue();
+        assertThat(((Value) executionResult.result()).isNumeric()).isTrue();
     }
 
     // TODO faire les tests par operations ...
@@ -59,8 +57,7 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult).isEqualTo(
-                new ExecutionResult(
-                        new ValueResult(expectedValue)));
+        assertThat(executionResult.result()).isEqualTo(
+                new Value(expectedValue));
     }
 }
