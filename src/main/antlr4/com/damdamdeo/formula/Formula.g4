@@ -11,6 +11,8 @@ expr: arithmetic_functions
 argument: STRUCTURED_REFERENCE  #argumentStructuredReference
         | VALUE #argumentValue
         | NUMERIC #argumentNumeric
+        | TRUE #argumentBooleanTrue
+        | FALSE #argumentBooleanFalse
         ;
 
 arithmetic_functions: operator=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')' #arithmeticFunctionsOperatorLeftOpRight
@@ -59,6 +61,8 @@ LTE: 'LTE' ;
 AND: 'AND' ;
 OR: 'OR';
 IF: 'IF' ;
+TRUE: 'true'|'1';
+FALSE: 'false'|'0';
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()% ]+']]' ;
 VALUE : '"'~["]+'"' ;
 NUMERIC : '-'?[0-9]+'.'?[0-9]*('E'[0-9]+|'E+'[0-9]+|'E-'[0-9]+)? ;

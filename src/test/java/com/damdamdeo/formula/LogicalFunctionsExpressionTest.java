@@ -117,6 +117,10 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("\"true\"", "AND", "\"true\"", "true"),
                     Arguments.of("0", "AND", "\"true\"", "false"),
                     Arguments.of("\"true\"", "AND", "\"boom\"", "false"),
+                    Arguments.of("true", "AND", "1", "true"),
+                    Arguments.of("true", "AND", "true", "true"),
+                    Arguments.of("0", "AND", "true", "false"),
+                    Arguments.of("true", "AND", "\"boom\"", "false"),
                     Arguments.of("0", "OR", "0", "false"),
                     Arguments.of("0", "OR", "1", "true"),
                     Arguments.of("1", "OR", "0", "true"),
@@ -125,7 +129,12 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("\"true\"", "OR", "1", "true"),
                     Arguments.of("\"true\"", "OR", "\"true\"", "true"),
                     Arguments.of("0", "OR", "\"true\"", "true"),
-                    Arguments.of("\"true\"", "OR", "\"boom\"", "true"));
+                    Arguments.of("\"true\"", "OR", "\"boom\"", "true"),
+                    Arguments.of("true", "OR", "1", "true"),
+                    Arguments.of("true", "OR", "true", "true"),
+                    Arguments.of("0", "OR", "true", "true"),
+                    Arguments.of("true", "OR", "\"boom\"", "true")
+            );
         }
 
         @ParameterizedTest
@@ -214,7 +223,11 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("""
                             OR(EQ("true","true"),EQ("true","true"))"""),
                     Arguments.of("""
-                            AND(EQ("true","true"),EQ("true","true"))"""));
+                            AND(EQ("true","true"),EQ("true","true"))"""),
+                    Arguments.of("""
+                            OR(EQ(true,true),EQ(true,true))"""),
+                    Arguments.of("""
+                            AND(EQ(true,true),EQ(true,true))"""));
         }
     }
 
@@ -250,7 +263,19 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("""
                             IF("true",ADD(1,1),ADD(2,2))""", "2"),
                     Arguments.of("""
-                            IF(EQ(1,1),ADD(1,1),ADD(2,2))""", "2")
+                            IF(EQ(1,1),ADD(1,1),ADD(2,2))""", "2"),
+                    Arguments.of("""
+                            IF(true,true,false)""", "true"),
+                    Arguments.of("""
+                            IF(false,true,false)""", "false"),
+                    Arguments.of("""
+                            IF(1,true,false)""", "true"),
+                    Arguments.of("""
+                            IF(0,true,false)""", "false"),
+                    Arguments.of("""
+                            IF(false,ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IF(true,ADD(1,1),ADD(2,2))""", "2")
             );
         }
 

@@ -38,8 +38,6 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         assertThat(((Value) executionResult.result()).isNumeric()).isTrue();
     }
 
-    // TODO faire les tests par operations ...
-
     @ParameterizedTest
     @CsvSource({
             "ADD,123000000",

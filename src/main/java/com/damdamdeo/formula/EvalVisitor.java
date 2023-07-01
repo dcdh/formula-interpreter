@@ -214,4 +214,16 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return Value.of(ctx.NUMERIC().getText());
     }
+
+    @Override
+    public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+        // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
+        return Value.of(ctx.getText());
+    }
+
+    @Override
+    public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+        // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
+        return Value.of(ctx.getText());
+    }
 }
