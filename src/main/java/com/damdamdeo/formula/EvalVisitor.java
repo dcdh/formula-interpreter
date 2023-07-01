@@ -210,7 +210,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitIsTextFunction(FormulaParser.IsTextFunctionContext ctx) {
+    public Value visitIsTextFunction(final FormulaParser.IsTextFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
         final Value result;
         if (value.isNotAvailable()) {
@@ -223,6 +223,24 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             result = Value.ofDividedByZero();
         } else {
             result = value.isText() ? Value.ofTrue() : Value.ofFalse();
+        }
+        return result;
+    }
+
+    @Override
+    public Value visitIsBlankFunction(final FormulaParser.IsBlankFunctionContext ctx) {
+        final Value value = this.visit(ctx.value);
+        final Value result;
+        if (value.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (value.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (value.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (value.isDivByZero()) {
+            result = Value.ofDividedByZero();
+        } else {
+            result = value.isBlank() ? Value.ofTrue() : Value.ofFalse();
         }
         return result;
     }

@@ -393,7 +393,6 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
     }
 
-
     @Nested
     public class LogicalIsText {
 
@@ -470,4 +469,84 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
     }
+
+    @Nested
+    public class LogicalIsBlank {
+
+        @ParameterizedTest
+        @MethodSource("provideValues")
+        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final String givenFormula = String.format("""
+                    ISBLANK("%s")
+                    """, givenValue);
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideValues")
+        public void shouldComputeUsingOnStructuredReference(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISBLANK([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(List.of(
+                    new StructuredDatum(new Reference("% Commission"), givenValue)
+            ));
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        private static Stream<Arguments> provideValues() {
+            return Stream.of(
+                    Arguments.of("azerty", "false"),
+                    Arguments.of("", "true"),
+                    Arguments.of("123456789", "false"));
+        }
+
+        @Test
+        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISBLANK([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#REF!"));
+        }
+
+        @Test
+        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISBLANK([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(
+                    List.of(
+                            new StructuredDatum(new Reference("% Commission"), null)
+                    )
+            );
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#NA!"));
+        }
+
+    }
+
+
 }
