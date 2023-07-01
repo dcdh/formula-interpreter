@@ -374,6 +374,63 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @Nested
+    class LogicalIfNa {
+
+        @ParameterizedTest
+        @MethodSource("provideComparisons")
+        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenIfFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        private static Stream<Arguments> provideComparisons() {
+            return Stream.of(
+                    Arguments.of("""
+                            IFNA("true","true","false")""", "false"),
+                    Arguments.of("""
+                            IFNA("false","true","false")""", "false"),
+                    Arguments.of("""
+                            IFNA("1","true","false")""", "false"),
+                    Arguments.of("""
+                            IFNA("0","true","false")""", "false"),
+                    Arguments.of("""
+                            IFNA("false",ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFNA("true",ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFNA(EQ(1,1),ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFNA(true,true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA(false,true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA(1,true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA(0,true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA(false,ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFNA(true,ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFNA("#NA!",true,false)""", "true"),
+                    Arguments.of("""
+                            IFNA("#REF!",true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA("#NUM!",true,false)""", "false"),
+                    Arguments.of("""
+                            IFNA("#DIV/0!",true,false)""", "false")
+            );
+        }
+    }
+
+    @Nested
     public class IsFunction {
 
         @ParameterizedTest

@@ -204,6 +204,18 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitIfNaFunction(final FormulaParser.IfNaFunctionContext ctx) {
+        final Value comparisonValue = this.visit(ctx.comparison);
+        final Value result;
+        if (comparisonValue.isNotAvailable()) {
+            result = this.visit(ctx.whenTrue);
+        } else {
+            result = this.visit(ctx.whenFalse);
+        }
+        return result;
+    }
+
+    @Override
     public Value visitIsFunction(final FormulaParser.IsFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
         final Value result;

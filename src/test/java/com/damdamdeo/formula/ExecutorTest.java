@@ -22,7 +22,7 @@ public class ExecutorTest {
         assertThatThrownBy(() -> executor.execute(new Formula("\""), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
-                        new SyntaxError(1, 1, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', 'GT', 'GTE', 'EQ', 'NEQ', 'LT', 'LTE', 'AND', 'OR', 'IF', 'IFERROR', 'ISNUM', 'ISLOGICAL', 'ISTEXT', 'ISBLANK', 'ISNA', 'ISERROR', TRUE, FALSE, STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
+                        new SyntaxError(1, 1, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', 'GT', 'GTE', 'EQ', 'NEQ', 'LT', 'LTE', 'AND', 'OR', 'IF', 'IFERROR', 'ISNUM', 'ISLOGICAL', 'ISTEXT', 'ISBLANK', 'ISNA', 'ISERROR', 'IFNA', TRUE, FALSE, STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
     }
 
     @Test
