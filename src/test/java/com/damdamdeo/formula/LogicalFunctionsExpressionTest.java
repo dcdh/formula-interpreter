@@ -162,7 +162,9 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
     private static Stream<Arguments> provideLogicalFunctionsUsingComparisonsFunction() {
         return Stream.of(
-                Arguments.of("OR(EQ(\"true\",\"true\"),EQ(\"true\",\"true\"))"),
-                Arguments.of("AND(EQ(\"true\",\"true\"),EQ(\"true\",\"true\"))"));
+                Arguments.of("""
+                        OR(EQ("true","true"),EQ("true","true"))"""),
+                Arguments.of("""
+                        AND(EQ("true","true"),EQ("true","true"))"""));
     }
 }
