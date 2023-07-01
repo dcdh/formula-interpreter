@@ -317,6 +317,63 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @Nested
+    class LogicalIfError {
+
+        @ParameterizedTest
+        @MethodSource("provideComparisons")
+        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenIfFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        private static Stream<Arguments> provideComparisons() {
+            return Stream.of(
+                    Arguments.of("""
+                            IFERROR("true","true","false")""", "false"),
+                    Arguments.of("""
+                            IFERROR("false","true","false")""", "false"),
+                    Arguments.of("""
+                            IFERROR("1","true","false")""", "false"),
+                    Arguments.of("""
+                            IFERROR("0","true","false")""", "false"),
+                    Arguments.of("""
+                            IFERROR("false",ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFERROR("true",ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFERROR(EQ(1,1),ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFERROR(true,true,false)""", "false"),
+                    Arguments.of("""
+                            IFERROR(false,true,false)""", "false"),
+                    Arguments.of("""
+                            IFERROR(1,true,false)""", "false"),
+                    Arguments.of("""
+                            IFERROR(0,true,false)""", "false"),
+                    Arguments.of("""
+                            IFERROR(false,ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFERROR(true,ADD(1,1),ADD(2,2))""", "4"),
+                    Arguments.of("""
+                            IFERROR("#NA!",true,false)""", "true"),
+                    Arguments.of("""
+                            IFERROR("#REF!",true,false)""", "true"),
+                    Arguments.of("""
+                            IFERROR("#NUM!",true,false)""", "true"),
+                    Arguments.of("""
+                            IFERROR("#DIV/0!",true,false)""", "true")
+            );
+        }
+    }
+
+    @Nested
     public class IsFunction {
 
         @ParameterizedTest

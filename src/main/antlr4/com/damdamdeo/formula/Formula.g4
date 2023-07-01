@@ -32,6 +32,7 @@ comparend: argument
 
 logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=logical_operand')' #logicalOperatorFunction
                  | IF'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
+                 | IFERROR'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifErrorFunction
                  | isOperator=(ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
                  | ISNA'('value=argument')' #isNaFunction
                  | ISERROR'('value=argument')' #isErrorFunction
@@ -64,6 +65,7 @@ LTE: 'LTE' ;
 AND: 'AND' ;
 OR: 'OR';
 IF: 'IF' ;
+IFERROR: 'IFERROR' ;
 ISNUM: 'ISNUM' ;
 ISLOGICAL: 'ISLOGICAL' ;
 ISTEXT: 'ISTEXT' ;
