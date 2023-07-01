@@ -33,6 +33,7 @@ comparend: argument
 logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=logical_operand')' #logicalOperatorFunction
                  | IF'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
                  | isOperator=(ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
+                 | ISNA'('value=argument')' #isNaFunction
                  ;
 
 logical_operand: argument
@@ -66,6 +67,7 @@ ISNUM: 'ISNUM' ;
 ISLOGICAL: 'ISLOGICAL' ;
 ISTEXT: 'ISTEXT' ;
 ISBLANK: 'ISBLANK' ;
+ISNA : 'ISNA' ;
 TRUE: 'true'|'1';
 FALSE: 'false'|'0';
 STRUCTURED_REFERENCE : '[@['.*?']]' ;

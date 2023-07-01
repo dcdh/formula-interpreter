@@ -225,6 +225,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
+        final Value value = this.visit(ctx.value);
+        final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
+        return result;
+    }
+
+    @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         Value result;
         try {
