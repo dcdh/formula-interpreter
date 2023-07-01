@@ -136,11 +136,15 @@ public record Value(String value) implements Result {
         if (!isNumeric() || !divisor.isNumeric() || divisor.isZero()) {
             throw new IllegalStateException("Should not be here");
         }
-        return new Value(
-                new BigDecimal(value)
-                        .divide(new BigDecimal(divisor.value()), numericalContext.scale(), numericalContext.roundingMode())
-                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
-        );
+        try {
+            return new Value(
+                    new BigDecimal(value)
+                            .divide(new BigDecimal(divisor.value()), numericalContext.scale(), numericalContext.roundingMode())
+                            .setScale(numericalContext.scale(), numericalContext.roundingMode())
+            );
+        } catch (final ArithmeticException arithmeticException) {
+            return NOT_A_NUMERICAL_VALUE;
+        }
     }
 
     public Value multiply(final Value multiplicand,
