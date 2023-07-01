@@ -35,6 +35,7 @@ logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=log
                  | ISNUM'('value=argument')' #isNumericFunction
                  | ISTEXT'('value=argument')' #isTextFunction
                  | ISBLANK'('value=argument')' #isBlankFunction
+                 | ISLOGICAL'('value=argument')' #isLogicalFunction
                  ;
 
 logical_operand: argument
@@ -65,6 +66,7 @@ AND: 'AND' ;
 OR: 'OR';
 IF: 'IF' ;
 ISNUM: 'ISNUM' ;
+ISLOGICAL: 'ISLOGICAL' ;
 ISTEXT: 'ISTEXT' ;
 ISBLANK: 'ISBLANK' ;
 TRUE: 'true'|'1';

@@ -103,6 +103,10 @@ public record Value(String value) implements Result {
         return "".equals(this.value);
     }
 
+    public boolean isLogical() {
+        return isTrue() || isFalse();
+    }
+
     public Value add(final Value augend,
                      final NumericalContext numericalContext) {
         if (!isNumeric() || !augend.isNumeric()) {
