@@ -14,14 +14,14 @@ public class Validator {
         final SyntaxErrorListener syntaxErrorListener = new SyntaxErrorListener();
         lexer.addErrorListener(syntaxErrorListener);
         if (syntaxErrorListener.hasSyntaxError()) {
-            throw new SyntaxErrorException(syntaxErrorListener.syntaxError());
+            throw new SyntaxErrorException(formula, syntaxErrorListener.syntaxError());
         }
         final FormulaParser parser = new FormulaParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrorListener);
         ParseTree tree = parser.program();
         if (syntaxErrorListener.hasSyntaxError()) {
-            throw new SyntaxErrorException(syntaxErrorListener.syntaxError());
+            throw new SyntaxErrorException(formula, syntaxErrorListener.syntaxError());
         }
         return tree;
     }

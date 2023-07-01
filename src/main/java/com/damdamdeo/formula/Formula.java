@@ -8,4 +8,10 @@ public record Formula(String formula) {
         this.formula = Objects.requireNonNull(formula);
     }
 
+    @Override
+    public String toString() {
+        return "Formula{" +
+                "formula='" + formula + '\'' +
+                '}';
+    }
 }

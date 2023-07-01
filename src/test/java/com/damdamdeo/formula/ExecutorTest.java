@@ -19,10 +19,10 @@ public class ExecutorTest {
 
     @Test
     public void shouldFailOnUnrecognizedToken() {
-        assertThatThrownBy(() -> executor.execute(new Formula("\"\""), new StructuredData()))
+        assertThatThrownBy(() -> executor.execute(new Formula("\""), new StructuredData()))
                 .isInstanceOf(SyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
-                        new SyntaxError(1, 2, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', 'GT', 'GTE', 'EQ', 'NEQ', 'LT', 'LTE', 'AND', 'OR', 'IF', TRUE, FALSE, STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
+                        new SyntaxError(1, 1, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', 'GT', 'GTE', 'EQ', 'NEQ', 'LT', 'LTE', 'AND', 'OR', 'IF', TRUE, FALSE, STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
     }
 
     @Test
