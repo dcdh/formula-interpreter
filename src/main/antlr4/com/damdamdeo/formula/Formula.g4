@@ -60,6 +60,6 @@ AND: 'AND' ;
 OR: 'OR';
 IF: 'IF' ;
 STRUCTURED_REFERENCE : '[@['[a-zA-Z0-9()% ]+']]' ;
-VALUE : '"'[a-zA-Z0-9 ()%#!\\+.-]+'"' ;
+VALUE : '"'~["]+'"' ;
 NUMERIC : '-'?[0-9]+'.'?[0-9]*('E'[0-9]+|'E+'[0-9]+|'E-'[0-9]+)? ;
 WS  : [ \t\r\n] -> skip ;
