@@ -12,6 +12,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -229,6 +231,26 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("""
                             AND(EQ(true,true),EQ(true,true))"""));
         }
+
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "AND(0,0)";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 4, 4, Map.of(), Value.of("0")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 6, 6, Map.of(), Value.of("0")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 7, Map.of(
+                            new InputName("left"), Value.of("0"),
+                            new InputName("right"), Value.of("0")
+                    ), Value.of("false"))
+            );
+        }
     }
 
     @Nested
@@ -314,6 +336,25 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             assertThat(executionResult.result()).isEqualTo(
                     new Value("#NA!"));
         }
+
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "IF(\"true\",\"true\",\"false\")";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 3, 8, Map.of(), Value.of("true")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 10, 15, Map.of(), Value.of("true")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 24, Map.of(
+                            new InputName("comparisonValue"), Value.of("true")
+                    ), Value.of("true"))
+            );
+        }
     }
 
     @Nested
@@ -371,6 +412,25 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                             IFERROR("#DIV/0!",true,false)""", "true")
             );
         }
+
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "IFERROR(\"true\",\"true\",\"false\")";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 8, 13, Map.of(), Value.of("true")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 22, 28, Map.of(), Value.of("false")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 29, Map.of(
+                            new InputName("comparisonValue"), Value.of("true")
+                    ), Value.of("false"))
+            );
+        }
     }
 
     @Nested
@@ -426,6 +486,25 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                             IFNA("#NUM!",true,false)""", "false"),
                     Arguments.of("""
                             IFNA("#DIV/0!",true,false)""", "false")
+            );
+        }
+
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "IFNA(\"#REF!\",\"true\",\"false\")";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 5, 11, Map.of(), Value.of("#REF!")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 20, 26, Map.of(), Value.of("false")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 27, Map.of(
+                            new InputName("comparisonValue"), Value.of("#REF!")
+                    ), Value.of("false"))
             );
         }
     }
@@ -529,6 +608,23 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             );
         }
 
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISNUM(\"123456\")";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 6, 13, Map.of(), Value.of("123456")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 14, Map.of(
+                            new InputName("value"), Value.of("123456")
+                    ), Value.of("true"))
+            );
+        }
     }
 
     @Nested
@@ -591,6 +687,23 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     new Value("true"));
         }
 
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISNA(123456)";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 5, 10, Map.of(), Value.of("123456")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 11, Map.of(
+                            new InputName("value"), Value.of("123456")
+                    ), Value.of("false"))
+            );
+        }
     }
 
     @Nested
@@ -624,5 +737,22 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             );
         }
 
+        @Test
+        public void shouldLogExecution() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISERROR(123456)";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.executions()).containsExactly(
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 8, 13, Map.of(), Value.of("123456")),
+                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 14, Map.of(
+                            new InputName("value"), Value.of("123456")
+                    ), Value.of("false"))
+            );
+        }
     }
 }

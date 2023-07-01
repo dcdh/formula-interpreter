@@ -8,13 +8,19 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import java.util.Objects;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
+    private final ExecutionId executionId;
+    private final ExecutionLogger executionLogger;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
 
     private Value currentResult = Value.ofNotAvailable();
 
-    public EvalVisitor(final StructuredData structuredData,
+    public EvalVisitor(final ExecutionId executionId,
+                       final ExecutionLogger executionLogger,
+                       final StructuredData structuredData,
                        final NumericalContext numericalContext) {
+        this.executionId = Objects.requireNonNull(executionId);
+        this.executionLogger = Objects.requireNonNull(executionLogger);
         this.structuredData = Objects.requireNonNull(structuredData);
         this.numericalContext = Objects.requireNonNull(numericalContext);
     }
@@ -68,6 +74,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = operator.execute(left, right, numericalContext);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("left"), left)
+                .appendInput(new InputName("right"), right)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -106,6 +119,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = numericalComparator.execute(left, right, numericalContext);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("left"), left)
+                .appendInput(new InputName("right"), right)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -136,6 +156,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = equalityComparator.execute(left, right, numericalContext);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("left"), left)
+                .appendInput(new InputName("right"), right)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -166,28 +193,41 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = logicalOperator.execute(left, right);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("left"), left)
+                .appendInput(new InputName("right"), right)
+                .result(result)
+                .build());
         return result;
     }
 
     @Override
     public Value visitIfFunction(final FormulaParser.IfFunctionContext ctx) {
-        final Value comparaisonValue = this.visit(ctx.comparison);
+        final Value comparisonValue = this.visit(ctx.comparison);
         final Value result;
-        if (comparaisonValue.isNotAvailable()) {
+        if (comparisonValue.isNotAvailable()) {
             result = Value.ofNotAvailable();
-        } else if (comparaisonValue.isUnknownRef()) {
+        } else if (comparisonValue.isUnknownRef()) {
             result = Value.ofUnknownRef();
-        } else if (comparaisonValue.isNotANumericalValue()) {
+        } else if (comparisonValue.isNotANumericalValue()) {
             result = Value.ofNumericalValueExpected();
-        } else if (comparaisonValue.isDivByZero()) {
+        } else if (comparisonValue.isDivByZero()) {
             result = Value.ofDividedByZero();
-        } else if (comparaisonValue.isTrue()) {
+        } else if (comparisonValue.isTrue()) {
             result = this.visit(ctx.whenTrue);
-        } else if (comparaisonValue.isFalse()) {
+        } else if (comparisonValue.isFalse()) {
             result = this.visit(ctx.whenFalse);
         } else {
             throw new IllegalStateException("Should not be here");
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -200,6 +240,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             result = this.visit(ctx.whenFalse);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -212,6 +258,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             result = this.visit(ctx.whenFalse);
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .result(result)
+                .build());
         return result;
     }
 
@@ -245,54 +297,104 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                     throw new IllegalStateException("Should not be here");
             }
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("value"), value)
+                .result(result)
+                .build());
         return result;
     }
 
     @Override
     public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
-        return value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
+        final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("value"), value)
+                .result(result)
+                .build());
+        return result;
     }
 
     @Override
     public Value visitIsErrorFunction(final FormulaParser.IsErrorFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
-        return value.isError() ? Value.ofTrue() : Value.ofFalse();
+        final Value result = value.isError() ? Value.ofTrue() : Value.ofFalse();
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("value"), value)
+                .result(result)
+                .build());
+        return result;
     }
 
     @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         Value result;
+        final String reference = ctx.STRUCTURED_REFERENCE().getText()
+                .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
+                .substring(3);
         try {
-            final String reference = ctx.STRUCTURED_REFERENCE().getText()
-                    .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
-                    .substring(3);
             result = this.structuredData.getValueByReference(new Reference(reference));
         } catch (final UnknownReferenceException unknownReferenceException) {
             result = Value.ofUnknownRef();
         }
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .appendInput(new InputName("structuredReference"), new Reference(reference))
+                .result(result)
+                .build());
         return result;
     }
 
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        return Value.of(ctx.VALUE().getText());
+        final Value result = Value.of(ctx.VALUE().getText());
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .result(result)
+                .build());
+        return result;
     }
 
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return Value.of(ctx.NUMERIC().getText());
+        final Value result = Value.of(ctx.NUMERIC().getText());
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .result(result)
+                .build());
+        return result;
     }
 
     @Override
     public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return Value.of(ctx.getText());
+        final Value result = Value.of(ctx.getText());
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .result(result)
+                .build());
+        return result;
     }
 
     @Override
     public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return Value.of(ctx.getText());
+        final Value result = Value.of(ctx.getText());
+        executionLogger.log(AntlrExecution.Builder.newBuilder()
+                .executionId(executionId)
+                .using(ctx)
+                .result(result)
+                .build());
+        return result;
     }
 }

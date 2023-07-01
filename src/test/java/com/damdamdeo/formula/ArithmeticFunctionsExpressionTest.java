@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -217,4 +219,23 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
                 new Value("#DIV/0!"));
     }
 
+    @Test
+    public void shouldLogExecution() throws SyntaxErrorException {
+        // Given
+        final String givenFormula = "DIV(10,0)";
+        final StructuredData givenStructuredData = new StructuredData(List.of());
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.executions()).containsExactly(
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 4, 5, Map.of(), Value.of("10")),
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 7, 7, Map.of(), Value.of("0")),
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 8, Map.of(
+                        new InputName("left"), Value.of("10"),
+                        new InputName("right"), Value.of("0")
+                ), Value.of("#DIV/0!"))
+        );
+    }
 }

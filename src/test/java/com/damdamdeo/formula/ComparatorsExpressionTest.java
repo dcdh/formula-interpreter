@@ -5,12 +5,15 @@ import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -249,5 +252,25 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     private static Stream<Arguments> provideComparatorFunctionsUsingArithmeticsFunction() {
         return Stream.of(
                 Arguments.of("LTE(ADD(100,160),ADD(100,160))"));
+    }
+
+    @Test
+    public void shouldLogExecution() throws SyntaxErrorException {
+        // Given
+        final String givenFormula = "GT(660,260)";
+        final StructuredData givenStructuredData = new StructuredData(List.of());
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.executions()).containsExactly(
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 3, 5, Map.of(), Value.of("660")),
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 7, 9, Map.of(), Value.of("260")),
+                new AntlrExecution(new ExecutionId(new UUID(0, 0)), 0, 10, Map.of(
+                        new InputName("left"), Value.of("660"),
+                        new InputName("right"), Value.of("260")
+                ), Value.of("true"))
+        );
     }
 }

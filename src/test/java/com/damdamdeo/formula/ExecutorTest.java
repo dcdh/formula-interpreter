@@ -6,6 +6,8 @@ import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ExecutorTest {
@@ -14,7 +16,10 @@ public class ExecutorTest {
 
     @BeforeEach
     public void setup() {
-        executor = new Executor(new Validator(), new NumericalContext());
+        executor = new Executor(
+                () -> new ExecutionId(new UUID(0, 0)),
+                new InMemoryExecutionLogger(),
+                new Validator(), new NumericalContext());
     }
 
     @Test

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
 
-public record Value(String value) implements Result {
+public record Value(String value) implements Input, Result {
 
     private static final Value TRUE = new Value("true");
     private static final Value FALSE = new Value("false");
@@ -249,4 +249,10 @@ public record Value(String value) implements Result {
         return isTrue() && valueToCheck.isTrue() ? Value.TRUE : Value.FALSE;
     }
 
+    @Override
+    public String toString() {
+        return "Value{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }
