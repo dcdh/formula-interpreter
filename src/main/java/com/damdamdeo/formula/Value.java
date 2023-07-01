@@ -2,7 +2,6 @@ package com.damdamdeo.formula;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.List;
 import java.util.Objects;
 
 public record Value(String value) implements Result {
@@ -76,6 +75,18 @@ public record Value(String value) implements Result {
         return value.matches("\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?");
     }
 
+    public boolean isText() {
+        return !isNotAvailable()
+                && !isUnknownRef()
+                && !isNotANumericalValue()
+                && !isDivByZero()
+                && !isTrue()
+                && !isFalse()
+                && !isBlank()
+                && !isNumeric()
+                ;
+    }
+
     public boolean isTrue() {
         return TRUE.equals(this) || ONE.equals(this);
     }
@@ -86,6 +97,10 @@ public record Value(String value) implements Result {
 
     public boolean isZero() {
         return ZERO.equals(this);
+    }
+
+    public boolean isBlank() {
+        return "".equals(this.value);
     }
 
     public Value add(final Value augend,

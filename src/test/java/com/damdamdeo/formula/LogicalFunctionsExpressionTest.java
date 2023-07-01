@@ -321,7 +321,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldComputeIf(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
             // Given
             final String givenFormula = String.format("""
                     ISNUM("%s")
@@ -338,7 +338,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldComputeIfOnStructuredReference(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldComputeUsingOnStructuredReference(final String givenValue, final String expectedResult) throws SyntaxErrorException {
             // Given
             final String givenFormula = "ISNUM([@[% Commission]])";
             final StructuredData givenStructuredData = new StructuredData(List.of(
@@ -377,6 +377,84 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull() throws SyntaxErrorException {
             // Given
             final String givenFormula = "ISNUM([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(
+                    List.of(
+                            new StructuredDatum(new Reference("% Commission"), null)
+                    )
+            );
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#NA!"));
+        }
+
+    }
+
+
+    @Nested
+    public class LogicalIsText {
+
+        @ParameterizedTest
+        @MethodSource("provideValues")
+        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final String givenFormula = String.format("""
+                    ISTEXT("%s")
+                    """, givenValue);
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideValues")
+        public void shouldComputeUsingOnStructuredReference(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISTEXT([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(List.of(
+                    new StructuredDatum(new Reference("% Commission"), givenValue)
+            ));
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        private static Stream<Arguments> provideValues() {
+            return Stream.of(
+                    Arguments.of("azerty", "true"),
+                    Arguments.of("123456789", "false"));
+        }
+
+        @Test
+        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISTEXT([@[% Commission]])";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#REF!"));
+        }
+
+        @Test
+        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull() throws SyntaxErrorException {
+            // Given
+            final String givenFormula = "ISTEXT([@[% Commission]])";
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
                             new StructuredDatum(new Reference("% Commission"), null)
