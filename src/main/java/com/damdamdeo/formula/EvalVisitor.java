@@ -192,6 +192,24 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitIsNumericFunction(final FormulaParser.IsNumericFunctionContext ctx) {
+        final Value value = this.visit(ctx.value);
+        final Value result;
+        if (value.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (value.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (value.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (value.isDivByZero()) {
+            result = Value.ofDividedByZero();
+        } else {
+            result = value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
+        }
+        return result;
+    }
+
+    @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         Value result;
         try {
