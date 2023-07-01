@@ -3,15 +3,15 @@ package com.damdamdeo.formula;
 import com.damdamdeo.formula.structuredreference.Reference;
 import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.UnknownReferenceException;
+import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.Objects;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
-
-    private Value result = Value.of();
-
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
+
+    private Value currentResult = Value.of();
 
     public EvalVisitor(final StructuredData structuredData,
                        final NumericalContext numericalContext) {
@@ -20,8 +20,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitExpr(final FormulaParser.ExprContext ctx) {
-        return super.visitExpr(ctx);
+    public Value visitChildren(final RuleNode node) {
+        final Value value = super.visitChildren(node);
+        this.currentResult = value;
+        return value;
+    }
+
+    @Override
+    protected Value defaultResult() {
+        return currentResult;
     }
 
     @Override
@@ -55,7 +62,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = operator.execute(left, right, numericalContext);
         }
-        this.result = result;
         return result;
     }
 
@@ -90,7 +96,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = numericalComparator.execute(left, right, numericalContext);
         }
-        this.result = result;
         return result;
     }
 
@@ -117,7 +122,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = equalityComparator.execute(left, right, numericalContext);
         }
-        this.result = result;
         return result;
     }
 
@@ -144,7 +148,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             }
             result = logicalOperator.execute(left, right);
         }
-        this.result = result;
         return result;
     }
 
@@ -163,7 +166,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             result = Value.ofError();
         }
-        this.result = result;
         return result;
     }
 
@@ -178,26 +180,16 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } catch (final UnknownReferenceException unknownReferenceException) {
             result = Value.ofUnknown();
         }
-        this.result = result;
         return result;
     }
 
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        final Value result = Value.of(ctx.VALUE().getText());
-        this.result = result;
-        return result;
+        return Value.of(ctx.VALUE().getText());
     }
 
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        final Value result = Value.of(ctx.NUMERIC().getText());
-        this.result = result;
-        return result;
+        return Value.of(ctx.NUMERIC().getText());
     }
-
-    public Value result() {
-        return result;
-    }
-
 }

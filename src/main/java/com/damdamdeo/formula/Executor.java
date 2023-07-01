@@ -20,8 +20,11 @@ public final class Executor {
     public ExecutionResult execute(final Formula formula, final StructuredData structuredData) throws SyntaxErrorException {
         final ParseTree tree = validator.validate(formula);
         final EvalVisitor visitor = new EvalVisitor(structuredData, numericalContext);
-        visitor.visit(tree);
-        return new ExecutionResult(visitor.result());
+        final Result value = visitor.visit(tree);
+        if (value == null) {
+            throw new IllegalStateException("Should not be null - a response is expected");
+        }
+        return new ExecutionResult(value);
     }
 
 }
