@@ -34,6 +34,7 @@ logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=log
                  | IF'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
                  | isOperator=(ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
                  | ISNA'('value=argument')' #isNaFunction
+                 | ISERROR'('value=argument')' #isErrorFunction
                  ;
 
 logical_operand: argument
@@ -67,7 +68,8 @@ ISNUM: 'ISNUM' ;
 ISLOGICAL: 'ISLOGICAL' ;
 ISTEXT: 'ISTEXT' ;
 ISBLANK: 'ISBLANK' ;
-ISNA : 'ISNA' ;
+ISNA: 'ISNA' ;
+ISERROR: 'ISERROR' ;
 TRUE: 'true'|'1';
 FALSE: 'false'|'0';
 STRUCTURED_REFERENCE : '[@['.*?']]' ;

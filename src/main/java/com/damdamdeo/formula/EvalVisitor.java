@@ -227,8 +227,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     @Override
     public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
-        final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
-        return result;
+        return value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
+    }
+
+    @Override
+    public Value visitIsErrorFunction(final FormulaParser.IsErrorFunctionContext ctx) {
+        final Value value = this.visit(ctx.value);
+        return value.isError() ? Value.ofTrue() : Value.ofFalse();
     }
 
     @Override

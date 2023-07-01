@@ -68,6 +68,10 @@ public record Value(String value) implements Result {
         return DIV_BY_ZERO.equals(this);
     }
 
+    public boolean isError() {
+        return isNotAvailable() || isUnknownRef() || isNotANumericalValue() || isDivByZero();
+    }
+
     public boolean isNumeric() {
         if (value.startsWith("#")) {
             return false;

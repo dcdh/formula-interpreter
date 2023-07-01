@@ -479,4 +479,36 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
     }
 
+    @Nested
+    public class IsError {
+
+        @ParameterizedTest
+        @MethodSource("provideValues")
+        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+            // Given
+            final String givenFormula = String.format("""
+                    ISERROR("%s")
+                    """, givenValue);
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value(expectedResult));
+        }
+
+        private static Stream<Arguments> provideValues() {
+            return Stream.of(
+                    Arguments.of("123456", "false"),
+                    Arguments.of("azerty", "false"),
+                    Arguments.of("#NA!", "true"),
+                    Arguments.of("#REF!", "true"),
+                    Arguments.of("#NUM!", "true"),
+                    Arguments.of("#DIV/0!", "true")
+            );
+        }
+
+    }
 }
