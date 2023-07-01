@@ -5,9 +5,10 @@ import com.damdamdeo.formula.structuredreference.StructuredData;
 import com.damdamdeo.formula.structuredreference.StructuredDatum;
 import com.damdamdeo.formula.syntax.SyntaxErrorException;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
-                            new StructuredDatum(new Reference("North Sales Amount"), new Value(leftValue)),
-                            new StructuredDatum(new Reference("South Sales Amount"), new Value(rightValue))
+                            new StructuredDatum(new Reference("North Sales Amount"), leftValue),
+                            new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                     )
             );
 
@@ -53,7 +54,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenLogicalFunction, rightValue);
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
-                            new StructuredDatum(new Reference("North Sales Amount"), new Value(leftValue))
+                            new StructuredDatum(new Reference("North Sales Amount"), leftValue)
                     )
             );
 
@@ -75,7 +76,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenLogicalFunction, leftValue);
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
-                            new StructuredDatum(new Reference("South Sales Amount"), new Value(rightValue))
+                            new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                     )
             );
 
@@ -128,14 +129,14 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @ParameterizedTest
-        @CsvSource({"AND", "OR"})
-        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenLogicalFunction) throws
+        @EnumSource(LogicalOperator.class)
+        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final LogicalOperator givenLogicalFunction) throws
                 SyntaxErrorException {
             // Given
-            final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
+            final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
-                            new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                            new StructuredDatum(new Reference("North Sales Amount"), "660")
                     )
             );
 
@@ -148,12 +149,55 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @ParameterizedTest
+        @EnumSource(LogicalOperator.class)
+        public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) throws
+                SyntaxErrorException {
+            // Given
+            final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
+            final StructuredData givenStructuredData = new StructuredData(
+                    List.of(
+                            new StructuredDatum(new Reference("North Sales Amount"), null),
+                            new StructuredDatum(new Reference("South Sales Amount"), "260")
+
+                    )
+            );
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#NA!"));
+        }
+
+        @ParameterizedTest
+        @EnumSource(LogicalOperator.class)
+        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) throws
+                SyntaxErrorException {
+            // Given
+            final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
+            final StructuredData givenStructuredData = new StructuredData(
+                    List.of(
+                            new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                            new StructuredDatum(new Reference("South Sales Amount"), null)
+                    )
+            );
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#NA!"));
+        }
+
+        @ParameterizedTest
         @MethodSource("provideLogicalFunctionsUsingComparisonsFunction")
         public void shouldUseComparisonsFunctions(final String givenFormula) throws SyntaxErrorException {
             // Given
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
-                            new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                            new StructuredDatum(new Reference("North Sales Amount"), "660")
                     )
             );
 
@@ -206,12 +250,44 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                     Arguments.of("""
                             IF("true",ADD(1,1),ADD(2,2))""", "2"),
                     Arguments.of("""
-                            IF(EQ(1,1),ADD(1,1),ADD(2,2))""", "2"),
-                    Arguments.of("""
-                            IF("#REF!","true","false")""", "#REF!"),
-                    Arguments.of("""
-                            IF("#VALUE!","true","false")""", "#VALUE!")
+                            IF(EQ(1,1),ADD(1,1),ADD(2,2))""", "2")
             );
+        }
+
+        @Test
+        public void shouldBeUnknownWhenStructuredReferenceIsUnknown() throws
+                SyntaxErrorException {
+            // Given
+            final String givenFormula = """
+                    IF([@[North Sales Amount]],"true","false")""";
+            final StructuredData givenStructuredData = new StructuredData(List.of());
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#REF!"));
+        }
+
+        @Test
+        public void shouldBeNotAvailableWhenStructuredReferenceIsNull() throws
+                SyntaxErrorException {
+            // Given
+            final String givenFormula = """
+                    IF([@[North Sales Amount]],"true","false")""";
+            final StructuredData givenStructuredData = new StructuredData(
+                    List.of(
+                            new StructuredDatum(new Reference("North Sales Amount"), null)
+                    )
+            );
+
+            // When
+            final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+            // Then
+            assertThat(executionResult.result()).isEqualTo(
+                    new Value("#NA!"));
         }
     }
 }

@@ -11,7 +11,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
 
-    private Value currentResult = Value.of();
+    private Value currentResult = Value.ofNotAvailable();
 
     public EvalVisitor(final StructuredData structuredData,
                        final NumericalContext numericalContext) {
@@ -36,12 +36,18 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
-        if (left.isUnknown() || right.isUnknown()) {
-            result = Value.ofUnknown();
-        } else if (left.isError() || right.isError()) {
-            result = Value.ofError();
+        if (left.isNotAvailable() || right.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (left.isUnknownRef() || right.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (left.isNotANumericalValue() || right.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (left.isDivByZero() || right.isDivByZero()) {
+            result = Value.ofDividedByZero();
         } else if (!left.isNumeric() || !right.isNumeric()) {
-            result = Value.ofError();
+            result = Value.ofNumericalValueExpected();
+        } else if (right.isNumeric() && right.isZero()) {
+            result = Value.ofDividedByZero();
         } else {
             final Operator operator;
             switch (ctx.operator.getType()) {
@@ -70,12 +76,16 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
-        if (left.isUnknown() || right.isUnknown()) {
-            result = Value.ofUnknown();
-        } else if (left.isError() || right.isError()) {
-            result = Value.ofError();
+        if (left.isNotAvailable() || right.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (left.isUnknownRef() || right.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (left.isNotANumericalValue() || right.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (left.isDivByZero() || right.isDivByZero()) {
+            result = Value.ofDividedByZero();
         } else if (!left.isNumeric() || !right.isNumeric()) {
-            result = Value.ofError();
+            result = Value.ofNumericalValueExpected();
         } else {
             final NumericalComparator numericalComparator;
             switch (ctx.numericalComparator.getType()) {
@@ -104,10 +114,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
-        if (left.isUnknown() || right.isUnknown()) {
-            result = Value.ofUnknown();
-        } else if (left.isError() || right.isError()) {
-            result = Value.ofError();
+        if (left.isNotAvailable() || right.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (left.isUnknownRef() || right.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (left.isNotANumericalValue() || right.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (left.isDivByZero() || right.isDivByZero()) {
+            result = Value.ofDividedByZero();
         } else {
             final EqualityComparator equalityComparator;
             switch (ctx.equalityComparator.getType()) {
@@ -130,10 +144,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
-        if (left.isUnknown() || right.isUnknown()) {
-            result = Value.ofUnknown();
-        } else if (left.isError() || right.isError()) {
-            result = Value.ofError();
+        if (left.isNotAvailable() || right.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (left.isUnknownRef() || right.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (left.isNotANumericalValue() || right.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (left.isDivByZero() || right.isDivByZero()) {
+            result = Value.ofDividedByZero();
         } else {
             final LogicalOperator logicalOperator;
             switch (ctx.logicalOperator.getType()) {
@@ -155,16 +173,20 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     public Value visitIfFunction(final FormulaParser.IfFunctionContext ctx) {
         final Value comparaisonValue = this.visit(ctx.comparison);
         final Value result;
-        if (comparaisonValue.isError()) {
-            result = Value.ofError();
-        } else if (comparaisonValue.isUnknown()) {
-            result = Value.ofUnknown();
+        if (comparaisonValue.isNotAvailable()) {
+            result = Value.ofNotAvailable();
+        } else if (comparaisonValue.isUnknownRef()) {
+            result = Value.ofUnknownRef();
+        } else if (comparaisonValue.isNotANumericalValue()) {
+            result = Value.ofNumericalValueExpected();
+        } else if (comparaisonValue.isDivByZero()) {
+            result = Value.ofDividedByZero();
         } else if (comparaisonValue.isTrue()) {
             result = this.visit(ctx.whenTrue);
         } else if (comparaisonValue.isFalse()) {
             result = this.visit(ctx.whenFalse);
         } else {
-            result = Value.ofError();
+            result = Value.ofNumericalValueExpected();
         }
         return result;
     }
@@ -178,7 +200,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                     .substring(3);
             result = this.structuredData.getValueByReference(new Reference(reference));
         } catch (final UnknownReferenceException unknownReferenceException) {
-            result = Value.ofUnknown();
+            result = Value.ofUnknownRef();
         }
         return result;
     }

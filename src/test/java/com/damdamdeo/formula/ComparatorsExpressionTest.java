@@ -26,8 +26,8 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value(leftValue)),
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value(rightValue))
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue),
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
@@ -49,7 +49,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenComparison, rightValue);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value(leftValue))
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue)
                 )
         );
 
@@ -71,7 +71,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenComparison, leftValue);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value(rightValue))
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
@@ -128,13 +128,13 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"ADD", "SUB", "DIV", "MUL", "GT", "GTE", "EQ", "NEQ", "LT", "LTE"})
+    @MethodSource("provideAllComparators")
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenComparison) throws SyntaxErrorException {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                        new StructuredDatum(new Reference("North Sales Amount"), "660")
                 )
         );
 
@@ -147,14 +147,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"ADD", "SUB", "DIV", "MUL", "GT", "GTE", "LT", "LTE"})
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) throws SyntaxErrorException {
+    @MethodSource("provideAllComparators")
+    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenComparison) throws SyntaxErrorException {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value("boom"))
+                        new StructuredDatum(new Reference("North Sales Amount"), null),
+                        new StructuredDatum(new Reference("South Sales Amount"), "260")
                 )
         );
 
@@ -163,7 +163,61 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
-                new Value("#VALUE!"));
+                new Value("#NA!"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideAllComparators")
+    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenComparison) throws SyntaxErrorException {
+        // Given
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
+        final StructuredData givenStructuredData = new StructuredData(
+                List.of(
+                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                        new StructuredDatum(new Reference("South Sales Amount"), null)
+                )
+        );
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#NA!"));
+    }
+
+    private static Stream<Arguments> provideAllComparators() {
+        return Stream.of(
+                Arguments.of("ADD"),
+                Arguments.of("SUB"),
+                Arguments.of("DIV"),
+                Arguments.of("MUL"),
+                Arguments.of("GT"),
+                Arguments.of("GTE"),
+                Arguments.of("EQ"),
+                Arguments.of("NEQ"),
+                Arguments.of("LT"),
+                Arguments.of("LTE"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"ADD", "SUB", "DIV", "MUL", "GT", "GTE", "LT", "LTE"})
+    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) throws SyntaxErrorException {
+        // Given
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
+        final StructuredData givenStructuredData = new StructuredData(
+                List.of(
+                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                        new StructuredDatum(new Reference("South Sales Amount"), "boom")
+                )
+        );
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#NUM!"));
     }
 
     @ParameterizedTest
@@ -172,7 +226,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         // Given
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                        new StructuredDatum(new Reference("North Sales Amount"), "660")
                 )
         );
 

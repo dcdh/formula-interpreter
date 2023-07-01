@@ -2,27 +2,34 @@ package com.damdamdeo.formula;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.List;
 import java.util.Objects;
 
 public record Value(String value) implements Result {
 
-    private static Value TRUE = new Value("true");
-    private static Value FALSE = new Value("false");
-    private static Value ZERO = new Value("0");
-    private static Value ONE = new Value("1");
-    private static Value UNKNOWN = new Value("#REF!");
-    private static Value ERROR = new Value("#VALUE!");
+    private static final Value TRUE = new Value("true");
+    private static final Value FALSE = new Value("false");
+    private static final Value ZERO = new Value("0");
+    private static final Value ONE = new Value("1");
+    private static final Value NOT_AVAILABLE = new Value("#NA!");
+    private static final Value UNKNOWN_REF = new Value("#REF!");
+    private static final Value NOT_A_NUMERICAL_VALUE = new Value("#NUM!");
+    private static final Value DIV_BY_ZERO = new Value("#DIV/0!");
 
-    public static Value of() {
-        return new Value("");
+    public static Value ofNotAvailable() {
+        return NOT_AVAILABLE;
     }
 
-    public static Value ofUnknown() {
-        return UNKNOWN;
+    public static Value ofUnknownRef() {
+        return UNKNOWN_REF;
     }
 
-    public static Value ofError() {
-        return ERROR;
+    public static Value ofNumericalValueExpected() {
+        return NOT_A_NUMERICAL_VALUE;
+    }
+
+    public static Value ofDividedByZero() {
+        return DIV_BY_ZERO;
     }
 
     public static Value ofTrue() {
@@ -37,7 +44,7 @@ public record Value(String value) implements Result {
         return new Value(value);
     }
 
-    public Value(String value) {
+    public Value(final String value) {
         this.value = Objects.requireNonNull(value)
                 .replaceAll("^\"|\"$", "");
     }
@@ -46,12 +53,20 @@ public record Value(String value) implements Result {
         this(value.stripTrailingZeros().toPlainString());
     }
 
-    public boolean isUnknown() {
-        return UNKNOWN.equals(this);
+    public boolean isNotAvailable() {
+        return NOT_AVAILABLE.equals(this);
     }
 
-    public boolean isError() {
-        return ERROR.equals(this);
+    public boolean isUnknownRef() {
+        return UNKNOWN_REF.equals(this);
+    }
+
+    public boolean isNotANumericalValue() {
+        return NOT_A_NUMERICAL_VALUE.equals(this);
+    }
+
+    public boolean isDivByZero() {
+        return DIV_BY_ZERO.equals(this);
     }
 
     public boolean isNumeric() {
@@ -66,7 +81,11 @@ public record Value(String value) implements Result {
     }
 
     public boolean isFalse() {
-        return FALSE.equals(this) || ZERO.equals(this);
+        return FALSE.equals(this) || isZero();
+    }
+
+    public boolean isZero() {
+        return ZERO.equals(this);
     }
 
     public Value add(final Value augend,
@@ -95,7 +114,7 @@ public record Value(String value) implements Result {
 
     public Value divide(final Value divisor,
                         final NumericalContext numericalContext) {
-        if (!isNumeric() || !divisor.isNumeric()) {
+        if (!isNumeric() || !divisor.isNumeric() || divisor.isZero()) {
             throw new IllegalStateException("Should not be here");
         }
         return new Value(

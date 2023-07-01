@@ -17,7 +17,7 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         // Given
         final String givenFormula = "[@[% Commission]]";
         final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), new Value("10%"))
+                new StructuredDatum(new Reference("% Commission"), "10%")
         ));
 
         // When
@@ -40,6 +40,22 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         // Then
         assertThat(executionResult.result()).isEqualTo(
                 new Value("#REF!"));
+    }
+
+    @Test
+    public void shouldReturnNotAvailableWhenStructureReferenceValueIsNull() throws SyntaxErrorException {
+        // Given
+        final String givenFormula = "[@[% Commission]]";
+        final StructuredData givenStructuredData = new StructuredData(List.of(
+                new StructuredDatum(new Reference("% Commission"), null)
+        ));
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#NA!"));
     }
 
 }

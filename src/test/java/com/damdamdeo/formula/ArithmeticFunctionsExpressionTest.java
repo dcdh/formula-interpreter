@@ -23,8 +23,8 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value("260"))
+                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                        new StructuredDatum(new Reference("South Sales Amount"), "260")
                 )
         );
 
@@ -44,7 +44,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],260)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                        new StructuredDatum(new Reference("North Sales Amount"), "660")
                 )
         );
 
@@ -64,7 +64,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s(660,[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value("260"))
+                        new StructuredDatum(new Reference("South Sales Amount"), "260")
                 )
         );
 
@@ -122,7 +122,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660"))
+                        new StructuredDatum(new Reference("North Sales Amount"), "660")
                 )
         );
 
@@ -136,13 +136,13 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperations")
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
+    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) throws SyntaxErrorException {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), new Value("660")),
-                        new StructuredDatum(new Reference("South Sales Amount"), new Value("boom"))
+                        new StructuredDatum(new Reference("North Sales Amount"), null),
+                        new StructuredDatum(new Reference("South Sales Amount"), "260")
                 )
         );
 
@@ -151,7 +151,47 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
-                new Value("#VALUE!"));
+                new Value("#NA!"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideOperations")
+    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) throws SyntaxErrorException {
+        // Given
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final StructuredData givenStructuredData = new StructuredData(
+                List.of(
+                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                        new StructuredDatum(new Reference("South Sales Amount"), null)
+                )
+        );
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#NA!"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideOperations")
+    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
+        // Given
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final StructuredData givenStructuredData = new StructuredData(
+                List.of(
+                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
+                        new StructuredDatum(new Reference("South Sales Amount"), "boom")
+                )
+        );
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#NUM!"));
     }
 
     private static Stream<Arguments> provideOperations() {
@@ -162,4 +202,19 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
                 Arguments.of("MUL")
         );
     }
+
+    @Test
+    public void shouldDivideByZeroProduceAnError() throws SyntaxErrorException {
+        // Given
+        final String givenFormula = "DIV(10,0)";
+        final StructuredData givenStructuredData = new StructuredData(List.of());
+
+        // When
+        final ExecutionResult executionResult = executor.execute(formula4Test(givenFormula), givenStructuredData);
+
+        // Then
+        assertThat(executionResult.result()).isEqualTo(
+                new Value("#DIV/0!"));
+    }
+
 }
