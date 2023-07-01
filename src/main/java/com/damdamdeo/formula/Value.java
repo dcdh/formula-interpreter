@@ -8,6 +8,7 @@ public record Value(String value) implements Result {
 
     private static Value TRUE = new Value("true");
     private static Value FALSE = new Value("false");
+    private static Value ZERO = new Value("0");
     private static Value ONE = new Value("1");
     private static Value UNKNOWN = new Value("#REF!");
     private static Value ERROR = new Value("#VALUE!");
@@ -61,11 +62,11 @@ public record Value(String value) implements Result {
     }
 
     public boolean isTrue() {
-        return TRUE.equals(this);
+        return TRUE.equals(this) || ONE.equals(this);
     }
 
-    public boolean isOne() {
-        return ONE.equals(this);
+    public boolean isFalse() {
+        return FALSE.equals(this) || ZERO.equals(this);
     }
 
     public Value add(final Value augend,
@@ -195,11 +196,11 @@ public record Value(String value) implements Result {
     }
 
     public Value or(final Value valueToCheck) {
-        return (isTrue() || isOne()) || (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
+        return isTrue() || valueToCheck.isTrue() ? Value.TRUE : Value.FALSE;
     }
 
     public Value and(final Value valueToCheck) {
-        return (isTrue() || isOne()) && (valueToCheck.isTrue() || valueToCheck.isOne()) ? Value.TRUE : Value.FALSE;
+        return isTrue() && valueToCheck.isTrue() ? Value.TRUE : Value.FALSE;
     }
 
 }

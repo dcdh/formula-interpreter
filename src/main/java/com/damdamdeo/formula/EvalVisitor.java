@@ -149,6 +149,25 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitIfFunction(final FormulaParser.IfFunctionContext ctx) {
+        final Value comparaisonValue = this.visit(ctx.comparison);
+        final Value result;
+        if (comparaisonValue.isError()) {
+            result = Value.ofError();
+        } else if (comparaisonValue.isUnknown()) {
+            result = Value.ofUnknown();
+        } else if (comparaisonValue.isTrue()) {
+            result = this.visit(ctx.whenTrue);
+        } else if (comparaisonValue.isFalse()) {
+            result = this.visit(ctx.whenFalse);
+        } else {
+            result = Value.ofError();
+        }
+        this.result = result;
+        return result;
+    }
+
+    @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         Value result;
         try {
