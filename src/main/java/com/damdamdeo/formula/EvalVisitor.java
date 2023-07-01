@@ -186,13 +186,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (comparaisonValue.isFalse()) {
             result = this.visit(ctx.whenFalse);
         } else {
-            result = Value.ofNumericalValueExpected();
+            throw new IllegalStateException("Should not be here");
         }
         return result;
     }
 
     @Override
-    public Value visitIsNumericFunction(final FormulaParser.IsNumericFunctionContext ctx) {
+    public Value visitIsFunction(final FormulaParser.IsFunctionContext ctx) {
         final Value value = this.visit(ctx.value);
         final Value result;
         if (value.isNotAvailable()) {
@@ -204,61 +204,22 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (value.isDivByZero()) {
             result = Value.ofDividedByZero();
         } else {
-            result = value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
-        }
-        return result;
-    }
-
-    @Override
-    public Value visitIsTextFunction(final FormulaParser.IsTextFunctionContext ctx) {
-        final Value value = this.visit(ctx.value);
-        final Value result;
-        if (value.isNotAvailable()) {
-            result = Value.ofNotAvailable();
-        } else if (value.isUnknownRef()) {
-            result = Value.ofUnknownRef();
-        } else if (value.isNotANumericalValue()) {
-            result = Value.ofNumericalValueExpected();
-        } else if (value.isDivByZero()) {
-            result = Value.ofDividedByZero();
-        } else {
-            result = value.isText() ? Value.ofTrue() : Value.ofFalse();
-        }
-        return result;
-    }
-
-    @Override
-    public Value visitIsBlankFunction(final FormulaParser.IsBlankFunctionContext ctx) {
-        final Value value = this.visit(ctx.value);
-        final Value result;
-        if (value.isNotAvailable()) {
-            result = Value.ofNotAvailable();
-        } else if (value.isUnknownRef()) {
-            result = Value.ofUnknownRef();
-        } else if (value.isNotANumericalValue()) {
-            result = Value.ofNumericalValueExpected();
-        } else if (value.isDivByZero()) {
-            result = Value.ofDividedByZero();
-        } else {
-            result = value.isBlank() ? Value.ofTrue() : Value.ofFalse();
-        }
-        return result;
-    }
-
-    @Override
-    public Value visitIsLogicalFunction(final FormulaParser.IsLogicalFunctionContext ctx) {
-        final Value value = this.visit(ctx.value);
-        final Value result;
-        if (value.isNotAvailable()) {
-            result = Value.ofNotAvailable();
-        } else if (value.isUnknownRef()) {
-            result = Value.ofUnknownRef();
-        } else if (value.isNotANumericalValue()) {
-            result = Value.ofNumericalValueExpected();
-        } else if (value.isDivByZero()) {
-            result = Value.ofDividedByZero();
-        } else {
-            result = value.isLogical() ? Value.ofTrue() : Value.ofFalse();
+            switch (ctx.isOperator.getType()) {
+                case FormulaParser.ISNUM:
+                    result = value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
+                    break;
+                case FormulaParser.ISTEXT:
+                    result = value.isText() ? Value.ofTrue() : Value.ofFalse();
+                    break;
+                case FormulaParser.ISBLANK:
+                    result = value.isBlank() ? Value.ofTrue() : Value.ofFalse();
+                    break;
+                case FormulaParser.ISLOGICAL:
+                    result = value.isLogical() ? Value.ofTrue() : Value.ofFalse();
+                    break;
+                default:
+                    throw new IllegalStateException("Should not be here");
+            }
         }
         return result;
     }
