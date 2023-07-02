@@ -17,3 +17,7 @@ Simple implementation of Excel formula
 - https://support.microsoft.com/en-au/office/error-type-function-10958677-7c8d-44f7-ae77-b9a9ee6eefaa
 - https://tomassetti.me/antlr-mega-tutorial/
 - https://yvesmouafo.developpez.com/tutoriels/java/grammaire-antlr/
+
+## Autosuggest
+
+Reference: https://github.com/oranoran/antlr4-autosuggest
