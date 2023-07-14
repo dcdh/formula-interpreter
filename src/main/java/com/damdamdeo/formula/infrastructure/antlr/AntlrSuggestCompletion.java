@@ -31,17 +31,17 @@ public class AntlrSuggestCompletion implements SuggestCompletion {
             try {
                 return future.get(5, TimeUnit.SECONDS);
             } catch (final InterruptedException interruptedException) {
-                throw new AutoSuggestUnavailableException(interruptedException);
+                throw new AutoSuggestUnavailableException(suggestedFormula, interruptedException);
             } catch (final ExecutionException executionException) {
-                throw new AutoSuggestionExecutionException(executionException.getCause());
+                throw new AutoSuggestionExecutionException(suggestedFormula, executionException.getCause());
             } catch (final TimeoutException timeoutException) {
                 future.cancel(true);
-                throw new AutoSuggestionProcessingTimedOutException(timeoutException);
+                throw new AutoSuggestionExecutionTimedOutException(suggestedFormula, timeoutException);
             } finally {
                 executor.shutdown();
             }
         } catch (final RejectedExecutionException rejectedExecutionException) {
-            throw new AutoSuggestUnavailableException(rejectedExecutionException);
+            throw new AutoSuggestUnavailableException(suggestedFormula, rejectedExecutionException);
         } finally {
             executor.shutdown();
         }

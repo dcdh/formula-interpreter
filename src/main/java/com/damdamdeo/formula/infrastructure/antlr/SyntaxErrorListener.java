@@ -6,18 +6,18 @@ import org.antlr.v4.runtime.Recognizer;
 
 public final class SyntaxErrorListener extends BaseErrorListener {
 
-    private SyntaxError syntaxError;
+    private AntlrSyntaxError antlrSyntaxError;
 
     @Override
     public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol, final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
-        this.syntaxError = new SyntaxError(line, charPositionInLine, msg);
+        this.antlrSyntaxError = new AntlrSyntaxError(line, charPositionInLine, msg);
     }
 
     public boolean hasSyntaxError() {
-        return this.syntaxError != null;
+        return this.antlrSyntaxError != null;
     }
 
-    public SyntaxError syntaxError() {
-        return syntaxError;
+    public AntlrSyntaxError syntaxError() {
+        return antlrSyntaxError;
     }
 }

@@ -1,5 +1,7 @@
 package com.damdamdeo.formula.domain;
 
-public interface Validator<R> {
-    R validate(Formula formula);
+import java.util.Optional;
+
+public interface Validator<R extends SyntaxError> {
+    Optional<R> validate(Formula formula);
 }

@@ -17,12 +17,11 @@ public final class AntlrExecutor implements Executor {
     public AntlrExecutor(final ExecutionIdGenerator executionIdGenerator,
                          final ExecutionLogger executionLogger,
                          final ExecutedAtProvider executedAtProvider,
-                         final AntlrValidator antlrValidator,
                          final NumericalContext numericalContext) {
         this.executionIdGenerator = Objects.requireNonNull(executionIdGenerator);
         this.executionLogger = Objects.requireNonNull(executionLogger);
         this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
-        this.antlrValidator = Objects.requireNonNull(antlrValidator);
+        this.antlrValidator = new AntlrValidator();
         this.numericalContext = Objects.requireNonNull(numericalContext);
     }
 

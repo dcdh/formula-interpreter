@@ -8,7 +8,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-public class AntlrValidator implements Validator<SyntaxError> {
+import java.util.Optional;
+
+public class AntlrValidator implements Validator<AntlrSyntaxError> {
 
     public ParseTree doValidate(final Formula formula) throws SyntaxErrorException {
         final FormulaLexer lexer = new FormulaLexer(CharStreams.fromString(formula.formula()));
@@ -29,12 +31,12 @@ public class AntlrValidator implements Validator<SyntaxError> {
     }
 
     @Override
-    public SyntaxError validate(final Formula formula) {
+    public Optional<AntlrSyntaxError> validate(final Formula formula) {
         try {
             doValidate(formula);
-            return null;
+            return Optional.empty();
         } catch (final SyntaxErrorException syntaxErrorException) {
-            return syntaxErrorException.syntaxError();
+            return Optional.of(syntaxErrorException.syntaxError());
         }
     }
 }

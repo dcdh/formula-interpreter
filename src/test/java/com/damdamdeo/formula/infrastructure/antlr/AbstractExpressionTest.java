@@ -23,8 +23,7 @@ public abstract class AbstractExpressionTest {
         doReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]"))).when(executedAtProvider).now();
         antlrExecutor = new AntlrExecutor(
                 () -> new ExecutionId(new UUID(0, 0)),
-                new InMemoryExecutionLogger(), executedAtProvider,
-                new AntlrValidator(), new NumericalContext());
+                new InMemoryExecutionLogger(), executedAtProvider, new NumericalContext());
     }
 
     protected Formula formula4Test(final String formula) {

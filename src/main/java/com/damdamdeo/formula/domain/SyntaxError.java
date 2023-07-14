@@ -1,4 +1,4 @@
 package com.damdamdeo.formula.domain;
 
-public interface UseCaseCommand {
+public interface SyntaxError {
 }

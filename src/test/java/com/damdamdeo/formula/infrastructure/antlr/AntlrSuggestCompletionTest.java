@@ -2,7 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;
-import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionProcessingTimedOutException;
+import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionTimedOutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,7 +29,7 @@ public class AntlrSuggestCompletionTest extends AbstractExpressionTest {
         final AntlrSuggestCompletion antlrSuggest = new AntlrSuggestCompletion();
         assertThatThrownBy(() -> antlrSuggest.suggest(new SuggestedFormula("""
                 IF(EQ([@[Sales Person]],"Joe"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],""")))
-                .isInstanceOf(AutoSuggestionProcessingTimedOutException.class);
+                .isInstanceOf(AutoSuggestionExecutionTimedOutException.class);
     }
 
     private static Stream<Arguments> provideSuggestions() {

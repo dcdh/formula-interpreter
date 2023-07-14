@@ -7,23 +7,23 @@ import java.util.Objects;
 public final class SyntaxErrorException extends RuntimeException {
 
     private final Formula formula;
-    private final SyntaxError syntaxError;
+    private final AntlrSyntaxError antlrSyntaxError;
 
     public SyntaxErrorException(final Formula formula,
-                                final SyntaxError syntaxError) {
+                                final AntlrSyntaxError antlrSyntaxError) {
         this.formula = Objects.requireNonNull(formula);
-        this.syntaxError = Objects.requireNonNull(syntaxError);
+        this.antlrSyntaxError = Objects.requireNonNull(antlrSyntaxError);
     }
 
-    public SyntaxError syntaxError() {
-        return syntaxError;
+    public AntlrSyntaxError syntaxError() {
+        return antlrSyntaxError;
     }
 
     @Override
     public String toString() {
         return "SyntaxErrorException{" +
-                "formula=" + formula +
-                ", syntaxError=" + syntaxError +
-                '}';
+               "formula=" + formula +
+               ", syntaxError=" + antlrSyntaxError +
+               '}';
     }
 }

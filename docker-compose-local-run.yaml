@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  formula-interpreter:
+    image: damdamdeo/formula-interpreter
+    ports:
+      - 8080:8080
+    environment:
+      - quarkus.http.host=0.0.0.0
