@@ -21,3 +21,32 @@ Simple implementation of Excel formula
 ## Autosuggest
 
 Reference: https://github.com/oranoran/antlr4-autosuggest
+
+## Java 17
+
+native build java version is 17
+
+### Install
+
+run `java -v` and `javac -v` if version is not 17 do the following commands:
+
+```bash
+sudo dnf install java-17-openjdk.x86_64 java-17-openjdk-devel.x86_64 -y
+```
+
+```bash
+sudo alternatives --config java
+```
+> select java 17
+
+```bash
+sudo alternatives --config javac
+```
+> select java 17
+
+### Define JAVA_HOME
+only if `mvn -v` does not return it
+
+```bash
+echo "export JAVA_HOME=\"/usr/lib/jvm/java\"" >> ~/.bashrc
+```
