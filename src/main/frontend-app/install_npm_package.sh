@@ -1,3 +1,3 @@
 #!/bin/bash
 PATH="$(pwd)/node:$PATH"
-npm install -g "$1"
+npm install "$1" --save
