@@ -18,7 +18,8 @@ public class AntlrSuggestCompletion implements SuggestCompletion {
     private static final Logger LOGGER = LogManager.getLogger(AntlrSuggestCompletion.class);
 
     @Override
-    public SuggestionsCompletion suggest(final SuggestedFormula suggestedFormula) {
+    public SuggestionsCompletion suggest(final SuggestedFormula suggestedFormula)
+            throws AutoSuggestUnavailableException, AutoSuggestionExecutionException, AutoSuggestionExecutionTimedOutException {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
             final Future<SuggestionsCompletion> future = executor.submit(() -> {

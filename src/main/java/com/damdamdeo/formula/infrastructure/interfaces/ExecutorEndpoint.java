@@ -2,6 +2,7 @@ package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.ExecutionResult;
 import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
+import com.damdamdeo.formula.infrastructure.antlr.SyntaxErrorException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -20,7 +21,7 @@ public final class ExecutorEndpoint {
     @POST
     @Consumes("application/vnd.formula-execute-v1+json")
     @Produces("application/vnd.formula-execution-v1+json")
-    public ExecutionResultDTO execute(final ExecuteDTO execute) {
+    public ExecutionResultDTO execute(final ExecuteDTO execute) throws SyntaxErrorException {
         final ExecutionResult executionResult = executeUseCase.execute(execute.toExecuteCommand());
         return new ExecutionResultDTO(executionResult);
     }

@@ -4,6 +4,9 @@ import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
+import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestUnavailableException;
+import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionException;
+import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionTimedOutException;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -22,7 +25,8 @@ public final class SuggestCompletionEndpoint {
 
     @POST
     @Produces("application/vnd.suggest-completion-v1+json")
-    public List<String> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) {
+    public List<String> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula)
+            throws AutoSuggestUnavailableException, AutoSuggestionExecutionException, AutoSuggestionExecutionTimedOutException {
         final SuggestionsCompletion suggestionsCompletion = suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula)));
         return suggestionsCompletion.suggestions();
     }
