@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.usecase.ValidateCommand;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
@@ -15,7 +16,9 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
 public class ValidatorEndpointTest {
@@ -65,4 +68,21 @@ public class ValidatorEndpointTest {
         JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
     }
 
+    @Test
+    public void shouldHandleException() {
+        // Given
+        doThrow(new ValidationException(new Exception("unexpected exception")))
+                .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
+
+        // When && Then
+        given()
+                .accept("application/vnd.formula-validator-v1+json")
+                .formParam("formula", "true")
+                .when()
+                .post("/validate")
+                .then()
+                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+                .contentType("application/vnd.validation-unexpected-exception-v1+text")
+                .body(is("unexpected exception"));
+    }
 }

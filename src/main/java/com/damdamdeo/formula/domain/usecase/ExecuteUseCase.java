@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.domain.usecase;
 
-import com.damdamdeo.formula.infrastructure.antlr.SyntaxErrorException;
+import com.damdamdeo.formula.domain.ExecutionException;
+import com.damdamdeo.formula.domain.SyntaxErrorException;
 import com.damdamdeo.formula.domain.ExecutionResult;
 import com.damdamdeo.formula.domain.Executor;
 import com.damdamdeo.formula.domain.UseCase;
@@ -15,7 +16,13 @@ public final class ExecuteUseCase implements UseCase<ExecutionResult, ExecuteCom
     }
 
     @Override
-    public ExecutionResult execute(final ExecuteCommand command) throws SyntaxErrorException {
-        return executor.execute(command.formula(), command.structuredData());
+    public ExecutionResult execute(final ExecuteCommand command) throws ExecutionException {
+        try {
+            return executor.execute(command.formula(), command.structuredData());
+        } catch (final SyntaxErrorException syntaxErrorException) {
+            throw new ExecutionException(syntaxErrorException);
+        } catch (final Exception exception) {
+            throw new ExecutionException(exception);
+        }
     }
 }

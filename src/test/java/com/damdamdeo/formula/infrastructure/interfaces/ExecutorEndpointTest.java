@@ -5,7 +5,7 @@ import com.damdamdeo.formula.domain.usecase.ExecuteCommand;
 import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrExecution;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
-import com.damdamdeo.formula.infrastructure.antlr.SyntaxErrorException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.apache.http.HttpStatus;
@@ -87,7 +87,7 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldHandleSyntaxErrorException() throws JSONException {
         // Given
-        doThrow(new SyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "msg")))
+        doThrow(new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "msg"))))
                 .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
                         new StructuredDatum(new Reference("ref"), new Value("val"))
                 ))));
@@ -111,8 +111,38 @@ public class ExecutorEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .contentType("application/vnd.formula-syntax-error-v1+json")
+                .contentType("application/vnd.execution-syntax-error-v1+json")
                 .body(is("Syntax error at line '0' at position '1' with message 'msg'"));
     }
 
+    @Test
+    public void shouldHandleException() {
+        // Given
+        doThrow(new ExecutionException(new Exception("unexpected exception")))
+                .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
+                        new StructuredDatum(new Reference("ref"), new Value("val"))
+                ))));
+        //language=JSON
+        final String request = """
+                {
+                    "formula":"true",
+                    "structuredData": {
+                        "ref":"val"
+                    }
+                }
+                """;
+
+        // When && Then
+        given()
+                .contentType("application/vnd.formula-execute-v1+json")
+                .accept("application/vnd.formula-execution-v1+json")
+                .body(request)
+                .when()
+                .post("/execute")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+                .contentType("application/vnd.execution-unexpected-exception-v1+text")
+                .body(is("unexpected exception"));
+    }
 }

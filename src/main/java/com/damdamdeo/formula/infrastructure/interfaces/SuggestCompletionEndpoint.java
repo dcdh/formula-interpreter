@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.SuggestedFormula;
-import com.damdamdeo.formula.domain.SuggestionsCompletion;
+import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import jakarta.ws.rs.FormParam;
@@ -22,8 +22,7 @@ public final class SuggestCompletionEndpoint {
 
     @POST
     @Produces("application/vnd.suggest-completion-v1+json")
-    public List<String> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) {
-        final SuggestionsCompletion suggestionsCompletion = suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula)));
-        return suggestionsCompletion.suggestions();
+    public List<String> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
+        return suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula))).suggestions();
     }
 }

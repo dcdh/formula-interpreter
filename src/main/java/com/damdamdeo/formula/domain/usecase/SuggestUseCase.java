@@ -1,8 +1,6 @@
 package com.damdamdeo.formula.domain.usecase;
 
-import com.damdamdeo.formula.domain.SuggestCompletion;
-import com.damdamdeo.formula.domain.SuggestionsCompletion;
-import com.damdamdeo.formula.domain.UseCase;
+import com.damdamdeo.formula.domain.*;
 
 import java.util.Objects;
 
@@ -15,7 +13,17 @@ public final class SuggestUseCase implements UseCase<SuggestionsCompletion, Sugg
     }
 
     @Override
-    public SuggestionsCompletion execute(final SuggestCommand command) {
-        return autoSuggestCompletion.suggest(command.suggestedFormula());
+    public SuggestionsCompletion execute(final SuggestCommand command) throws SuggestionException {
+        try {
+            return autoSuggestCompletion.suggest(command.suggestedFormula());
+        } catch (final AutoSuggestUnavailableException exception) {
+            throw new SuggestionException(exception);
+        } catch (final AutoSuggestionExecutionException exception) {
+            throw new SuggestionException(exception);
+        } catch (final AutoSuggestionExecutionTimedOutException exception) {
+            throw new SuggestionException(exception);
+        } catch (final Exception exception) {
+            throw new SuggestionException(exception);
+        }
     }
 }

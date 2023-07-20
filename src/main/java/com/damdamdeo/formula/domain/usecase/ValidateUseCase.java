@@ -2,6 +2,7 @@ package com.damdamdeo.formula.domain.usecase;
 
 import com.damdamdeo.formula.domain.SyntaxError;
 import com.damdamdeo.formula.domain.UseCase;
+import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.Validator;
 
 import java.util.Objects;
@@ -15,7 +16,11 @@ public final class ValidateUseCase<R extends SyntaxError> implements UseCase<Opt
     }
 
     @Override
-    public Optional<R> execute(final ValidateCommand command) {
-        return validator.validate(command.formula());
+    public Optional<R> execute(final ValidateCommand command) throws ValidationException {
+        try {
+            return validator.validate(command.formula());
+        } catch (final Exception exception) {
+            throw new ValidationException(exception);
+        }
     }
 }

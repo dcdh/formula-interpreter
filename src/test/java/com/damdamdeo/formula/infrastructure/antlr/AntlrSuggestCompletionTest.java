@@ -2,7 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;
-import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionTimedOutException;
+import com.damdamdeo.formula.domain.AutoSuggestionExecutionTimedOutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

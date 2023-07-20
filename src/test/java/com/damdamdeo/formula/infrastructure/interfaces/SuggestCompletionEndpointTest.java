@@ -1,12 +1,8 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
-import com.damdamdeo.formula.domain.SuggestedFormula;
-import com.damdamdeo.formula.domain.SuggestionsCompletion;
+import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
-import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestUnavailableException;
-import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionException;
-import com.damdamdeo.formula.infrastructure.antlr.autosuggest.AutoSuggestionExecutionTimedOutException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.apache.http.HttpStatus;
@@ -57,7 +53,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestionExecutionException() {
         // Given
-        doThrow(new AutoSuggestionExecutionException(new SuggestedFormula("IF"), new RuntimeException("error")))
+        doThrow(new SuggestionException(new AutoSuggestionExecutionException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -76,7 +72,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestionExecutionTimedOutException() {
         // Given
-        doThrow(new AutoSuggestionExecutionTimedOutException(new SuggestedFormula("IF"), new RuntimeException("error")))
+        doThrow(new SuggestionException(new AutoSuggestionExecutionTimedOutException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -95,7 +91,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestUnavailableException() {
         // Given
-        doThrow(new AutoSuggestUnavailableException(new SuggestedFormula("IF"), new RuntimeException("error")))
+        doThrow(new SuggestionException(new AutoSuggestUnavailableException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -111,4 +107,22 @@ public class SuggestCompletionEndpointTest {
                 .body(is("AutoSuggestion service execution unavailable while processing formula 'IF' - msg 'error'"));
     }
 
+    @Test
+    public void shouldHandleException() {
+        // Given
+        doThrow(new SuggestionException(new Exception("unexpected exception")))
+                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+
+        // When && Then
+        given()
+                .accept("application/vnd.suggest-completion-v1+json")
+                .formParam("suggestedFormula", "IF")
+                .when()
+                .post("/suggestCompletion")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+                .contentType("application/vnd.autosuggestion-unexpected-exception-v1+text")
+                .body(is("unexpected exception"));
+    }
 }

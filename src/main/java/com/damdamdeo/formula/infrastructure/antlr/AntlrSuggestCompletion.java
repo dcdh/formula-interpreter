@@ -2,9 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.FormulaLexer;
 import com.damdamdeo.formula.FormulaParser;
-import com.damdamdeo.formula.domain.SuggestCompletion;
-import com.damdamdeo.formula.domain.SuggestedFormula;
-import com.damdamdeo.formula.domain.SuggestionsCompletion;
+import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.infrastructure.antlr.autosuggest.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,13 +10,15 @@ import org.apache.logging.log4j.Logger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class AntlrSuggestCompletion implements SuggestCompletion {
     private static final Logger LOGGER = LogManager.getLogger(AntlrSuggestCompletion.class);
 
     @Override
-    public SuggestionsCompletion suggest(final SuggestedFormula suggestedFormula) {
+    public SuggestionsCompletion suggest(final SuggestedFormula suggestedFormula)
+            throws AutoSuggestUnavailableException, AutoSuggestionExecutionException, AutoSuggestionExecutionTimedOutException {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         try {
             final Future<SuggestionsCompletion> future = executor.submit(() -> {
