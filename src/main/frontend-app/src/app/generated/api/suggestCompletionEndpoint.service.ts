@@ -107,10 +107,10 @@ export class SuggestCompletionEndpointService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public suggestCompletion(suggestedFormula?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json', context?: HttpContext}): Observable<Array<string>>;
-    public suggestCompletion(suggestedFormula?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json', context?: HttpContext}): Observable<HttpResponse<Array<string>>>;
-    public suggestCompletion(suggestedFormula?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json', context?: HttpContext}): Observable<HttpEvent<Array<string>>>;
-    public suggestCompletion(suggestedFormula?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json', context?: HttpContext}): Observable<any> {
+    public suggestCompletion(suggestedFormula?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json' | 'application/vnd.autosuggestion-unavailable-v1+text' | 'application/vnd.autosuggestion-execution-exception-v1+text' | 'application/vnd.autosuggestion-unexpected-exception-v1+text' | 'application/vnd.autosuggestion-execution-timed-out-v1+text', context?: HttpContext}): Observable<Array<string>>;
+    public suggestCompletion(suggestedFormula?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json' | 'application/vnd.autosuggestion-unavailable-v1+text' | 'application/vnd.autosuggestion-execution-exception-v1+text' | 'application/vnd.autosuggestion-unexpected-exception-v1+text' | 'application/vnd.autosuggestion-execution-timed-out-v1+text', context?: HttpContext}): Observable<HttpResponse<Array<string>>>;
+    public suggestCompletion(suggestedFormula?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json' | 'application/vnd.autosuggestion-unavailable-v1+text' | 'application/vnd.autosuggestion-execution-exception-v1+text' | 'application/vnd.autosuggestion-unexpected-exception-v1+text' | 'application/vnd.autosuggestion-execution-timed-out-v1+text', context?: HttpContext}): Observable<HttpEvent<Array<string>>>;
+    public suggestCompletion(suggestedFormula?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.suggest-completion-v1+json' | 'application/vnd.autosuggestion-unavailable-v1+text' | 'application/vnd.autosuggestion-execution-exception-v1+text' | 'application/vnd.autosuggestion-unexpected-exception-v1+text' | 'application/vnd.autosuggestion-execution-timed-out-v1+text', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -118,7 +118,11 @@ export class SuggestCompletionEndpointService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/vnd.suggest-completion-v1+json'
+                'application/vnd.suggest-completion-v1+json',
+                'application/vnd.autosuggestion-unavailable-v1+text',
+                'application/vnd.autosuggestion-execution-exception-v1+text',
+                'application/vnd.autosuggestion-unexpected-exception-v1+text',
+                'application/vnd.autosuggestion-execution-timed-out-v1+text'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }

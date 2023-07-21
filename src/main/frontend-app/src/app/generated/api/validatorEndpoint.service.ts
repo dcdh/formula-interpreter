@@ -109,10 +109,10 @@ export class ValidatorEndpointService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public validate(formula?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json', context?: HttpContext}): Observable<SyntaxErrorDTO>;
-    public validate(formula?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json', context?: HttpContext}): Observable<HttpResponse<SyntaxErrorDTO>>;
-    public validate(formula?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json', context?: HttpContext}): Observable<HttpEvent<SyntaxErrorDTO>>;
-    public validate(formula?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json', context?: HttpContext}): Observable<any> {
+    public validate(formula?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json' | 'application/vnd.validation-unexpected-exception-v1+text', context?: HttpContext}): Observable<SyntaxErrorDTO>;
+    public validate(formula?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json' | 'application/vnd.validation-unexpected-exception-v1+text', context?: HttpContext}): Observable<HttpResponse<SyntaxErrorDTO>>;
+    public validate(formula?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json' | 'application/vnd.validation-unexpected-exception-v1+text', context?: HttpContext}): Observable<HttpEvent<SyntaxErrorDTO>>;
+    public validate(formula?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.formula-validator-v1+json' | 'application/vnd.validation-unexpected-exception-v1+text', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -120,7 +120,8 @@ export class ValidatorEndpointService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/vnd.formula-validator-v1+json'
+                'application/vnd.formula-validator-v1+json',
+                'application/vnd.validation-unexpected-exception-v1+text'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }

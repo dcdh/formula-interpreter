@@ -98,10 +98,10 @@ export class ExecutorEndpointService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public execute(executeDTO?: ExecuteDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json', context?: HttpContext}): Observable<ExecutionResultDTO>;
-    public execute(executeDTO?: ExecuteDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json', context?: HttpContext}): Observable<HttpResponse<ExecutionResultDTO>>;
-    public execute(executeDTO?: ExecuteDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json', context?: HttpContext}): Observable<HttpEvent<ExecutionResultDTO>>;
-    public execute(executeDTO?: ExecuteDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json', context?: HttpContext}): Observable<any> {
+    public execute(executeDTO?: ExecuteDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json' | 'application/vnd.execution-syntax-error-v1+json' | 'application/vnd.execution-unexpected-exception-v1+text', context?: HttpContext}): Observable<ExecutionResultDTO>;
+    public execute(executeDTO?: ExecuteDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json' | 'application/vnd.execution-syntax-error-v1+json' | 'application/vnd.execution-unexpected-exception-v1+text', context?: HttpContext}): Observable<HttpResponse<ExecutionResultDTO>>;
+    public execute(executeDTO?: ExecuteDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json' | 'application/vnd.execution-syntax-error-v1+json' | 'application/vnd.execution-unexpected-exception-v1+text', context?: HttpContext}): Observable<HttpEvent<ExecutionResultDTO>>;
+    public execute(executeDTO?: ExecuteDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.formula-execution-v1+json' | 'application/vnd.execution-syntax-error-v1+json' | 'application/vnd.execution-unexpected-exception-v1+text', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -109,7 +109,9 @@ export class ExecutorEndpointService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/vnd.formula-execution-v1+json'
+                'application/vnd.formula-execution-v1+json',
+                'application/vnd.execution-syntax-error-v1+json',
+                'application/vnd.execution-unexpected-exception-v1+text'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
