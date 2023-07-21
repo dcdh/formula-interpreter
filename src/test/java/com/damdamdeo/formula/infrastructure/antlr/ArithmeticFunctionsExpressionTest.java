@@ -19,7 +19,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                                            final String expectedValue) throws SyntaxErrorException {
+                                                                                            final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -40,7 +40,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
-                                                                              final String expectedValue) throws SyntaxErrorException {
+                                                                              final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],260)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -60,7 +60,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                              final String expectedValue) throws SyntaxErrorException {
+                                                                              final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s(660,[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -80,7 +80,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
     public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
-                                                                final String expectedValue) throws SyntaxErrorException {
+                                                                final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s(660,260)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -103,7 +103,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldCompoundArithmeticFunctions() throws SyntaxErrorException {
+    public void shouldCompoundArithmeticFunctions() {
         // Given
         final String givenFormula = "DIV(ADD(2,MUL(2,4)),2)";
         final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -118,7 +118,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperations")
-    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) throws SyntaxErrorException {
+    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -137,7 +137,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperations")
-    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) throws SyntaxErrorException {
+    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -157,7 +157,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperations")
-    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) throws SyntaxErrorException {
+    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -177,7 +177,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperations")
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) throws SyntaxErrorException {
+    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
@@ -205,7 +205,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldDivideByZeroProduceAnError() throws SyntaxErrorException {
+    public void shouldDivideByZeroProduceAnError() {
         // Given
         final String givenFormula = "DIV(10,0)";
         final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -219,7 +219,7 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecution() throws SyntaxErrorException {
+    public void shouldLogExecution() {
         // Given
         final String givenFormula = "DIV(10,0)";
         final StructuredData givenStructuredData = new StructuredData(List.of());

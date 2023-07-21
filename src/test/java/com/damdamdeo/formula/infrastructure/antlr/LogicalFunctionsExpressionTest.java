@@ -27,7 +27,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
                 final String leftValue,
                 final String givenLogicalFunction,
                 final String rightValue,
-                final String expectedValue) throws SyntaxErrorException {
+                final String expectedValue) {
             // Given
             final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
             final StructuredData givenStructuredData = new StructuredData(
@@ -50,7 +50,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         public void shouldExecuteLogicalFunctionsForStructuredReferenceLeftAndValueRight(final String leftValue,
                                                                                          final String givenLogicalFunction,
                                                                                          final String rightValue,
-                                                                                         final String expectedValue) throws SyntaxErrorException {
+                                                                                         final String expectedValue) {
             // Given
             final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenLogicalFunction, rightValue);
             final StructuredData givenStructuredData = new StructuredData(
@@ -72,7 +72,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         public void shouldExecuteLogicalFunctionsForValueLeftAndStructuredReferenceRight(final String leftValue,
                                                                                          final String givenLogicalFunction,
                                                                                          final String rightValue,
-                                                                                         final String expectedValue) throws SyntaxErrorException {
+                                                                                         final String expectedValue) {
             // Given
             final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenLogicalFunction, leftValue);
             final StructuredData givenStructuredData = new StructuredData(
@@ -94,7 +94,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         public void shouldExecuteLogicalFunctionsForValueLeftAndValueRight(final String leftValue,
                                                                            final String givenLogicalFunction,
                                                                            final String rightValue,
-                                                                           final String expectedValue) throws SyntaxErrorException {
+                                                                           final String expectedValue) {
             // Given
             final String givenFormula = String.format("%s(%s,%s)", givenLogicalFunction, leftValue, rightValue);
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -140,8 +140,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @EnumSource(LogicalOperator.class)
-        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final LogicalOperator givenLogicalFunction) throws
-                SyntaxErrorException {
+        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final LogicalOperator givenLogicalFunction) {
             // Given
             final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
             final StructuredData givenStructuredData = new StructuredData(
@@ -160,8 +159,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @EnumSource(LogicalOperator.class)
-        public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) throws
-                SyntaxErrorException {
+        public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) {
             // Given
             final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
             final StructuredData givenStructuredData = new StructuredData(
@@ -182,8 +180,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @EnumSource(LogicalOperator.class)
-        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) throws
-                SyntaxErrorException {
+        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final LogicalOperator givenLogicalFunction) {
             // Given
             final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction.name());
             final StructuredData givenStructuredData = new StructuredData(
@@ -203,7 +200,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideLogicalFunctionsUsingComparisonsFunction")
-        public void shouldUseComparisonsFunctions(final String givenFormula) throws SyntaxErrorException {
+        public void shouldUseComparisonsFunctions(final String givenFormula) {
             // Given
             final StructuredData givenStructuredData = new StructuredData(
                     List.of(
@@ -232,7 +229,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "AND(0,0)";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -262,7 +259,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideComparisons")
-        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) throws SyntaxErrorException {
+        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) {
             // Given
             final StructuredData givenStructuredData = new StructuredData(List.of());
 
@@ -306,8 +303,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldBeUnknownWhenStructuredReferenceIsUnknown() throws
-                SyntaxErrorException {
+        public void shouldBeUnknownWhenStructuredReferenceIsUnknown() {
             // Given
             final String givenFormula = """
                     IF([@[North Sales Amount]],"true","false")""";
@@ -322,8 +318,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldBeNotAvailableWhenStructuredReferenceIsNull() throws
-                SyntaxErrorException {
+        public void shouldBeNotAvailableWhenStructuredReferenceIsNull() {
             // Given
             final String givenFormula = """
                     IF([@[North Sales Amount]],"true","false")""";
@@ -342,7 +337,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "IF(\"true\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -371,7 +366,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideComparisons")
-        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) throws SyntaxErrorException {
+        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) {
             // Given
             final StructuredData givenStructuredData = new StructuredData(List.of());
 
@@ -423,7 +418,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "IFERROR(\"true\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -452,7 +447,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideComparisons")
-        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) throws SyntaxErrorException {
+        public void shouldComputeIf(final String givenIfFormula, final String expectedResult) {
             // Given
             final StructuredData givenStructuredData = new StructuredData(List.of());
 
@@ -504,7 +499,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "IFNA(\"#REF!\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -533,7 +528,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldCheck(final String givenFunction, final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldCheck(final String givenFunction, final String givenValue, final String expectedResult) {
             // Given
             final String givenFormula = String.format("""
                     %s("%s")
@@ -550,7 +545,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldComputeUsingOnStructuredReference(final String givenFunction, final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldComputeUsingOnStructuredReference(final String givenFunction, final String givenValue, final String expectedResult) {
             // Given
             final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
             final StructuredData givenStructuredData = new StructuredData(List.of(
@@ -586,7 +581,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideFunctions")
-        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenFunction) throws SyntaxErrorException {
+        public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenFunction) {
             // Given
             final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -601,7 +596,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideFunctions")
-        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenFunction) throws SyntaxErrorException {
+        public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenFunction) {
             // Given
             final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
             final StructuredData givenStructuredData = new StructuredData(
@@ -628,7 +623,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "ISNUM(\"123456\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -655,7 +650,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldCheck(final String givenValue, final String expectedResult) {
             // Given
             final String givenFormula = String.format("""
                     ISNA("%s")
@@ -679,7 +674,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldBeFalseWhenOneStructuredReferenceIsUnknown() throws SyntaxErrorException {
+        public void shouldBeFalseWhenOneStructuredReferenceIsUnknown() {
             // Given
             final String givenFormula = "ISNA([@[% Commission]])";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -693,7 +688,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldBeTrueWhenRightStructuredReferenceIsNull() throws SyntaxErrorException {
+        public void shouldBeTrueWhenRightStructuredReferenceIsNull() {
             // Given
             final String givenFormula = "ISNA([@[% Commission]])";
             final StructuredData givenStructuredData = new StructuredData(
@@ -711,7 +706,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "ISNA(123456)";
             final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -738,7 +733,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
 
         @ParameterizedTest
         @MethodSource("provideValues")
-        public void shouldCheck(final String givenValue, final String expectedResult) throws SyntaxErrorException {
+        public void shouldCheck(final String givenValue, final String expectedResult) {
             // Given
             final String givenFormula = String.format("""
                     ISERROR("%s")
@@ -765,7 +760,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
         }
 
         @Test
-        public void shouldLogExecution() throws SyntaxErrorException {
+        public void shouldLogExecution() {
             // Given
             final String givenFormula = "ISERROR(123456)";
             final StructuredData givenStructuredData = new StructuredData(List.of());

@@ -3,6 +3,9 @@ package com.damdamdeo.formula.infrastructure.interfaces;
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestUnavailableException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionTimedOutException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.apache.http.HttpStatus;
@@ -53,7 +56,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestionExecutionException() {
         // Given
-        doThrow(new SuggestionException(new AutoSuggestionExecutionException(new SuggestedFormula("IF"), new RuntimeException("error"))))
+        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -72,7 +75,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestionExecutionTimedOutException() {
         // Given
-        doThrow(new SuggestionException(new AutoSuggestionExecutionTimedOutException(new SuggestedFormula("IF"), new RuntimeException("error"))))
+        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -91,7 +94,7 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestUnavailableException() {
         // Given
-        doThrow(new SuggestionException(new AutoSuggestUnavailableException(new SuggestedFormula("IF"), new RuntimeException("error"))))
+        doThrow(new SuggestionException(new AntlrAutoSuggestUnavailableException(new SuggestedFormula("IF"), new RuntimeException("error"))))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then

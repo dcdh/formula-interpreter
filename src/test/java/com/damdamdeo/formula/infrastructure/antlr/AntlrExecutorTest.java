@@ -27,7 +27,9 @@ public class AntlrExecutorTest {
     @Test
     public void shouldFailOnUnrecognizedToken() {
         assertThatThrownBy(() -> antlrExecutor.execute(new Formula("\""), new StructuredData()))
-                .isInstanceOf(SyntaxErrorException.class)
+                .isInstanceOf(ExecutionException.class)
+                .cause()
+                .isInstanceOf(AntlrSyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
                         new AntlrSyntaxError(1, 1, "mismatched input '<EOF>' expecting {'ADD', 'SUB', 'DIV', 'MUL', 'GT', 'GTE', 'EQ', 'NEQ', 'LT', 'LTE', 'AND', 'OR', 'IF', 'IFERROR', 'ISNUM', 'ISLOGICAL', 'ISTEXT', 'ISBLANK', 'ISNA', 'ISERROR', 'IFNA', TRUE, FALSE, STRUCTURED_REFERENCE, VALUE, NUMERIC}"));
     }
@@ -35,7 +37,9 @@ public class AntlrExecutorTest {
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
         assertThatThrownBy(() -> antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData()))
-                .isInstanceOf(SyntaxErrorException.class)
+                .isInstanceOf(ExecutionException.class)
+                .cause()
+                .isInstanceOf(AntlrSyntaxErrorException.class)
                 .hasFieldOrPropertyWithValue("syntaxError",
                         new AntlrSyntaxError(2, 0, "extraneous input '\"World\"' expecting <EOF>"));
     }

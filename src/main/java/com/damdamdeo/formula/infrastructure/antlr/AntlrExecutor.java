@@ -27,16 +27,22 @@ public final class AntlrExecutor implements Executor {
 
     @Override
     public ExecutionResult execute(final Formula formula,
-                                   final StructuredData structuredData) throws SyntaxErrorException {
-        final ParseTree tree = antlrValidator.doValidate(formula);
-        final ExecutionId executionId = executionIdGenerator.generate();
-        final EvalVisitor visitor = new EvalVisitor(executionId, executionLogger, executedAtProvider, structuredData, numericalContext);
-        final Result value = visitor.visit(tree);
-        if (value == null) {
-            throw new IllegalStateException("Should not be null - a response is expected");
+                                   final StructuredData structuredData) throws ExecutionException {
+        try {
+            final ParseTree tree = antlrValidator.doValidate(formula);
+            final ExecutionId executionId = executionIdGenerator.generate();
+            final EvalVisitor visitor = new EvalVisitor(executionId, executionLogger, executedAtProvider, structuredData, numericalContext);
+            final Result value = visitor.visit(tree);
+            if (value == null) {
+                throw new IllegalStateException("Should not be null - a response is expected");
+            }
+            final List<Execution> executions = executionLogger.getByExecutionId(executionId);
+            return new ExecutionResult(value, executions);
+        } catch (final AntlrSyntaxErrorException antlrSyntaxErrorException) {
+            throw new ExecutionException(antlrSyntaxErrorException);
+        } catch (final Exception exception) {
+            throw new ExecutionException(exception);
         }
-        final List<Execution> executions = executionLogger.getByExecutionId(executionId);
-        return new ExecutionResult(value, executions);
     }
 
 }

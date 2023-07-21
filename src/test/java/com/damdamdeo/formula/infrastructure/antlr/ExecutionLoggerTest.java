@@ -24,7 +24,7 @@ public class ExecutionLoggerTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecutionForJoe() throws SyntaxErrorException {
+    public void shouldLogExecutionForJoe() {
         // Given
         final StructuredData givenStructuredData = new StructuredData(List.of(
                 new StructuredDatum(new Reference("Sales Person"), "Joe"),
@@ -78,7 +78,7 @@ public class ExecutionLoggerTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecutionForRobert() throws SyntaxErrorException {
+    public void shouldLogExecutionForRobert() {
         // Given
         final StructuredData givenStructuredData = new StructuredData(List.of(
                 new StructuredDatum(new Reference("Sales Person"), "Robert"),

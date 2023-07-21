@@ -23,7 +23,7 @@ public class ValueExpressionTest extends AbstractExpressionTest {
             "\"-+E.09()%\",-+E.09()%"
     })
     public void shouldReturnInputValue(final String givenFormula,
-                                       final String expectedResult) throws SyntaxErrorException {
+                                       final String expectedResult) {
         // Given
 
         // When
@@ -35,7 +35,7 @@ public class ValueExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecution() throws SyntaxErrorException {
+    public void shouldLogExecution() {
         // Given
         final String givenFormula = "\"Hello World\"";
         final StructuredData givenStructuredData = new StructuredData(List.of());

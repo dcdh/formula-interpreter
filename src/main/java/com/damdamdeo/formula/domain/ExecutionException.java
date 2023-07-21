@@ -1,7 +1,9 @@
 package com.damdamdeo.formula.domain;
 
+import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
+
 public final class ExecutionException extends RuntimeException {
-    public ExecutionException(final SyntaxErrorException cause) {
+    public ExecutionException(final AntlrSyntaxErrorException cause) {
         super(cause);
     }
 

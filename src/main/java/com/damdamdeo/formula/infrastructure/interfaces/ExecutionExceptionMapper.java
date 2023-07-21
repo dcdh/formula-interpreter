@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.ExecutionException;
-import com.damdamdeo.formula.domain.SyntaxErrorException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -25,7 +25,7 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
             )
     )
     public Response toResponse(final ExecutionException exception) {
-        if (exception.getCause() instanceof SyntaxErrorException) {
+        if (exception.getCause() instanceof AntlrSyntaxErrorException) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type("application/vnd.execution-syntax-error-v1+json")
                     .entity(exception.getMessage())

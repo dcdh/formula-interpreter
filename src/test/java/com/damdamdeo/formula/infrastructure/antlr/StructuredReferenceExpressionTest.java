@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
 
     @Test
-    public void shouldReturnStructuredReferenceValue() throws SyntaxErrorException {
+    public void shouldReturnStructuredReferenceValue() {
         // Given
         final String givenFormula = "[@[% Commission]]";
         final StructuredData givenStructuredData = new StructuredData(List.of(
@@ -30,7 +30,7 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldReturnUnknownReferenceWhenStructureReferenceDoesNotExists() throws SyntaxErrorException {
+    public void shouldReturnUnknownReferenceWhenStructureReferenceDoesNotExists() {
         // Given
         final String givenFormula = "[@[% Commission]]";
         final StructuredData givenStructuredData = new StructuredData();
@@ -44,7 +44,7 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldReturnNotAvailableWhenStructureReferenceValueIsNull() throws SyntaxErrorException {
+    public void shouldReturnNotAvailableWhenStructureReferenceValueIsNull() {
         // Given
         final String givenFormula = "[@[% Commission]]";
         final StructuredData givenStructuredData = new StructuredData(List.of(
@@ -60,7 +60,7 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecution() throws SyntaxErrorException {
+    public void shouldLogExecution() {
         // Given
         final String givenFormula = "[@[% Commission]]";
         final StructuredData givenStructuredData = new StructuredData(List.of(

@@ -1,8 +1,8 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
-import com.damdamdeo.formula.domain.AutoSuggestUnavailableException;
-import com.damdamdeo.formula.domain.AutoSuggestionExecutionException;
-import com.damdamdeo.formula.domain.AutoSuggestionExecutionTimedOutException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestUnavailableException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionException;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionTimedOutException;
 import com.damdamdeo.formula.domain.SuggestionException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -37,17 +37,17 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
             )
     )
     public Response toResponse(final SuggestionException exception) {
-        if (exception.getCause() instanceof AutoSuggestUnavailableException) {
+        if (exception.getCause() instanceof AntlrAutoSuggestUnavailableException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .type("application/vnd.autosuggestion-unavailable-v1+text")
                     .entity(exception.getMessage())
                     .build();
-        } else if (exception.getCause() instanceof AutoSuggestionExecutionException) {
+        } else if (exception.getCause() instanceof AntlrAutoSuggestionExecutionException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .type("application/vnd.autosuggestion-execution-exception-v1+text")
                     .entity(exception.getMessage())
                     .build();
-        } else if (exception.getCause() instanceof AutoSuggestionExecutionTimedOutException) {
+        } else if (exception.getCause() instanceof AntlrAutoSuggestionExecutionTimedOutException) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE)
                     .type("application/vnd.autosuggestion-execution-timed-out-v1+text")
                     .entity(exception.getMessage())

@@ -17,10 +17,6 @@ public final class ValidateUseCase<R extends SyntaxError> implements UseCase<Opt
 
     @Override
     public Optional<R> execute(final ValidateCommand command) throws ValidationException {
-        try {
-            return validator.validate(command.formula());
-        } catch (final Exception exception) {
-            throw new ValidationException(exception);
-        }
+        return validator.validate(command.formula());
     }
 }

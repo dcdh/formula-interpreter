@@ -32,7 +32,7 @@ public class NumericExpressionTest extends AbstractExpressionTest {
             "0E+7",
             "-0"
     })
-    public void shouldBeANumeric(final String givenFormula) throws SyntaxErrorException {
+    public void shouldBeANumeric(final String givenFormula) {
         // Given
 
         // When
@@ -50,7 +50,7 @@ public class NumericExpressionTest extends AbstractExpressionTest {
             "MUL,-0.000151"
     })
     public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
-                                                                final String expectedValue) throws SyntaxErrorException {
+                                                                final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s(12.3E+7,-1.23E-12)", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -64,7 +64,7 @@ public class NumericExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecution() throws SyntaxErrorException {
+    public void shouldLogExecution() {
         // Given
         final String givenFormula = "ADD(12.3E+7,-1.23E-12)";
         final StructuredData givenStructuredData = new StructuredData(List.of());

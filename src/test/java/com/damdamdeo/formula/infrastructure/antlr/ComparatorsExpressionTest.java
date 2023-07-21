@@ -23,7 +23,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     public void shouldExecuteComparisonForStructuredReferenceLeftAndStructuredReferenceRight(final String leftValue,
                                                                                              final String givenComparison,
                                                                                              final String rightValue,
-                                                                                             final String expectedValue) throws SyntaxErrorException {
+                                                                                             final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
@@ -46,7 +46,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     public void shouldExecuteComparisonForStructuredReferenceLeftAndValueRight(final String leftValue,
                                                                                final String givenComparison,
                                                                                final String rightValue,
-                                                                               final String expectedValue) throws SyntaxErrorException {
+                                                                               final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenComparison, rightValue);
         final StructuredData givenStructuredData = new StructuredData(
@@ -68,7 +68,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     public void shouldExecuteComparisonForValueLeftAndStructuredReferenceRight(final String leftValue,
                                                                                final String givenComparison,
                                                                                final String rightValue,
-                                                                               final String expectedValue) throws SyntaxErrorException {
+                                                                               final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenComparison, leftValue);
         final StructuredData givenStructuredData = new StructuredData(
@@ -90,7 +90,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     public void shouldExecuteComparisonForValueLeftAndValueRight(final String leftValue,
                                                                  final String givenComparison,
                                                                  final String rightValue,
-                                                                 final String expectedValue) throws SyntaxErrorException {
+                                                                 final String expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,%s)", givenComparison, leftValue, rightValue);
         final StructuredData givenStructuredData = new StructuredData(List.of());
@@ -139,7 +139,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideAllComparators")
-    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenComparison) throws SyntaxErrorException {
+    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenComparison) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
@@ -158,7 +158,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideAllComparators")
-    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenComparison) throws SyntaxErrorException {
+    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenComparison) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
@@ -178,7 +178,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideAllComparators")
-    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenComparison) throws SyntaxErrorException {
+    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenComparison) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
@@ -212,7 +212,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @CsvSource({"ADD", "SUB", "DIV", "MUL", "GT", "GTE", "LT", "LTE"})
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) throws SyntaxErrorException {
+    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenComparison) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
@@ -232,7 +232,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
 
     @ParameterizedTest
     @MethodSource("provideComparatorFunctionsUsingArithmeticsFunction")
-    public void shouldUseComparisonsFunctions(final String givenFormula) throws SyntaxErrorException {
+    public void shouldUseComparisonsFunctions(final String givenFormula) {
         // Given
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
@@ -254,7 +254,7 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
     }
 
     @Test
-    public void shouldLogExecution() throws SyntaxErrorException {
+    public void shouldLogExecution() {
         // Given
         final String givenFormula = "GT(660,260)";
         final StructuredData givenStructuredData = new StructuredData(List.of());

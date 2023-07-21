@@ -3,7 +3,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 import com.damdamdeo.formula.FormulaLexer;
 import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.Formula;
-import com.damdamdeo.formula.domain.SyntaxErrorException;
+import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.Validator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class AntlrValidator implements Validator<AntlrSyntaxError> {
 
-    public ParseTree doValidate(final Formula formula) throws SyntaxErrorException {
+    public ParseTree doValidate(final Formula formula) throws AntlrSyntaxErrorException {
         final FormulaLexer lexer = new FormulaLexer(CharStreams.fromString(formula.formula()));
         lexer.removeErrorListeners();
         final SyntaxErrorListener syntaxErrorListener = new SyntaxErrorListener();
@@ -32,12 +32,14 @@ public class AntlrValidator implements Validator<AntlrSyntaxError> {
     }
 
     @Override
-    public Optional<AntlrSyntaxError> validate(final Formula formula) {
+    public Optional<AntlrSyntaxError> validate(final Formula formula) throws ValidationException {
         try {
             doValidate(formula);
             return Optional.empty();
         } catch (final AntlrSyntaxErrorException syntaxErrorException) {
-            return Optional.of((AntlrSyntaxError) syntaxErrorException.syntaxError());
+            return Optional.of(syntaxErrorException.syntaxError());
+        } catch (final Exception exception) {
+            throw new ValidationException(exception);
         }
     }
 }
