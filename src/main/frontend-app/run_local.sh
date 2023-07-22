@@ -1,4 +1,3 @@
 #!/bin/bash
-PATH="$(pwd)/../node:$PATH"
-PATH="$(pwd)/../bin:$PATH"
-ng serve
+PATH="$(pwd)/node:$PATH"
+npm start
