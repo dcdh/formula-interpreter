@@ -68,8 +68,8 @@ public class SuggestCompletionEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.autosuggestion-execution-exception-v1+text")
-                .body(is("AutoSuggestion service execution exception while processing formula 'IF' - msg 'error'"));
+                .contentType("application/vnd.autosuggestion-execution-exception-v1+json")
+                .body("message", is("AutoSuggestion service execution exception while processing formula 'IF' - msg 'error'"));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class SuggestCompletionEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_SERVICE_UNAVAILABLE)
-                .contentType("application/vnd.autosuggestion-execution-timed-out-v1+text")
-                .body(is("AutoSuggestion service has timed out while executing formula 'IF' - Infinite loop in Grammar - msg 'error'"));
+                .contentType("application/vnd.autosuggestion-execution-timed-out-v1+json")
+                .body("message", is("AutoSuggestion service has timed out while executing formula 'IF' - Infinite loop in Grammar - msg 'error'"));
     }
 
     @Test
@@ -106,8 +106,8 @@ public class SuggestCompletionEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.autosuggestion-unavailable-v1+text")
-                .body(is("AutoSuggestion service execution unavailable while processing formula 'IF' - msg 'error'"));
+                .contentType("application/vnd.autosuggestion-unavailable-v1+json")
+                .body("message", is("AutoSuggestion service execution unavailable while processing formula 'IF' - msg 'error'"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class SuggestCompletionEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.autosuggestion-unexpected-exception-v1+text")
-                .body(is("unexpected exception"));
+                .contentType("application/vnd.autosuggestion-unexpected-exception-v1+json")
+                .body("message", is("unexpected exception"));
     }
 }

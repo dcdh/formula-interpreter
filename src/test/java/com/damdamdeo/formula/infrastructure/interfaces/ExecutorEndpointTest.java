@@ -112,7 +112,7 @@ public class ExecutorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType("application/vnd.execution-syntax-error-v1+json")
-                .body(is("Syntax error at line '0' at position '1' with message 'msg'"));
+                .body("message", is("Syntax error at line '0' at position '1' with message 'msg'"));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class ExecutorEndpointTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.execution-unexpected-exception-v1+text")
-                .body(is("unexpected exception"));
+                .contentType("application/vnd.execution-unexpected-exception-v1+json")
+                .body("message", is("unexpected exception"));
     }
 }

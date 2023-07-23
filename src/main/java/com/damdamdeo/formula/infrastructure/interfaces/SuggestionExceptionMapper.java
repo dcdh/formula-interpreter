@@ -17,45 +17,52 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
     @APIResponse(responseCode = "500", description = "AutoSuggestion service execution exception while processing formula",
             content = {
                     @Content(
-                            mediaType = "application/vnd.autosuggestion-unavailable-v1+text",
+                            mediaType = "application/vnd.autosuggestion-unavailable-v1+json",
                             schema = @Schema(implementation = String.class)
                     ),
                     @Content(
-                            mediaType = "application/vnd.autosuggestion-execution-exception-v1+text",
+                            mediaType = "application/vnd.autosuggestion-execution-exception-v1+json",
                             schema = @Schema(implementation = String.class)
                     ),
                     @Content(
-                            mediaType = "application/vnd.autosuggestion-unexpected-exception-v1+text",
+                            mediaType = "application/vnd.autosuggestion-unexpected-exception-v1+json",
                             schema = @Schema(implementation = String.class)
                     )
             }
     )
     @APIResponse(responseCode = "503", description = "AutoSuggestion service has timed out while executing formula",
             content = @Content(
-                    mediaType = "application/vnd.autosuggestion-execution-timed-out-v1+text",
+                    mediaType = "application/vnd.autosuggestion-execution-timed-out-v1+json",
                     schema = @Schema(implementation = String.class)
             )
     )
     public Response toResponse(final SuggestionException exception) {
+        final String body = String.format(
+                //language=JSON
+                """
+                {
+                    "message": "%s"
+                }
+                """, exception.getMessage());
         if (exception.getCause() instanceof AntlrAutoSuggestUnavailableException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .type("application/vnd.autosuggestion-unavailable-v1+text")
-                    .entity(exception.getMessage())
+                    .type("application/vnd.autosuggestion-unavailable-v1+json")
+                    .entity(body)
                     .build();
         } else if (exception.getCause() instanceof AntlrAutoSuggestionExecutionException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .type("application/vnd.autosuggestion-execution-exception-v1+text")
-                    .entity(exception.getMessage())
+                    .type("application/vnd.autosuggestion-execution-exception-v1+json")
+                    .entity(body)
                     .build();
         } else if (exception.getCause() instanceof AntlrAutoSuggestionExecutionTimedOutException) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                    .type("application/vnd.autosuggestion-execution-timed-out-v1+text")
-                    .entity(exception.getMessage())
+                    .type("application/vnd.autosuggestion-execution-timed-out-v1+json")
+                    .entity(body)
                     .build();
         } else {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .type("application/vnd.autosuggestion-unexpected-exception-v1+text")
-                    .entity(exception.getMessage())
+                    .type("application/vnd.autosuggestion-unexpected-exception-v1+json")
+                    .entity(body)
                     .build();
         }
     }

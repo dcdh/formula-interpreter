@@ -20,20 +20,27 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
     )
     @APIResponse(responseCode = "500", description = "Unhandled exception while executing formula",
             content = @Content(
-                    mediaType = "application/vnd.execution-unexpected-exception-v1+text",
+                    mediaType = "application/vnd.execution-unexpected-exception-v1+json",
                     schema = @Schema(implementation = String.class)
             )
     )
     public Response toResponse(final ExecutionException exception) {
+        final String body = String.format(
+                //language=JSON
+                """
+                {
+                    "message": "%s"
+                }
+                """, exception.getMessage());
         if (exception.getCause() instanceof AntlrSyntaxErrorException) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type("application/vnd.execution-syntax-error-v1+json")
-                    .entity(exception.getMessage())
+                    .entity(body)
                     .build();
         } else {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .type("application/vnd.execution-unexpected-exception-v1+text")
-                    .entity(exception.getMessage())
+                    .type("application/vnd.execution-unexpected-exception-v1+json")
+                    .entity(body)
                     .build();
         }
     }

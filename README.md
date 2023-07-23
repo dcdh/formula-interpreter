@@ -30,6 +30,22 @@ http://localhost:8080
 
 http://localhost:8080/q/swagger-ui/
 
+https://openapi-generator.tech/docs/generators
+
+https://redux-toolkit.js.org/introduction/getting-started
+
+https://redux-toolkit.js.org/introduction/getting-started#rtk-query
+
+https://redux-toolkit.js.org/rtk-query/usage-with-typescript
+
+https://react-redux.js.org/introduction/getting-started
+
+https://github.com/amplitude/redux-query
+
+https://amplitude.github.io/redux-query/docs/getting-started
+
+https://github.com/krlls/react-redux-rxjs-ts
+
 ## Java 17
 
 native build java version is 17

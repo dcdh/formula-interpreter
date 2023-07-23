@@ -13,14 +13,20 @@ public final class ValidationExceptionMapper implements ExceptionMapper<Validati
     @Override
     @APIResponse(responseCode = "500", description = "Validation service execution exception while processing formula",
             content = @Content(
-                    mediaType = "application/vnd.validation-unexpected-exception-v1+text",
+                    mediaType = "application/vnd.validation-unexpected-exception-v1+json",
                     schema = @Schema(implementation = String.class)
             )
     )
     public Response toResponse(final ValidationException exception) {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .type("application/vnd.validation-unexpected-exception-v1+text")
-                .entity(exception.getMessage())
+                .type("application/vnd.validation-unexpected-exception-v1+json")
+                .entity(String.format(
+                //language=JSON
+                """
+                {
+                    "message": "%s"
+                }
+                """, exception.getMessage()))
                 .build();
     }
 }

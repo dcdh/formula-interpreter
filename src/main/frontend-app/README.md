@@ -8,6 +8,16 @@ https://www.patternfly.org/v4/get-started/develop
 
 ### redux
 
+https://react-redux.js.org/introduction/getting-started
+
+https://github.com/rahsheen/expo-template-redux-typescript
+> sample to use
+
+https://redux-toolkit.js.org/api/createAsyncThunk#examples
+> sample to use
+
+https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+
 https://react-redux.js.org/tutorials/quick-start
 
 https://react-redux.js.org/tutorials/typescript-quick-start

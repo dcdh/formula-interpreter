@@ -82,7 +82,7 @@ public class ValidatorEndpointTest {
                 .post("/validate")
                 .then()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.validation-unexpected-exception-v1+text")
-                .body(is("unexpected exception"));
+                .contentType("application/vnd.validation-unexpected-exception-v1+json")
+                .body("message", is("unexpected exception"));
     }
 }
