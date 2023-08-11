@@ -5,12 +5,13 @@ import com.damdamdeo.formula.domain.ExecutionId;
 import com.damdamdeo.formula.domain.ExecutionLogger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class InMemoryExecutionLogger implements ExecutionLogger {
 
-    private final List<Execution> executions = new ArrayList<>();
+    private final List<Execution> executions = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void log(final Execution execution) {
@@ -19,9 +20,11 @@ public final class InMemoryExecutionLogger implements ExecutionLogger {
 
     @Override
     public List<Execution> getByExecutionId(ExecutionId executionId) {
-        return executions.stream()
-                .filter(execution -> execution.executionId().equals(executionId))
-                .collect(Collectors.toList());
+        synchronized (executions) {
+            return executions.stream()
+                    .filter(execution -> execution.executionId().equals(executionId))
+                    .collect(Collectors.toList());
+        }
     }
 
 }
