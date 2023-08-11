@@ -25,8 +25,7 @@ public class AntlrSuggestCompletion implements SuggestCompletion {
         try {
             final Future<SuggestionsCompletion> future = executor.submit(() -> {
                 final LexerAndParserFactory lexerAndParserFactory = new ReflectionLexerAndParserFactory(FormulaLexer.class, FormulaParser.class);
-                final AutoSuggester suggester = new AutoSuggester(lexerAndParserFactory, suggestedFormula.formula());
-                suggester.setCasePreference(CasePreference.BOTH);
+                final AutoSuggester suggester = new AutoSuggester(lexerAndParserFactory, suggestedFormula.formula(), CasePreference.BOTH);
                 final List<String> suggestCompletions = suggester.suggestCompletions()
                         .stream()
                         .sorted(Comparator.reverseOrder())

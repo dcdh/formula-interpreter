@@ -13,34 +13,35 @@ public class ReflectionLexerAndParserFactory implements LexerAndParserFactory {
     private final Constructor<? extends Lexer> lexerCtr;
     private final Constructor<? extends Parser> parserCtr;
 
-    public ReflectionLexerAndParserFactory(Class<? extends Lexer> lexerClass, Class<? extends Parser> parserClass) {
+    public ReflectionLexerAndParserFactory(final Class<? extends Lexer> lexerClass,
+                                           final Class<? extends Parser> parserClass) {
         lexerCtr = getConstructor(lexerClass, CharStream.class);
         parserCtr = getConstructor(parserClass, TokenStream.class);
     }
 
     @Override
-    public Lexer createLexer(CharStream input) {
+    public Lexer createLexer(final CharStream input) {
         return create(lexerCtr, input);
     }
 
     @Override
-    public Parser createParser(TokenStream tokenStream) {
+    public Parser createParser(final TokenStream tokenStream) {
         return create(parserCtr, tokenStream);
     }
 
-    private static <T> Constructor<? extends T> getConstructor(Class<? extends T> givenClass, Class<?> argClass) {
+    private static <T> Constructor<? extends T> getConstructor(final Class<? extends T> givenClass, final Class<?> argClass) {
         try {
             return givenClass.getConstructor(argClass);
-        } catch (NoSuchMethodException | SecurityException e) {
+        } catch (final NoSuchMethodException | SecurityException e) {
             throw new IllegalArgumentException(
                     givenClass.getSimpleName() + " must have constructor from " + argClass.getSimpleName() + ".");
         }
     }
 
-    private <T> T create(Constructor<? extends T> contructor, Object arg) {
+    private <T> T create(final Constructor<? extends T> constructor, final Object arg) {
         try {
-            return contructor.newInstance(arg);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return constructor.newInstance(arg);
+        } catch (final InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);
         }
     }

@@ -10,39 +10,38 @@ import java.util.*;
 class TokenSuggester {
     private final LexerWrapper lexerWrapper;
     private final CasePreference casePreference;
+    private final Set<String> suggestions;
+    private final List<Integer> visitedLexerStates;
+    private final String origPartialToken;
 
-    private final Set<String> suggestions = new TreeSet<String>();
-    private final List<Integer> visitedLexerStates = new ArrayList<>();
-    private String origPartialToken;
-
-    public TokenSuggester(LexerWrapper lexerWrapper, String input) {
-        this(input, lexerWrapper, CasePreference.BOTH);
+    public TokenSuggester(final String origPartialToken,
+                          final LexerWrapper lexerWrapper,
+                          final CasePreference casePreference) {
+        this.origPartialToken = Objects.requireNonNull(origPartialToken);
+        this.lexerWrapper = Objects.requireNonNull(lexerWrapper);
+        this.casePreference = Objects.requireNonNull(casePreference);
+        this.suggestions = new TreeSet<>();
+        this.visitedLexerStates = new ArrayList<>();
     }
 
-    public TokenSuggester(String origPartialToken, LexerWrapper lexerWrapper, CasePreference casePreference) {
-        this.origPartialToken = origPartialToken;
-        this.lexerWrapper = lexerWrapper;
-        this.casePreference = casePreference;
-    }
-
-    public Collection<String> suggest(Collection<Integer> nextParserTransitionLabels) {
-        for (int nextParserTransitionLabel : nextParserTransitionLabels) {
-            int nextTokenRuleNumber = nextParserTransitionLabel - 1; // Count from 0 not from 1
-            ATNState lexerState = this.lexerWrapper.findStateByRuleNumber(nextTokenRuleNumber);
+    public Collection<String> suggest(final Collection<Integer> nextParserTransitionLabels) {
+        for (final int nextParserTransitionLabel : nextParserTransitionLabels) {
+            final int nextTokenRuleNumber = nextParserTransitionLabel - 1; // Count from 0 not from 1
+            final ATNState lexerState = this.lexerWrapper.findStateByRuleNumber(nextTokenRuleNumber);
             suggest("", lexerState, origPartialToken);
         }
         return suggestions;
     }
 
-    private void suggest(String tokenSoFar, ATNState lexerState, String remainingText) {
+    private void suggest(final String tokenSoFar, final ATNState lexerState, final String remainingText) {
         if (visitedLexerStates.contains(lexerState.stateNumber)) {
             return; // avoid infinite loop and stack overflow
         }
         visitedLexerStates.add(lexerState.stateNumber);
         try {
-            Transition[] transitions = lexerState.getTransitions();
-            boolean tokenNotEmpty = tokenSoFar.length() > 0;
-            boolean noMoreCharactersInToken = (transitions.length == 0);
+            final Transition[] transitions = lexerState.getTransitions();
+            final boolean tokenNotEmpty = tokenSoFar.length() > 0;
+            final boolean noMoreCharactersInToken = (transitions.length == 0);
             if (tokenNotEmpty && noMoreCharactersInToken) {
                 addSuggestedToken(tokenSoFar);
                 return;
@@ -55,20 +54,20 @@ class TokenSuggester {
         }
     }
 
-    private void suggestViaLexerTransition(String tokenSoFar, String remainingText, Transition trans) {
+    private void suggestViaLexerTransition(final String tokenSoFar, final String remainingText, final Transition trans) {
         if (trans.isEpsilon()) {
             suggest(tokenSoFar, trans.target, remainingText);
         } else if (trans instanceof AtomTransition) {
-            String newTokenChar = getAddedTextFor((AtomTransition) trans);
+            final String newTokenChar = getAddedTextFor((AtomTransition) trans);
             if (remainingText.isEmpty() || remainingText.startsWith(newTokenChar)) {
                 suggestViaNonEpsilonLexerTransition(tokenSoFar, remainingText, newTokenChar, trans.target);
             }
         } else if (trans instanceof SetTransition) {
-            List<Integer> symbols = ((SetTransition) trans).label().toList();
+            final List<Integer> symbols = ((SetTransition) trans).label().toList();
             for (Integer symbol : symbols) {
-                char[] charArr = Character.toChars(symbol);
-                String charStr = new String(charArr);
-                boolean shouldIgnoreCase = shouldIgnoreThisCase(charArr[0], symbols); // TODO: check for non-BMP
+                final char[] charArr = Character.toChars(symbol);
+                final String charStr = new String(charArr);
+                final boolean shouldIgnoreCase = shouldIgnoreThisCase(charArr[0], symbols); // TODO: check for non-BMP
                 if (!shouldIgnoreCase && (remainingText.isEmpty() || remainingText.startsWith(charStr))) {
                     suggestViaNonEpsilonLexerTransition(tokenSoFar, remainingText, charStr, trans.target);
                 }
@@ -76,30 +75,29 @@ class TokenSuggester {
         }
     }
 
-    private void suggestViaNonEpsilonLexerTransition(String tokenSoFar, String remainingText,
-                                                     String newTokenChar, ATNState targetState) {
-        String newRemainingText = (remainingText.length() > 0) ? remainingText.substring(1) : remainingText;
+    private void suggestViaNonEpsilonLexerTransition(final String tokenSoFar,
+                                                     final String remainingText,
+                                                     final String newTokenChar,
+                                                     final ATNState targetState) {
+        final String newRemainingText = (remainingText.length() > 0) ? remainingText.substring(1) : remainingText;
         suggest(tokenSoFar + newTokenChar, targetState, newRemainingText);
     }
 
-    private void addSuggestedToken(String tokenToAdd) {
-        String justTheCompletionPart = chopOffCommonStart(tokenToAdd, this.origPartialToken);
+    private void addSuggestedToken(final String tokenToAdd) {
+        final String justTheCompletionPart = chopOffCommonStart(tokenToAdd, this.origPartialToken);
         suggestions.add(justTheCompletionPart);
     }
 
-    private String chopOffCommonStart(String a, String b) {
-        int charsToChopOff = Math.min(b.length(), a.length());
+    private String chopOffCommonStart(final String a, final String b) {
+        final int charsToChopOff = Math.min(b.length(), a.length());
         return a.substring(charsToChopOff);
     }
 
-    private String getAddedTextFor(AtomTransition transition) {
+    private String getAddedTextFor(final AtomTransition transition) {
         return new String(Character.toChars(transition.label));
     }
 
-    private boolean shouldIgnoreThisCase(char transChar, List<Integer> allTransChars) {
-        if (this.casePreference == null) {
-            return false;
-        }
+    private boolean shouldIgnoreThisCase(final char transChar, final List<Integer> allTransChars) {
         switch (this.casePreference) {
             case BOTH:
                 return false;

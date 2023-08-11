@@ -13,20 +13,20 @@ class ParserWrapper {
     private final ATN parserAtn;
     private final String[] parserRuleNames;
 
-    public ParserWrapper(ParserFactory parserFactory, Vocabulary lexerVocabulary) {
+    public ParserWrapper(final ParserFactory parserFactory, final Vocabulary lexerVocabulary) {
         this.lexerVocabulary = lexerVocabulary;
 
-        Parser parserForAtnOnly = parserFactory.createParser(null);
+        final Parser parserForAtnOnly = parserFactory.createParser(null);
         this.parserAtn = parserForAtnOnly.getATN();
         this.parserRuleNames = parserForAtnOnly.getRuleNames();
     }
 
-    public String toString(ATNState parserState) {
-        String ruleName = this.parserRuleNames[parserState.ruleIndex];
+    public String toString(final ATNState parserState) {
+        final String ruleName = this.parserRuleNames[parserState.ruleIndex];
         return "*" + ruleName + "* " + parserState.getClass().getSimpleName() + " " + parserState;
     }
 
-    public String toString(Transition t) {
+    public String toString(final Transition t) {
         String nameOrLabel = t.getClass().getSimpleName();
         if (t instanceof AtomTransition) {
             nameOrLabel += ' ' + this.lexerVocabulary.getDisplayName(((AtomTransition) t).label);
@@ -34,7 +34,7 @@ class ParserWrapper {
         return nameOrLabel + " -> " + toString(t.target);
     }
 
-    public ATNState getAtnState(int stateNumber) {
+    public ATNState getAtnState(final int stateNumber) {
         return parserAtn.states.get(stateNumber);
     }
 }

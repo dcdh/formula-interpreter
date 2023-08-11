@@ -2,7 +2,6 @@ package com.damdamdeo.formula.infrastructure.antlr.autosuggest;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNState;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -11,69 +10,56 @@ import java.util.stream.Collectors;
 
 public class LexerWrapper {
     private final LexerFactory lexerFactory;
-    private Lexer cachedLexer;
+    private final Lexer cachedLexer;
 
-    static class TokenizationResult {
-        public List<? extends Token> tokens;
-        public String untokenizedText = "";
-    }
-
-    public LexerWrapper(LexerFactory lexerFactory) {
+    public LexerWrapper(final LexerFactory lexerFactory) {
         super();
         this.lexerFactory = lexerFactory;
+        this.cachedLexer = createLexer("");
     }
 
-    public TokenizationResult tokenizeNonDefaultChannel(String input) {
-        TokenizationResult result = this.tokenize(input);
-        result.tokens = result.tokens.stream().filter(t -> t.getChannel() == 0).collect(Collectors.toList());
-        return result;
+    public TokenizationResult tokenizeNonDefaultChannel(final String input) {
+        final TokenizationResult result = this.tokenize(input);
+        return new TokenizationResult(
+                result.tokens().stream().filter(t -> t.getChannel() == 0).collect(Collectors.toList()),
+                result.untokenizedText()
+        );
     }
 
     public String[] getRuleNames() {
-        return getCachedLexer().getRuleNames();
+        return cachedLexer.getRuleNames();
     }
 
-    public ATNState findStateByRuleNumber(int ruleNumber) {
-        return getCachedLexer().getATN().ruleToStartState[ruleNumber];
+    public ATNState findStateByRuleNumber(final int ruleNumber) {
+        return cachedLexer.getATN().ruleToStartState[ruleNumber];
     }
 
     public Vocabulary getVocabulary() {
-        return getCachedLexer().getVocabulary();
+        return cachedLexer.getVocabulary();
     }
 
-    private Lexer getCachedLexer() {
-        if (cachedLexer == null) {
-            cachedLexer = createLexer("");
-        }
-        return cachedLexer;
-    }
-
-    private TokenizationResult tokenize(String input) {
-        Lexer lexer = this.createLexer(input);
+    private TokenizationResult tokenize(final String input) {
+        final Lexer lexer = this.createLexer(input);
         lexer.removeErrorListeners();
-        final TokenizationResult result = new TokenizationResult();
-        ANTLRErrorListener newErrorListener = new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-                                    int charPositionInLine, String msg, RecognitionException e) throws ParseCancellationException {
-                result.untokenizedText = input.substring(charPositionInLine); // intended side effect
-            }
-        };
-        lexer.addErrorListener(newErrorListener);
-        result.tokens = lexer.getAllTokens();
-        return result;
+        final AutoSuggestANTLRErrorListener autoSuggestANTLRErrorListener = new AutoSuggestANTLRErrorListener(input);
+        lexer.addErrorListener(autoSuggestANTLRErrorListener);
+        final List<? extends Token> tokens = lexer.getAllTokens();
+        return new TokenizationResult(
+                tokens,
+                autoSuggestANTLRErrorListener.unTokenizedText()
+        );
     }
 
-    private Lexer createLexer(CharStream input) {
+    private Lexer createLexer(final CharStream input) {
         return this.lexerFactory.createLexer(input);
     }
 
-    private Lexer createLexer(String lexerInput) {
+    private Lexer createLexer(final String lexerInput) {
         return this.createLexer(toCharStream(lexerInput));
     }
 
-    private static CharStream toCharStream(String text) {
-        CharStream inputStream;
+    private static CharStream toCharStream(final String text) {
+        final CharStream inputStream;
         try {
             inputStream = CharStreams.fromReader(new StringReader(text));
         } catch (IOException e) {
