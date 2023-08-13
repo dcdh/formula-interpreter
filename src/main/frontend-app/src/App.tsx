@@ -5,7 +5,7 @@ import {
   Page, PageSection,
   Alert, FormAlert,
   FormGroup, TextInput,
-  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner
+  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, Divider, PanelMainBody, PanelMain, Panel, SimpleListItem, SimpleList, SimpleListItemProps
 } from '@patternfly/react-core';
 import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
@@ -80,6 +80,8 @@ const initialSampleState: SampleState = {
   ]
 };
 
+const selectFormulaPreset = createAction<string>('preset/select');
+
 const defineFormula = createAction<string>('formula/define');
 
 interface RemoteError {
@@ -87,11 +89,12 @@ interface RemoteError {
 }
 
 const validateFormula = createAsyncThunk<
-  SyntaxErrorDTO | null, string,
+  SyntaxErrorDTO | null, void,
   {
     rejectValue: RemoteError
-  }>('formula/validate', async (formula: string, { rejectWithValue }) => {
+  }>('formula/validate', async (_void: void, { rejectWithValue }) => {
     try {
+      const formula: string = store.getState().formula.formula;
       const syntaxError: SyntaxErrorDTO | null = await firstValueFrom(validator.validate({ formula: formula }));
       return syntaxError;
     } catch (error) {
@@ -115,6 +118,12 @@ const formulaSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(selectFormulaPreset, (state, { payload }) => {
+        state.formula = payload;
+        state.status = 'notValidated';
+        state.invalidMessage = null;
+        state.errorMessage = null;
+      })
       .addCase(defineFormula, (state, { payload }) => {
         state.formula = payload;
         state.status = 'notValidated';
@@ -146,11 +155,12 @@ const formulaSlice = createSlice({
 });
 
 const suggestTokens = createAsyncThunk<
-  string[], string,
+  string[], void,
   {
     rejectValue: RemoteError
-  }>('autoSuggestion/suggestTokens', async (formula: string, { rejectWithValue }) => {
+  }>('autoSuggestion/suggestTokens', async (_void: void, { rejectWithValue }) => {
     try {
+      const formula: string = store.getState().formula.formula;
       const tokens: string[] = await firstValueFrom(suggest.suggestCompletion({
         suggestedFormula: formula
       }));
@@ -208,7 +218,6 @@ const autoSuggestionSlice = createSlice({
 });
 
 type SampleToApplyFormulaOn = {
-  formula: string,
   sampleItem: SampleItem,
   sampleIndex: number
 };
@@ -218,7 +227,8 @@ const executeFormulaOnSamples = createAsyncThunk<ExecutionResultDTO, SampleToApp
     rejectValue: RemoteError
   }
 >('samples/executeFormula', async (sampleToApplyFormulaOn: SampleToApplyFormulaOn, { rejectWithValue }) => {
-  const { formula, sampleItem } = sampleToApplyFormulaOn;
+  const { sampleItem } = sampleToApplyFormulaOn;
+  const formula: string = store.getState().formula.formula;
   try {
     const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
       executeDTO: {
@@ -255,7 +265,6 @@ const executeFormulaOnSamples = createAsyncThunk<ExecutionResultDTO, SampleToApp
 const markSamplesAsFormulaInError = createAction('samples/markAsFormulaInError');
 
 const markSamplesAsFormulaInvalid = createAction('samples/markAsFormulaInvalid');
-
 
 const sampleSlice = createSlice({
   name: 'sample',
@@ -315,6 +324,7 @@ function App() {
   const tokens = useSelector(selectTokens);
   const autoSuggestionStatus = useSelector(selectAutoSuggestionStatus);
   const autoSuggestionErrMessage = useSelector(selectAutoSuggestionErrMessage);
+  const [inputFormula, setInputFormulaValue] = React.useState('');
   return (
     <Page>
       <PageSection isWidthLimited isCenterAligned>
@@ -322,12 +332,26 @@ function App() {
           <CardBody>
             <Stack hasGutter>
               <StackItem>
-              MUL([@[Sales Amount]],[@[% Commission]])
-              IF(EQ([@[Sales Person]],"Joe"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))
+                <SimpleList>
+                  <SimpleListItem key="firstPresetFormula" onClick={() => {
+                    onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
+                    setInputFormulaValue(store.getState().formula.formula);
+                  }}>
+                    Compute commission amout by multiplying Sales Amount by Percent Commission
+                  </SimpleListItem>
+                  <SimpleListItem key="secondPresetFormula" onClick={() => {
+                    onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
+                    setInputFormulaValue(store.getState().formula.formula);
+                  }}>
+                    Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+                  </SimpleListItem>
+                </SimpleList>
               </StackItem>
               <StackItem>
                 <FormGroup>
                   <TextInput id="formulaDefinition"
+                    onChange={value => setInputFormulaValue(value)}
+                    value={inputFormula}
                     onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
                   />
                   <FormHelperText isHidden={false} component="div">
@@ -356,9 +380,6 @@ function App() {
                   }
                   {formula.status === 'invalid' &&
                     <Alert variant="danger" title={formula.invalidMessage} aria-live="polite" isInline />
-                  }
-                  {formula.status === 'notValidated' &&
-                    <Alert variant="info" title="Not validated yet." aria-live="polite" isInline />
                   }
                 </FormAlert>
               </StackItem>
@@ -413,36 +434,45 @@ function App() {
     </Page>
   );
 
+  function onFormulaPresetSelected(preset: string) {
+    dispatch(selectFormulaPreset(preset));
+    executeFormula();
+  }
+
   function onFormulaDefinition(formulaKeyUpEvent: React.KeyboardEvent<HTMLInputElement>): void {
     const formula: string = formulaKeyUpEvent.currentTarget.value;
+    dispatch(defineFormula(formula));
     if (formulaKeyUpEvent.key === 'Enter') {
-      dispatch(validateFormula(formula))
-        .then((resultAction) => {
-          if (validateFormula.fulfilled.match(resultAction)) {
-            switch (store.getState().formula.status) {
-              case 'valid':
-                sample.items.forEach(function (item, index) {
-                  dispatch(executeFormulaOnSamples({
-                    formula: formula,
-                    sampleItem: item,
-                    sampleIndex: index
-                  }));
-                });
-                break;
-              case 'invalid':
-                dispatch(markSamplesAsFormulaInvalid());
-                break;
-              default:
-                console.log('Should not be here');
-            }
-          } else {
-            dispatch(markSamplesAsFormulaInError());
-          }
-        })
+      executeFormula();
     } else {
-      dispatch(defineFormula(formula));
-      dispatch(suggestTokens(formula));
+      dispatch(suggestTokens());
     }
+  }
+
+  function executeFormula() {
+    dispatch(validateFormula())
+      .then((resultAction) => {
+        if (validateFormula.fulfilled.match(resultAction)) {
+          // cannot use selector here
+          switch (store.getState().formula.status) {
+            case 'valid':
+              store.getState().sample.items.forEach(function (item, index) {
+                dispatch(executeFormulaOnSamples({
+                  sampleItem: item,
+                  sampleIndex: index
+                }));
+              });
+              break;
+            case 'invalid':
+              dispatch(markSamplesAsFormulaInvalid());
+              break;
+            default:
+              console.log('Should not be here');
+          }
+        } else {
+          dispatch(markSamplesAsFormulaInError());
+        }
+      });
   }
 };
 
