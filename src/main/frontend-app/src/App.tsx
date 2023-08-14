@@ -5,7 +5,7 @@ import {
   Page, PageSection,
   Alert, FormAlert,
   FormGroup, TextInput,
-  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, Divider, PanelMainBody, PanelMain, Panel, SimpleListItem, SimpleList, SimpleListItemProps
+  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, SimpleListItem, SimpleList
 } from '@patternfly/react-core';
 import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ValidatorEndpointApi, SuggestCompletionEndpointApi, ExecutorEndpointApi, SyntaxErrorDTO, ExecutionResultDTO } from './generated';
 import { firstValueFrom } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
+import { Form, Field } from 'react-final-form';
 
 const validator = new ValidatorEndpointApi();
 const suggest = new SuggestCompletionEndpointApi();
@@ -240,7 +241,7 @@ const executeFormulaOnSamples = createAsyncThunk<ExecutionResultDTO, SampleToApp
           '% Commission': sampleItem.percentCommission.toString()
         }
       }
-    }))
+    }));
     return executionResult;
   } catch (error) {
     if (error instanceof AjaxError) {
@@ -324,7 +325,6 @@ function App() {
   const tokens = useSelector(selectTokens);
   const autoSuggestionStatus = useSelector(selectAutoSuggestionStatus);
   const autoSuggestionErrMessage = useSelector(selectAutoSuggestionErrMessage);
-  const [inputFormula, setInputFormulaValue] = React.useState('');
   return (
     <Page>
       <PageSection isWidthLimited isCenterAligned>
@@ -332,28 +332,44 @@ function App() {
           <CardBody>
             <Stack hasGutter>
               <StackItem>
-                <SimpleList>
-                  <SimpleListItem key="firstPresetFormula" onClick={() => {
-                    onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
-                    setInputFormulaValue(store.getState().formula.formula);
-                  }}>
-                    Compute commission amout by multiplying Sales Amount by Percent Commission
-                  </SimpleListItem>
-                  <SimpleListItem key="secondPresetFormula" onClick={() => {
-                    onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
-                    setInputFormulaValue(store.getState().formula.formula);
-                  }}>
-                    Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
-                  </SimpleListItem>
-                </SimpleList>
-              </StackItem>
-              <StackItem>
                 <FormGroup>
-                  <TextInput id="formulaDefinition"
-                    onChange={value => setInputFormulaValue(value)}
-                    value={inputFormula}
-                    onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
-                  />
+                  <Form
+                    initialValues={{
+                      formulaDefinition: ''
+                    }}
+                    mutators={{
+                      setInputFormulaDefinition: (formulaDefinition: string, state, utils) => {
+                        utils.changeValue(state, 'formulaDefinition', () => formulaDefinition)
+                      }
+                    }}
+                    onSubmit={() => { }}
+                    render={({ form }) => (
+                      <div>
+                        <SimpleList>
+                          <SimpleListItem key="firstPresetFormula" onClick={() => {
+                            onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
+                            form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
+                          }}>
+                            Compute commission amout by multiplying Sales Amount by Percent Commission
+                          </SimpleListItem>
+                          <SimpleListItem key="secondPresetFormula" onClick={() => {
+                            onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
+                            form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
+                          }}>
+                            Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+                          </SimpleListItem>
+                        </SimpleList>
+                        <Field name="formulaDefinition">
+                          {props => (
+                            <TextInput id="formulaDefinition"
+                              onChange={props.input.onChange}
+                              value={props.input.value}
+                              onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    )} />
                   <FormHelperText isHidden={false} component="div">
                     <HelperText>
                       {autoSuggestionStatus === 'idle' &&
