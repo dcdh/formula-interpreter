@@ -23,7 +23,7 @@ const executor = new ExecutorEndpointApi();
 
 const useAppDispatch: () => AppDispatch = useDispatch
 
-interface SampleItem {
+interface Sample {
   salesPerson: string,
   region: string,
   salesAmount: number,
@@ -66,12 +66,12 @@ const initialAutoSuggestionState: AutoSuggestionState = {
   status: 'idle'
 };
 
-interface SampleState {
-  items: SampleItem[];
+interface SamplesState {
+  samples: Sample[];
 };
 
-const initialSampleState: SampleState = {
-  items: [
+const initialSamplesState: SamplesState = {
+  samples: [
     { salesPerson: 'Joe', region: 'North', salesAmount: 260, percentCommission: 10, commissionAmount: null, status: 'notExecutedYet' },
     { salesPerson: 'Robert', region: 'South', salesAmount: 660, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' },
     { salesPerson: 'Michelle', region: 'East', salesAmount: 940, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' },
@@ -219,7 +219,7 @@ const autoSuggestionSlice = createSlice({
 });
 
 type SampleToApplyFormulaOn = {
-  sampleItem: SampleItem,
+  sample: Sample,
   sampleIndex: number
 };
 
@@ -228,17 +228,17 @@ const executeFormulaOnSamples = createAsyncThunk<ExecutionResultDTO, SampleToApp
     rejectValue: RemoteError
   }
 >('samples/executeFormula', async (sampleToApplyFormulaOn: SampleToApplyFormulaOn, { rejectWithValue }) => {
-  const { sampleItem } = sampleToApplyFormulaOn;
+  const { sample } = sampleToApplyFormulaOn;
   const formula: string = store.getState().formula.formula;
   try {
     const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
       executeDTO: {
         formula: formula,
         structuredData: {
-          'Sales Person': sampleItem.salesPerson,
-          'Region': sampleItem.region,
-          'Sales Amount': sampleItem.salesAmount.toString(),
-          '% Commission': sampleItem.percentCommission.toString()
+          'Sales Person': sample.salesPerson,
+          'Region': sample.region,
+          'Sales Amount': sample.salesAmount.toString(),
+          '% Commission': sample.percentCommission.toString()
         }
       }
     }));
@@ -267,41 +267,41 @@ const markSamplesAsFormulaInError = createAction('samples/markAsFormulaInError')
 
 const markSamplesAsFormulaInvalid = createAction('samples/markAsFormulaInvalid');
 
-const sampleSlice = createSlice({
-  name: 'sample',
-  initialState: initialSampleState,
+const samplesSlice = createSlice({
+  name: 'samples',
+  initialState: initialSamplesState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(executeFormulaOnSamples.rejected, (state, { meta }) => {
-        const sampleItem = state.items[meta.arg.sampleIndex];
+        const sampleItem = state.samples[meta.arg.sampleIndex];
         sampleItem.status = 'failed';
         sampleItem.commissionAmount = null;
       })
       .addCase(executeFormulaOnSamples.pending, (state, { meta }) => {
-        const sampleItem = state.items[meta.arg.sampleIndex];
+        const sampleItem = state.samples[meta.arg.sampleIndex];
         sampleItem.status = 'processing';
         sampleItem.commissionAmount = null;
       })
       .addCase(executeFormulaOnSamples.fulfilled, (state, { meta, payload }) => {
-        const sampleItem = state.items[meta.arg.sampleIndex];
+        const sampleItem = state.samples[meta.arg.sampleIndex];
         sampleItem.status = 'executed';
         sampleItem.commissionAmount = payload.result!;
       })
       .addCase(markSamplesAsFormulaInError, (state) => {
-        state.items.forEach(item => {
-          item.status = 'formulaInError';
+        state.samples.forEach(sample => {
+          sample.status = 'formulaInError';
         });
       })
       .addCase(markSamplesAsFormulaInvalid, (state) => {
-        state.items.forEach(item => {
-          item.status = 'formulaInvalid';
+        state.samples.forEach(sample => {
+          sample.status = 'formulaInvalid';
         });
       })
   }
 })
 
-const selectSample = (state: RootState) => state.sample;
+const selectSamples = (state: RootState) => state.samples;
 const selectFormula = (state: RootState) => state.formula;
 const selectTokens = (state: RootState) => state.autoSuggestion.tokens;
 const selectAutoSuggestionStatus = (state: RootState) => state.autoSuggestion.status;
@@ -311,7 +311,7 @@ export const store = configureStore({
   reducer: {
     formula: formulaSlice.reducer,
     autoSuggestion: autoSuggestionSlice.reducer,
-    sample: sampleSlice.reducer
+    samples: samplesSlice.reducer
   },
 });
 
@@ -321,7 +321,7 @@ type AppDispatch = typeof store.dispatch;
 function App() {
   const dispatch = useAppDispatch();
   const formula = useSelector(selectFormula);
-  const sample = useSelector(selectSample);
+  const samples = useSelector(selectSamples);
   const tokens = useSelector(selectTokens);
   const autoSuggestionStatus = useSelector(selectAutoSuggestionStatus);
   const autoSuggestionErrMessage = useSelector(selectAutoSuggestionErrMessage);
@@ -412,29 +412,29 @@ function App() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {sample.items.map(item => (
-                      <Tr key={item.salesPerson}>
-                        <Td dataLabel={columnNames.salesPerson}>{item.salesPerson}</Td>
-                        <Td dataLabel={columnNames.region}>{item.region}</Td>
-                        <Td dataLabel={columnNames.salesAmount}>{item.salesAmount}</Td>
-                        <Td dataLabel={columnNames.percentCommission}>{item.percentCommission}</Td>
+                    {samples.samples.map(sample => (
+                      <Tr key={sample.salesPerson}>
+                        <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
+                        <Td dataLabel={columnNames.region}>{sample.region}</Td>
+                        <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
+                        <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
                         <Td dataLabel={columnNames.commissionAmount}>
-                          {item.status === 'notExecutedYet' &&
+                          {sample.status === 'notExecutedYet' &&
                             <Label color="blue">Not executed yet</Label>
                           }
-                          {item.status === 'executed' &&
-                            <Label color="green">{item.commissionAmount}</Label>
+                          {sample.status === 'executed' &&
+                            <Label color="green">{sample.commissionAmount}</Label>
                           }
-                          {item.status === 'processing' &&
+                          {sample.status === 'processing' &&
                             <Spinner size="sm" />
                           }
-                          {item.status === 'failed' &&
+                          {sample.status === 'failed' &&
                             <Label color="red">Somethings wrong happened</Label>
                           }
-                          {item.status === 'formulaInError' &&
+                          {sample.status === 'formulaInError' &&
                             <Label color="red">Formula in error unable to process</Label>
                           }
-                          {item.status === 'formulaInvalid' &&
+                          {sample.status === 'formulaInvalid' &&
                             <Label color="orange">Formula invalid</Label>
                           }
                         </Td>
@@ -472,9 +472,9 @@ function App() {
           // cannot use selector here
           switch (store.getState().formula.status) {
             case 'valid':
-              store.getState().sample.items.forEach(function (item, index) {
+              store.getState().samples.samples.forEach(function (sample, index) {
                 dispatch(executeFormulaOnSamples({
-                  sampleItem: item,
+                  sample: sample,
                   sampleIndex: index
                 }));
               });
