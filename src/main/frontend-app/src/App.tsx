@@ -7,7 +7,7 @@ import {
   FormGroup, TextInput,
   Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, SimpleListItem, SimpleList
 } from '@patternfly/react-core';
-import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
+import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
@@ -370,7 +370,7 @@ function App() {
                         </Field>
                       </div>
                     )} />
-                  <FormHelperText isHidden={false} component="div">
+                  <FormHelperText>
                     <HelperText>
                       {autoSuggestionStatus === 'idle' &&
                         <HelperTextItem variant={'success'}>{tokens.join(',')}</HelperTextItem>
@@ -400,7 +400,7 @@ function App() {
                 </FormAlert>
               </StackItem>
               <StackItem isFilled>
-                <TableComposable aria-label="Actions table">
+                <Table aria-label="Actions table">
                   <Thead>
                     <Tr>
                       <Th>{columnNames.salesPerson}</Th>
@@ -441,7 +441,7 @@ function App() {
                       </Tr>
                     ))}
                   </Tbody>
-                </TableComposable>
+                </Table>
               </StackItem>
             </Stack>
           </CardBody>
