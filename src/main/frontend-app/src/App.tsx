@@ -318,6 +318,57 @@ export const store = configureStore({
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 
+type SamplesProps = {
+  samples: SamplesState
+}
+
+const Samples: React.FunctionComponent<SamplesProps> = (props) => {
+  return (
+    <Table aria-label="Actions table">
+      <Thead>
+        <Tr>
+          <Th width={15}>{columnNames.salesPerson}</Th>
+          <Th width={15}>{columnNames.region}</Th>
+          <Th width={15}>{columnNames.salesAmount}</Th>
+          <Th width={15}>{columnNames.percentCommission}</Th>
+          <Th width={15}>{columnNames.commissionAmount}</Th>
+          <Td width={25}></Td>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {props.samples.samples.map(sample => (
+          <Tr key={sample.salesPerson}>
+            <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
+            <Td dataLabel={columnNames.region}>{sample.region}</Td>
+            <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
+            <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
+            <Td dataLabel={columnNames.commissionAmount}>
+              {sample.status === 'notExecutedYet' &&
+                <Label color="blue">Not executed yet</Label>
+              }
+              {sample.status === 'executed' &&
+                <Label color="green">{sample.commissionAmount}</Label>
+              }
+              {sample.status === 'processing' &&
+                <Spinner size="sm" />
+              }
+              {sample.status === 'failed' &&
+                <Label color="red">Somethings wrong happened</Label>
+              }
+              {sample.status === 'formulaInError' &&
+                <Label color="red">Formula in error unable to process</Label>
+              }
+              {sample.status === 'formulaInvalid' &&
+                <Label color="orange">Formula invalid</Label>
+              }
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  )
+}
+
 function App() {
   const dispatch = useAppDispatch();
   const formula = useSelector(selectFormula);
@@ -400,48 +451,7 @@ function App() {
                 </FormAlert>
               </StackItem>
               <StackItem isFilled>
-                <Table aria-label="Actions table">
-                  <Thead>
-                    <Tr>
-                      <Th>{columnNames.salesPerson}</Th>
-                      <Th>{columnNames.region}</Th>
-                      <Th>{columnNames.salesAmount}</Th>
-                      <Th>{columnNames.percentCommission}</Th>
-                      <Th>{columnNames.commissionAmount}</Th>
-                      <Td></Td>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {samples.samples.map(sample => (
-                      <Tr key={sample.salesPerson}>
-                        <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
-                        <Td dataLabel={columnNames.region}>{sample.region}</Td>
-                        <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
-                        <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
-                        <Td dataLabel={columnNames.commissionAmount}>
-                          {sample.status === 'notExecutedYet' &&
-                            <Label color="blue">Not executed yet</Label>
-                          }
-                          {sample.status === 'executed' &&
-                            <Label color="green">{sample.commissionAmount}</Label>
-                          }
-                          {sample.status === 'processing' &&
-                            <Spinner size="sm" />
-                          }
-                          {sample.status === 'failed' &&
-                            <Label color="red">Somethings wrong happened</Label>
-                          }
-                          {sample.status === 'formulaInError' &&
-                            <Label color="red">Formula in error unable to process</Label>
-                          }
-                          {sample.status === 'formulaInvalid' &&
-                            <Label color="orange">Formula invalid</Label>
-                          }
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
+                <Samples samples={samples}></Samples>
               </StackItem>
             </Stack>
           </CardBody>
