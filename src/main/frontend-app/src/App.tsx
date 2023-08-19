@@ -429,13 +429,13 @@ const Formula: React.FunctionComponent<{}> = () => {
           <div>
             <SimpleList>
               <SimpleListItem key="firstPresetFormula" onClick={() => {
-                onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
+                onFormulaPresetSelected("MUL([@[Sales Amount]],DIV([@[% Commission]],100))");
                 form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
               }}>
                 Compute commission amount by multiplying Sales Amount by Percent Commission
               </SimpleListItem>
               <SimpleListItem key="secondPresetFormula" onClick={() => {
-                onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
+                onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))");
                 form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
               }}>
                 Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
