@@ -318,147 +318,12 @@ export const store = configureStore({
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 
-type SamplesProps = {
-  samples: SamplesState
-}
-
-const Samples: React.FunctionComponent<SamplesProps> = (props) => {
-  return (
-    <Table aria-label="Actions table">
-      <Thead>
-        <Tr>
-          <Th width={15}>{columnNames.salesPerson}</Th>
-          <Th width={15}>{columnNames.region}</Th>
-          <Th width={15}>{columnNames.salesAmount}</Th>
-          <Th width={15}>{columnNames.percentCommission}</Th>
-          <Th width={15}>{columnNames.commissionAmount}</Th>
-          <Td width={25}></Td>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {props.samples.samples.map(sample => (
-          <Tr key={sample.salesPerson}>
-            <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
-            <Td dataLabel={columnNames.region}>{sample.region}</Td>
-            <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
-            <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
-            <Td dataLabel={columnNames.commissionAmount}>
-              {sample.status === 'notExecutedYet' &&
-                <Label color="blue">Not executed yet</Label>
-              }
-              {sample.status === 'executed' &&
-                <Label color="green">{sample.commissionAmount}</Label>
-              }
-              {sample.status === 'processing' &&
-                <Spinner size="sm" />
-              }
-              {sample.status === 'failed' &&
-                <Label color="red">Somethings wrong happened</Label>
-              }
-              {sample.status === 'formulaInError' &&
-                <Label color="red">Formula in error unable to process</Label>
-              }
-              {sample.status === 'formulaInvalid' &&
-                <Label color="orange">Formula invalid</Label>
-              }
-            </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
-  )
-}
-
-function App() {
+const Formula: React.FunctionComponent<{}> = () => {
   const dispatch = useAppDispatch();
   const formula = useSelector(selectFormula);
-  const samples = useSelector(selectSamples);
   const tokens = useSelector(selectTokens);
   const autoSuggestionStatus = useSelector(selectAutoSuggestionStatus);
   const autoSuggestionErrMessage = useSelector(selectAutoSuggestionErrMessage);
-  return (
-    <Page>
-      <PageSection isWidthLimited isCenterAligned>
-        <Card>
-          <CardBody>
-            <Stack hasGutter>
-              <StackItem>
-                <FormGroup>
-                  <Form
-                    initialValues={{
-                      formulaDefinition: ''
-                    }}
-                    mutators={{
-                      setInputFormulaDefinition: (formulaDefinition: string, state, utils) => {
-                        utils.changeValue(state, 'formulaDefinition', () => formulaDefinition)
-                      }
-                    }}
-                    onSubmit={() => { }}
-                    render={({ form }) => (
-                      <div>
-                        <SimpleList>
-                          <SimpleListItem key="firstPresetFormula" onClick={() => {
-                            onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
-                            form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
-                          }}>
-                            Compute commission amout by multiplying Sales Amount by Percent Commission
-                          </SimpleListItem>
-                          <SimpleListItem key="secondPresetFormula" onClick={() => {
-                            onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
-                            form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
-                          }}>
-                            Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
-                          </SimpleListItem>
-                        </SimpleList>
-                        <Field name="formulaDefinition">
-                          {props => (
-                            <TextInput id="formulaDefinition"
-                              onChange={props.input.onChange}
-                              value={props.input.value}
-                              onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    )} />
-                  <FormHelperText>
-                    <HelperText>
-                      {autoSuggestionStatus === 'idle' &&
-                        <HelperTextItem variant={'success'}>{tokens.join(',')}</HelperTextItem>
-                      }
-                      {autoSuggestionStatus === 'loading' &&
-                        <HelperTextItem variant={'indeterminate'}>Loading...</HelperTextItem>
-                      }
-                      {autoSuggestionStatus === 'failed' &&
-                        <HelperTextItem variant={'error'}>{autoSuggestionErrMessage}</HelperTextItem>
-                      }
-                    </HelperText>
-                  </FormHelperText>
-                </FormGroup>
-                <FormAlert>
-                  {formula.status === 'error' &&
-                    <Alert variant="danger" title={formula.errorMessage} aria-live="polite" isInline />
-                  }
-                  {formula.status === 'valid' &&
-                    <Alert variant="success" title="Formula is valid." aria-live="polite" isInline />
-                  }
-                  {formula.status === 'validationProcessing' &&
-                    <Alert variant="info" title="Validation in progress." aria-live="polite" isInline />
-                  }
-                  {formula.status === 'invalid' &&
-                    <Alert variant="danger" title={formula.invalidMessage} aria-live="polite" isInline />
-                  }
-                </FormAlert>
-              </StackItem>
-              <StackItem isFilled>
-                <Samples samples={samples}></Samples>
-              </StackItem>
-            </Stack>
-          </CardBody>
-        </Card>
-      </PageSection>
-    </Page>
-  );
 
   function onFormulaPresetSelected(preset: string) {
     dispatch(selectFormulaPreset(preset));
@@ -500,6 +365,145 @@ function App() {
         }
       });
   }
+
+  return (
+    <FormGroup>
+      <Form
+        initialValues={{
+          formulaDefinition: ''
+        }}
+        mutators={{
+          setInputFormulaDefinition: (formulaDefinition: string, state, utils) => {
+            utils.changeValue(state, 'formulaDefinition', () => formulaDefinition)
+          }
+        }}
+        onSubmit={() => { }}
+        render={({ form }) => (
+          <div>
+            <SimpleList>
+              <SimpleListItem key="firstPresetFormula" onClick={() => {
+                onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
+                form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
+              }}>
+                Compute commission amout by multiplying Sales Amount by Percent Commission
+              </SimpleListItem>
+              <SimpleListItem key="secondPresetFormula" onClick={() => {
+                onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
+                form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
+              }}>
+                Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+              </SimpleListItem>
+            </SimpleList>
+            <Field name="formulaDefinition">
+              {props => (
+                <TextInput id="formulaDefinition"
+                  onChange={props.input.onChange}
+                  value={props.input.value}
+                  onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
+                />
+              )}
+            </Field>
+          </div>
+        )} />
+      <FormHelperText>
+        <HelperText>
+          {autoSuggestionStatus === 'idle' &&
+            <HelperTextItem variant={'success'}>{tokens.join(',')}</HelperTextItem>
+          }
+          {autoSuggestionStatus === 'loading' &&
+            <HelperTextItem variant={'indeterminate'}>Loading...</HelperTextItem>
+          }
+          {autoSuggestionStatus === 'failed' &&
+            <HelperTextItem variant={'error'}>{autoSuggestionErrMessage}</HelperTextItem>
+          }
+        </HelperText>
+      </FormHelperText>
+      <FormAlert>
+        {formula.status === 'error' &&
+          <Alert variant="danger" title={formula.errorMessage} aria-live="polite" isInline />
+        }
+        {formula.status === 'valid' &&
+          <Alert variant="success" title="Formula is valid." aria-live="polite" isInline />
+        }
+        {formula.status === 'validationProcessing' &&
+          <Alert variant="info" title="Validation in progress." aria-live="polite" isInline />
+        }
+        {formula.status === 'invalid' &&
+          <Alert variant="danger" title={formula.invalidMessage} aria-live="polite" isInline />
+        }
+      </FormAlert>
+    </FormGroup>
+  )
+}
+
+const Samples: React.FunctionComponent<{}> = (props) => {
+  const samples = useSelector(selectSamples);
+
+  return (
+    <Table>
+      <Thead>
+        <Tr>
+          <Th width={15}>{columnNames.salesPerson}</Th>
+          <Th width={15}>{columnNames.region}</Th>
+          <Th width={15}>{columnNames.salesAmount}</Th>
+          <Th width={15}>{columnNames.percentCommission}</Th>
+          <Th width={15}>{columnNames.commissionAmount}</Th>
+          <Td width={25}></Td>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {samples.samples.map(sample => (
+          <Tr key={sample.salesPerson}>
+            <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
+            <Td dataLabel={columnNames.region}>{sample.region}</Td>
+            <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
+            <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
+            <Td dataLabel={columnNames.commissionAmount}>
+              {sample.status === 'notExecutedYet' &&
+                <Label color="blue">Not executed yet</Label>
+              }
+              {sample.status === 'executed' &&
+                <Label color="green">{sample.commissionAmount}</Label>
+              }
+              {sample.status === 'processing' &&
+                <Spinner size="sm" />
+              }
+              {sample.status === 'failed' &&
+                <Label color="red">Somethings wrong happened</Label>
+              }
+              {sample.status === 'formulaInError' &&
+                <Label color="red">Formula in error unable to process</Label>
+              }
+              {sample.status === 'formulaInvalid' &&
+                <Label color="orange">Formula invalid</Label>
+              }
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  )
+}
+
+function App() {
+  return (
+    <Page>
+      <PageSection isWidthLimited isCenterAligned>
+        <Card>
+          <CardBody>
+            <Stack hasGutter>
+              <StackItem>
+                <Formula />
+              </StackItem>
+              <StackItem isFilled>
+                <Samples />
+              </StackItem>
+            </Stack>
+          </CardBody>
+        </Card>
+      </PageSection>
+    </Page>
+  );
 };
 
 export default App;
