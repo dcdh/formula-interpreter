@@ -5,14 +5,14 @@ import {
   Page, PageSection,
   Alert, FormAlert,
   FormGroup, TextInput,
-  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, SimpleListItem, SimpleList
+  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, SimpleListItem, SimpleList, ToggleGroup, ToggleGroupItem, List, ListItem
 } from '@patternfly/react-core';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ValidatorEndpointApi, SuggestCompletionEndpointApi, ExecutorEndpointApi, SyntaxErrorDTO, ExecutionResultDTO } from './generated';
+import { ValidatorEndpointApi, SuggestCompletionEndpointApi, ExecutorEndpointApi, SyntaxErrorDTO, ExecutionResultDTO, ExecutionDTO } from './generated';
 import { firstValueFrom } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
 import { Form, Field } from 'react-final-form';
@@ -29,15 +29,8 @@ interface Sample {
   salesAmount: number,
   percentCommission: number,
   commissionAmount: string | null,
-  status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid'
-};
-
-const columnNames = {
-  salesPerson: 'Sales Person',
-  region: 'Region',
-  salesAmount: 'Sales Amount',
-  percentCommission: '% Commission',
-  commissionAmount: 'Commission Amount'
+  status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid',
+  executions: Array<ExecutionDTO>
 };
 
 interface FormulaState {
@@ -72,12 +65,12 @@ interface SamplesState {
 
 const initialSamplesState: SamplesState = {
   samples: [
-    { salesPerson: 'Joe', region: 'North', salesAmount: 260, percentCommission: 10, commissionAmount: null, status: 'notExecutedYet' },
-    { salesPerson: 'Robert', region: 'South', salesAmount: 660, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' },
-    { salesPerson: 'Michelle', region: 'East', salesAmount: 940, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' },
-    { salesPerson: 'Erich', region: 'West', salesAmount: 410, percentCommission: 12, commissionAmount: null, status: 'notExecutedYet' },
-    { salesPerson: 'Dafna', region: 'North', salesAmount: 800, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' },
-    { salesPerson: 'Rob', region: 'South', salesAmount: 900, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet' }
+    { salesPerson: 'Joe', region: 'North', salesAmount: 260, percentCommission: 10, commissionAmount: null, status: 'notExecutedYet', executions: [] },
+    { salesPerson: 'Robert', region: 'South', salesAmount: 660, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
+    { salesPerson: 'Michelle', region: 'East', salesAmount: 940, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
+    { salesPerson: 'Erich', region: 'West', salesAmount: 410, percentCommission: 12, commissionAmount: null, status: 'notExecutedYet', executions: [] },
+    { salesPerson: 'Dafna', region: 'North', salesAmount: 800, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
+    { salesPerson: 'Rob', region: 'South', salesAmount: 900, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] }
   ]
 };
 
@@ -222,8 +215,9 @@ const executeFormulaOnSamples = createAsyncThunk<Sample[], void
 >('samples/executeFormula', async (_void: void) => {
   const formula: string = store.getState().formula.formula;
   const samples: Sample[] = store.getState().samples.samples;
-  let status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid';
-  let commissionAmount: string | null;
+  let status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid' = 'notExecutedYet';
+  let commissionAmount: string | null = null;
+  let executions: Array<ExecutionDTO> = [];
   const results: Sample[] = await Promise.all(samples.map(async function (sample: Sample) {
     try {
       const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
@@ -239,6 +233,7 @@ const executeFormulaOnSamples = createAsyncThunk<Sample[], void
       }));
       status = 'executed';
       commissionAmount = executionResult.result!;
+      executions = executionResult.executions!;
     } catch (error) {
       status = 'failed';
       if (error instanceof AjaxError) {
@@ -263,7 +258,8 @@ const executeFormulaOnSamples = createAsyncThunk<Sample[], void
       salesAmount: sample.salesAmount,
       percentCommission: sample.percentCommission,
       commissionAmount,
-      status
+      status,
+      executions
     };
   }));
   return results;
@@ -311,12 +307,63 @@ const selectFormula = (state: RootState) => state.formula;
 const selectTokens = (state: RootState) => state.autoSuggestion.tokens;
 const selectAutoSuggestionStatus = (state: RootState) => state.autoSuggestion.status;
 const selectAutoSuggestionErrMessage = (state: RootState) => state.autoSuggestion.errMessage;
+const selectExecutionsDebug = (state: RootState) => state.executionsDebug;
+
+interface Executions {
+  salesPerson: string,
+  executions: Array<ExecutionDTO>
+}
+
+interface ExecutionsDebugState {
+  selectedSalesPerson: string | null,
+  executions: Array<Executions>
+}
+
+const initialExecutionsDebugState: ExecutionsDebugState = {
+  selectedSalesPerson: null,
+  executions: []
+}
+
+const selectSalesPerson = createAction<string>('executionsDebug/selectSalesPerson');
+
+const executionsDebugSlice = createSlice({
+  name: 'executionsDebug',
+  initialState: initialExecutionsDebugState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(selectSalesPerson, (state, { payload }) => {
+        state.selectedSalesPerson = payload;
+      })
+      .addCase(executeFormulaOnSamples.rejected, (state, { payload }) => {
+        state.executions = []
+      })
+      .addCase(executeFormulaOnSamples.pending, (state) => {
+        state.executions = []
+      })
+      .addCase(executeFormulaOnSamples.fulfilled, (state, { payload }) => {
+        state.executions = payload.map(sample => {
+          return {
+            salesPerson: sample.salesPerson,
+            executions: sample.executions
+          }
+        })
+      })
+      .addCase(markSamplesAsFormulaInError, (state) => {
+        state.executions = []
+      })
+      .addCase(markSamplesAsFormulaInvalid, (state) => {
+        state.executions = []
+      })
+  }
+})
 
 export const store = configureStore({
   reducer: {
     formula: formulaSlice.reducer,
     autoSuggestion: autoSuggestionSlice.reducer,
-    samples: samplesSlice.reducer
+    samples: samplesSlice.reducer,
+    executionsDebug: executionsDebugSlice.reducer
   },
 });
 
@@ -438,6 +485,13 @@ const Formula: React.FunctionComponent<{}> = () => {
 
 const Samples: React.FunctionComponent<{}> = () => {
   const samples = useSelector(selectSamples);
+  const columnNames = {
+    salesPerson: 'Sales Person',
+    region: 'Region',
+    salesAmount: 'Sales Amount',
+    percentCommission: '% Commission',
+    commissionAmount: 'Commission Amount'
+  };
 
   return (
     <Table>
@@ -485,6 +539,85 @@ const Samples: React.FunctionComponent<{}> = () => {
   )
 }
 
+const ExecutionDebug: React.FunctionComponent<{}> = () => {
+  const formula = useSelector(selectFormula);
+  const samples = useSelector(selectSamples);
+  const executionsDebug = useSelector(selectExecutionsDebug);
+  const dispatch = useAppDispatch();
+  const columnNames = {
+    executionId: 'Execution Id',
+    executedAt: 'Executed At',
+    inputs: 'Inputs',
+    result: 'Result',
+    underline: 'Underline'
+  };
+
+  return (
+    <React.Fragment>
+      <ToggleGroup>
+        {samples.samples.map(sample => {
+          return (
+            <ToggleGroupItem
+              key={sample.salesPerson}
+              text={sample.salesPerson}
+              isSelected={sample.salesPerson === executionsDebug.selectedSalesPerson}
+              onChange={() => dispatch(selectSalesPerson(sample.salesPerson))}
+            />)
+        })}
+      </ToggleGroup>
+      <Table>
+        <Thead>
+          <Tr>
+            <Td>{columnNames.executionId}</Td>
+            <Td>{columnNames.executedAt}</Td>
+            <Td>{columnNames.inputs}</Td>
+            <Td>{columnNames.result}</Td>
+            <Td>{columnNames.underline}</Td>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {executionsDebug.executions.filter(executions => executions.salesPerson === executionsDebug.selectedSalesPerson)
+            .flatMap(executions => executions.executions)
+            .map((execution: ExecutionDTO, index: number) => {
+              return (
+                <Tr key={index}>
+                  <Td dataLabel={columnNames.executionId}>{execution.executionId}</Td>
+                  <Td dataLabel={columnNames.executedAt}>{execution.executedAt}</Td>
+                  <Td dataLabel={columnNames.inputs}>
+                    <List isPlain isBordered>
+                      {
+                        Object.entries(execution.inputs!)
+                          .map(([key, value]) => {
+                            return (
+                              <ListItem key={key}>{key}: {value}</ListItem>
+                            )
+                          })
+                      }
+                    </List>
+                  </Td>
+                  <Td dataLabel={columnNames.result}>{execution.result}</Td>
+                  <Td dataLabel={columnNames.underline}>
+                    {
+                      formula.formula.substring(0, execution.start!)
+                    }
+                    <b>
+                      {
+                        formula.formula.substring(execution.start!, execution.end! + 1)
+                      }
+                    </b>
+                    {
+                      formula.formula.substring(execution.end! + 1, formula.formula.length)
+                    }
+                  </Td>
+                </Tr>
+              )
+            })}
+        </Tbody>
+      </Table>
+    </React.Fragment>
+  );
+}
+
 function App() {
   return (
     <Page>
@@ -497,6 +630,9 @@ function App() {
               </StackItem>
               <StackItem isFilled>
                 <Samples />
+              </StackItem>
+              <StackItem>
+                <ExecutionDebug />
               </StackItem>
             </Stack>
           </CardBody>
