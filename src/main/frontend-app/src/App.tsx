@@ -218,49 +218,55 @@ const autoSuggestionSlice = createSlice({
   },
 });
 
-type SampleToApplyFormulaOn = {
-  sample: Sample,
-  sampleIndex: number
-};
-
-const executeFormulaOnSamples = createAsyncThunk<ExecutionResultDTO, SampleToApplyFormulaOn,
-  {
-    rejectValue: RemoteError
-  }
->('samples/executeFormula', async (sampleToApplyFormulaOn: SampleToApplyFormulaOn, { rejectWithValue }) => {
-  const { sample } = sampleToApplyFormulaOn;
+const executeFormulaOnSamples = createAsyncThunk<Sample[], void
+>('samples/executeFormula', async (_void: void) => {
   const formula: string = store.getState().formula.formula;
-  try {
-    const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
-      executeDTO: {
-        formula: formula,
-        structuredData: {
-          'Sales Person': sample.salesPerson,
-          'Region': sample.region,
-          'Sales Amount': sample.salesAmount.toString(),
-          '% Commission': sample.percentCommission.toString()
+  const samples: Sample[] = store.getState().samples.samples;
+  let status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid';
+  let commissionAmount: string | null;
+  const results: Sample[] = await Promise.all(samples.map(async function (sample: Sample) {
+    try {
+      const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
+        executeDTO: {
+          formula: formula,
+          structuredData: {
+            'Sales Person': sample.salesPerson,
+            'Region': sample.region,
+            'Sales Amount': sample.salesAmount.toString(),
+            '% Commission': sample.percentCommission.toString()
+          }
         }
+      }));
+      status = 'executed';
+      commissionAmount = executionResult.result!;
+    } catch (error) {
+      status = 'failed';
+      if (error instanceof AjaxError) {
+        switch (error.xhr.getResponseHeader('content-type')) {
+          case 'application/vnd.execution-syntax-error-v1+json':
+            // TODO
+            break;
+          case 'application/vnd.execution-unexpected-exception-v1+json':
+            // TODO
+            break;
+          default:
+            // TODO
+            break;
+        }
+      } else {
+        // TODO
       }
-    }));
-    return executionResult;
-  } catch (error) {
-    if (error instanceof AjaxError) {
-      switch (error.xhr.getResponseHeader('content-type')) {
-        case 'application/vnd.execution-syntax-error-v1+json':
-          throw rejectWithValue({
-            message: error.response.message
-          });
-        case 'application/vnd.execution-unexpected-exception-v1+json':
-          throw rejectWithValue({
-            message: error.response.message
-          });
-        default:
-          throw error;
-      }
-    } else {
-      throw error;
     }
-  }
+    return {
+      salesPerson: sample.salesPerson,
+      region: sample.region,
+      salesAmount: sample.salesAmount,
+      percentCommission: sample.percentCommission,
+      commissionAmount,
+      status
+    };
+  }));
+  return results;
 });
 
 const markSamplesAsFormulaInError = createAction('samples/markAsFormulaInError');
@@ -273,20 +279,19 @@ const samplesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(executeFormulaOnSamples.rejected, (state, { meta }) => {
-        const sampleItem = state.samples[meta.arg.sampleIndex];
-        sampleItem.status = 'failed';
-        sampleItem.commissionAmount = null;
+      .addCase(executeFormulaOnSamples.rejected, (state, { payload }) => {
+        // TODO
       })
-      .addCase(executeFormulaOnSamples.pending, (state, { meta }) => {
-        const sampleItem = state.samples[meta.arg.sampleIndex];
-        sampleItem.status = 'processing';
-        sampleItem.commissionAmount = null;
+      .addCase(executeFormulaOnSamples.pending, (state) => {
+        /*
+         * Avoid flickering because it is really fast
+        state.samples.forEach(sample => {
+          sample.status = 'processing';
+        })
+        */
       })
-      .addCase(executeFormulaOnSamples.fulfilled, (state, { meta, payload }) => {
-        const sampleItem = state.samples[meta.arg.sampleIndex];
-        sampleItem.status = 'executed';
-        sampleItem.commissionAmount = payload.result!;
+      .addCase(executeFormulaOnSamples.fulfilled, (state, { payload }) => {
+        state.samples = payload;
       })
       .addCase(markSamplesAsFormulaInError, (state) => {
         state.samples.forEach(sample => {
@@ -347,12 +352,7 @@ const Formula: React.FunctionComponent<{}> = () => {
           // cannot use selector here
           switch (store.getState().formula.status) {
             case 'valid':
-              store.getState().samples.samples.forEach(function (sample, index) {
-                dispatch(executeFormulaOnSamples({
-                  sample: sample,
-                  sampleIndex: index
-                }));
-              });
+              dispatch(executeFormulaOnSamples());
               break;
             case 'invalid':
               dispatch(markSamplesAsFormulaInvalid());
@@ -385,13 +385,13 @@ const Formula: React.FunctionComponent<{}> = () => {
                 onFormulaPresetSelected("MUL([@[Sales Amount]],[@[% Commission]])");
                 form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
               }}>
-                Compute commission amout by multiplying Sales Amount by Percent Commission
+                Compute commission amount by multiplying Sales Amount by Percent Commission
               </SimpleListItem>
               <SimpleListItem key="secondPresetFormula" onClick={() => {
                 onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],[@[% Commission]]),2),MUL([@[Sales Amount]],[@[% Commission]]))");
                 form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
               }}>
-                Compute commission amout by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+                Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
               </SimpleListItem>
             </SimpleList>
             <Field name="formulaDefinition">
@@ -436,7 +436,7 @@ const Formula: React.FunctionComponent<{}> = () => {
   )
 }
 
-const Samples: React.FunctionComponent<{}> = (props) => {
+const Samples: React.FunctionComponent<{}> = () => {
   const samples = useSelector(selectSamples);
 
   return (
