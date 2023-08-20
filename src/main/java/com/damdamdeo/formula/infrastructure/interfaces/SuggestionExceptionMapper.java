@@ -37,13 +37,7 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
             )
     )
     public Response toResponse(final SuggestionException exception) {
-        final String body = String.format(
-                //language=JSON
-                """
-                {
-                    "message": "%s"
-                }
-                """, exception.getMessage());
+        final String body = new ErrorMessageDTO(exception).toJson();
         if (exception.getCause() instanceof AntlrAutoSuggestUnavailableException) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .type("application/vnd.autosuggestion-unavailable-v1+json")

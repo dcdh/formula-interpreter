@@ -18,15 +18,10 @@ public final class ValidationExceptionMapper implements ExceptionMapper<Validati
             )
     )
     public Response toResponse(final ValidationException exception) {
+        final String body = new ErrorMessageDTO(exception).toJson();
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type("application/vnd.validation-unexpected-exception-v1+json")
-                .entity(String.format(
-                //language=JSON
-                """
-                {
-                    "message": "%s"
-                }
-                """, exception.getMessage()))
+                .entity(body)
                 .build();
     }
 }

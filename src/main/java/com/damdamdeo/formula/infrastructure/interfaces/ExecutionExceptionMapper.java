@@ -25,13 +25,7 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
             )
     )
     public Response toResponse(final ExecutionException exception) {
-        final String body = String.format(
-                //language=JSON
-                """
-                {
-                    "message": "%s"
-                }
-                """, exception.getMessage());
+        final String body = new ErrorMessageDTO(exception).toJson();
         if (exception.getCause() instanceof AntlrSyntaxErrorException) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .type("application/vnd.execution-syntax-error-v1+json")

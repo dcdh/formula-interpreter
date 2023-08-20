@@ -27,7 +27,7 @@ public class ValidatorEndpointTest {
     private ValidateUseCase<AntlrSyntaxError> validateUseCase;
 
     @Test
-    public void shouldValidate() throws JSONException {
+    public void shouldValidate() {
         // Given
         doReturn(Optional.empty()).when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
@@ -71,7 +71,7 @@ public class ValidatorEndpointTest {
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new ValidationException(new Exception("unexpected exception")))
+        doThrow(new ValidationException(new Exception("unexpected \"exception\"")))
                 .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
@@ -83,6 +83,6 @@ public class ValidatorEndpointTest {
                 .then()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.validation-unexpected-exception-v1+json")
-                .body("message", is("unexpected exception"));
+                .body("message", is("unexpected \"exception\""));
     }
 }

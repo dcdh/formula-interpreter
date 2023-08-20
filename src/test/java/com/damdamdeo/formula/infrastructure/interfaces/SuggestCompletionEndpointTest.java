@@ -56,64 +56,70 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleAutoSuggestionExecutionException() {
         // Given
-        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionException(new SuggestedFormula("IF"), new RuntimeException("error"))))
-                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+        final SuggestedFormula givenSuggestedFormula
+                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
+        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionException(givenSuggestedFormula, new RuntimeException("error"))))
+                .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.autosuggestion-execution-exception-v1+json")
-                .body("message", is("AutoSuggestion service execution exception while processing formula 'IF' - msg 'error'"));
+                .body("message", is("AutoSuggestion service execution exception while processing formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - msg 'error'"));
     }
 
     @Test
     public void shouldHandleAutoSuggestionExecutionTimedOutException() {
         // Given
-        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(new SuggestedFormula("IF"), new RuntimeException("error"))))
-                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+        final SuggestedFormula givenSuggestedFormula
+                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
+        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(givenSuggestedFormula, new RuntimeException("error"))))
+                .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_SERVICE_UNAVAILABLE)
                 .contentType("application/vnd.autosuggestion-execution-timed-out-v1+json")
-                .body("message", is("AutoSuggestion service has timed out while executing formula 'IF' - Infinite loop in Grammar - msg 'error'"));
+                .body("message", is("AutoSuggestion service has timed out while executing formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - Infinite loop in Grammar - msg 'error'"));
     }
 
     @Test
     public void shouldHandleAutoSuggestUnavailableException() {
         // Given
-        doThrow(new SuggestionException(new AntlrAutoSuggestUnavailableException(new SuggestedFormula("IF"), new RuntimeException("error"))))
-                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+        final SuggestedFormula givenSuggestedFormula
+                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
+        doThrow(new SuggestionException(new AntlrAutoSuggestUnavailableException(givenSuggestedFormula, new RuntimeException("error"))))
+                .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.autosuggestion-unavailable-v1+json")
-                .body("message", is("AutoSuggestion service execution unavailable while processing formula 'IF' - msg 'error'"));
+                .body("message", is("AutoSuggestion service execution unavailable while processing formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - msg 'error'"));
     }
 
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new SuggestionException(new Exception("unexpected exception")))
+        doThrow(new SuggestionException(new Exception("unexpected \"exception\"")))
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -126,6 +132,6 @@ public class SuggestCompletionEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.autosuggestion-unexpected-exception-v1+json")
-                .body("message", is("unexpected exception"));
+                .body("message", is("unexpected \"exception\""));
     }
 }

@@ -87,7 +87,7 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldHandleSyntaxErrorException() throws JSONException {
         // Given
-        doThrow(new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "msg"))))
+        doThrow(new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\""))))
                 .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
                         new StructuredDatum(new Reference("ref"), new Value("val"))
                 ))));
@@ -112,13 +112,13 @@ public class ExecutorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType("application/vnd.execution-syntax-error-v1+json")
-                .body("message", is("Syntax error at line '0' at position '1' with message 'msg'"));
+                .body("message", is("Syntax error at line '0' at position '1' with message 'custom \"msg\"'"));
     }
 
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new ExecutionException(new Exception("unexpected exception")))
+        doThrow(new ExecutionException(new Exception("unexpected \"exception\"")))
                 .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
                         new StructuredDatum(new Reference("ref"), new Value("val"))
                 ))));
@@ -143,6 +143,6 @@ public class ExecutorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.execution-unexpected-exception-v1+json")
-                .body("message", is("unexpected exception"));
+                .body("message", is("unexpected \"exception\""));
     }
 }
