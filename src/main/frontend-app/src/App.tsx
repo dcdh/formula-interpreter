@@ -3,9 +3,11 @@ import '@patternfly/react-core/dist/styles/base.css';
 import {
   Card, CardBody,
   Page, PageSection,
-  Alert, FormAlert,
+  Alert,
   FormGroup, TextInput,
-  Stack, StackItem, FormHelperText, HelperText, HelperTextItem, Label, Spinner, SimpleListItem, SimpleList, ToggleGroup, ToggleGroupItem, List, ListItem
+  Label, Spinner, ToggleGroup, ToggleGroupItem, List, ListItem, Popper, Menu, MenuContent,
+  MenuList, MenuItem, InputGroup, InputGroupItem, DropdownList, DropdownItem, Dropdown, MenuToggle, MenuToggleElement,
+  Grid, GridItem, CardHeader, ValidatedOptions, AlertProps, AlertGroup, AlertVariant, AlertActionCloseButton
 } from '@patternfly/react-core';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
@@ -275,10 +277,10 @@ const samplesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(executeFormulaOnSamples.rejected, (state, { payload }) => {
+      .addCase(executeFormulaOnSamples.rejected, () => {
         // TODO
       })
-      .addCase(executeFormulaOnSamples.pending, (state) => {
+      .addCase(executeFormulaOnSamples.pending, () => {
         /*
          * Avoid flickering because it is really fast
         state.samples.forEach(sample => {
@@ -306,7 +308,6 @@ const selectSamples = (state: RootState) => state.samples;
 const selectFormula = (state: RootState) => state.formula;
 const selectTokens = (state: RootState) => state.autoSuggestion.tokens;
 const selectAutoSuggestionStatus = (state: RootState) => state.autoSuggestion.status;
-const selectAutoSuggestionErrMessage = (state: RootState) => state.autoSuggestion.errMessage;
 const selectExecutionsDebug = (state: RootState) => state.executionsDebug;
 
 interface Executions {
@@ -335,7 +336,7 @@ const executionsDebugSlice = createSlice({
       .addCase(selectSalesPerson, (state, { payload }) => {
         state.selectedSalesPerson = payload;
       })
-      .addCase(executeFormulaOnSamples.rejected, (state, { payload }) => {
+      .addCase(executeFormulaOnSamples.rejected, (state) => {
         state.executions = []
       })
       .addCase(executeFormulaOnSamples.pending, (state) => {
@@ -370,39 +371,54 @@ export const store = configureStore({
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 
-const Formula: React.FunctionComponent<{}> = () => {
+const Formula = (props: { addAlert: (title: string, variant: AlertProps['variant']) => void; }) => {
   const dispatch = useAppDispatch();
   const formula = useSelector(selectFormula);
   const tokens = useSelector(selectTokens);
   const autoSuggestionStatus = useSelector(selectAutoSuggestionStatus);
-  const autoSuggestionErrMessage = useSelector(selectAutoSuggestionErrMessage);
+  const [autoSuggestionVisible, setAutoSuggestionVisible] = React.useState(true);
+  const [isPresetOpen, setIsPresetOpen] = React.useState<boolean>(false);
 
-  function onFormulaPresetSelected(preset: string) {
+  const onFormulaPresetSelected = (preset: string) => {
     dispatch(selectFormulaPreset(preset));
     executeFormula();
   }
 
-  function onFormulaDefinition(formulaKeyUpEvent: React.KeyboardEvent<HTMLInputElement>): void {
+  const onFormulaDefinition = (formulaKeyUpEvent: React.KeyboardEvent<HTMLInputElement>): void => {
     const formula: string = formulaKeyUpEvent.currentTarget.value;
     dispatch(defineFormula(formula));
+    if (formulaKeyUpEvent.key === 'Escape') {
+      setAutoSuggestionVisible(false);
+    } else {
+      setAutoSuggestionVisible(true);
+    }
     if (formulaKeyUpEvent.key === 'Enter') {
       executeFormula();
     } else {
-      dispatch(suggestTokens());
+      dispatch(suggestTokens())
+        .then((resultAction) => {
+          if (suggestTokens.rejected.match(resultAction)) {
+            // cannot use selector here
+            const autoSuggestionState: AutoSuggestionState = store.getState().autoSuggestion;
+            props.addAlert(autoSuggestionState.errMessage!, 'danger');
+          }
+        })
     }
   }
 
-  function executeFormula() {
+  const executeFormula = () => {
     dispatch(validateFormula())
       .then((resultAction) => {
         if (validateFormula.fulfilled.match(resultAction)) {
           // cannot use selector here
-          switch (store.getState().formula.status) {
+          const formulaState: FormulaState = store.getState().formula;
+          switch (formulaState.status) {
             case 'valid':
               dispatch(executeFormulaOnSamples());
               break;
             case 'invalid':
               dispatch(markSamplesAsFormulaInvalid());
+              props.addAlert(formulaState.invalidMessage!, 'danger');
               break;
             default:
               console.log('Should not be here');
@@ -414,72 +430,103 @@ const Formula: React.FunctionComponent<{}> = () => {
   }
 
   return (
-    <FormGroup>
-      <Form
-        initialValues={{
-          formulaDefinition: ''
-        }}
-        mutators={{
-          setInputFormulaDefinition: (formulaDefinition: string, state, utils) => {
-            utils.changeValue(state, 'formulaDefinition', () => formulaDefinition)
-          }
-        }}
-        onSubmit={() => { }}
-        render={({ form }) => (
-          <div>
-            <SimpleList>
-              <SimpleListItem key="firstPresetFormula" onClick={() => {
-                onFormulaPresetSelected("MUL([@[Sales Amount]],DIV([@[% Commission]],100))");
-                form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
-              }}>
-                Compute commission amount by multiplying Sales Amount by Percent Commission
-              </SimpleListItem>
-              <SimpleListItem key="secondPresetFormula" onClick={() => {
-                onFormulaPresetSelected("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))");
-                form.mutators.setInputFormulaDefinition(store.getState().formula.formula);
-              }}>
-                Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
-              </SimpleListItem>
-            </SimpleList>
-            <Field name="formulaDefinition">
-              {props => (
-                <TextInput id="formulaDefinition"
-                  onChange={props.input.onChange}
-                  value={props.input.value}
-                  onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
-                />
-              )}
-            </Field>
-          </div>
-        )} />
-      <FormHelperText>
-        <HelperText>
-          {autoSuggestionStatus === 'idle' &&
-            <HelperTextItem variant={'success'}>{tokens.join(',')}</HelperTextItem>
-          }
-          {autoSuggestionStatus === 'loading' &&
-            <HelperTextItem variant={'indeterminate'}>Loading...</HelperTextItem>
-          }
-          {autoSuggestionStatus === 'failed' &&
-            <HelperTextItem variant={'error'}>{autoSuggestionErrMessage}</HelperTextItem>
-          }
-        </HelperText>
-      </FormHelperText>
-      <FormAlert>
-        {formula.status === 'error' &&
-          <Alert variant="danger" title={formula.errorMessage} aria-live="polite" isInline />
-        }
-        {formula.status === 'valid' &&
-          <Alert variant="success" title="Formula is valid." aria-live="polite" isInline />
-        }
-        {formula.status === 'validationProcessing' &&
-          <Alert variant="info" title="Validation in progress." aria-live="polite" isInline />
-        }
-        {formula.status === 'invalid' &&
-          <Alert variant="danger" title={formula.invalidMessage} aria-live="polite" isInline />
-        }
-      </FormAlert>
-    </FormGroup>
+    <React.Fragment>
+      <Card>
+        <CardBody>
+          <FormGroup>
+            <Form
+              initialValues={{
+                formulaDefinition: ''
+              }}
+              mutators={{
+                setInputFormulaDefinition: (formulaDefinition: string, state, utils) => {
+                  utils.changeValue(state, 'formulaDefinition', () => formulaDefinition)
+                }
+              }}
+              onSubmit={() => { }}
+              render={({ form }) => (
+                <React.Fragment>
+                  <InputGroup>
+                    <InputGroupItem>
+                      <Dropdown
+                        isOpen={isPresetOpen}
+                        onSelect={(event, value) => {
+                          onFormulaPresetSelected(value?.toString() || '');
+                          form.mutators.setInputFormulaDefinition(value);
+                        }}
+                        onOpenChange={(isPresetOpen: boolean) => setIsPresetOpen(isPresetOpen)}
+                        toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                          <MenuToggle ref={toggleRef}
+                            onClick={() => setIsPresetOpen(!isPresetOpen)}
+                            isExpanded={isPresetOpen}>
+                            Preset
+                          </MenuToggle>
+                        )}
+                      >
+                        <DropdownList>
+                          <DropdownItem
+                            value={"MUL([@[Sales Amount]],DIV([@[% Commission]],100))"}
+                            key="firstPresetFormula">
+                            Compute commission amount by multiplying Sales Amount by Percent Commission
+                          </DropdownItem>
+                          <DropdownItem
+                            value={"IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"}
+                            key="secondPresetFormula">
+                            Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+                          </DropdownItem>
+                        </DropdownList>
+                      </Dropdown>
+                    </InputGroupItem>
+                    <InputGroupItem isFill>
+                      <Field name="formulaDefinition">
+                        {props => (
+                          <Popper
+                            trigger={
+                              <TextInput id="formulaDefinition"
+                                onChange={props.input.onChange}
+                                value={props.input.value}
+                                onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
+                                validated={
+                                  (formula.status === 'notValidated' &&
+                                    ValidatedOptions.default)
+                                  || (formula.status === 'error' &&
+                                    ValidatedOptions.error)
+                                  || (formula.status === 'valid' &&
+                                    ValidatedOptions.success)
+                                  || (formula.status === 'validationProcessing' &&
+                                    ValidatedOptions.default)
+                                  || (formula.status === 'invalid' &&
+                                    ValidatedOptions.error)
+                                  || ValidatedOptions.default
+                                }
+                              />
+                            }
+                            popper={
+                              <Menu>
+                                <MenuContent>{
+                                  tokens.length > 0 &&
+                                  <MenuList>
+                                    {
+                                      tokens.map(token => {
+                                        return <MenuItem key={token}>{token}</MenuItem>
+                                      })
+                                    }
+                                  </MenuList>
+                                }</MenuContent>
+                              </Menu>
+                            }
+                            isVisible={autoSuggestionStatus === 'idle' && autoSuggestionVisible}
+                          />
+                        )}
+                      </Field>
+                    </InputGroupItem>
+                  </InputGroup>
+                </React.Fragment>
+              )} />
+          </FormGroup>
+        </CardBody>
+      </Card>
+    </React.Fragment>
   )
 }
 
@@ -494,48 +541,52 @@ const Samples: React.FunctionComponent<{}> = () => {
   };
 
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th width={15}>{columnNames.salesPerson}</Th>
-          <Th width={15}>{columnNames.region}</Th>
-          <Th width={15}>{columnNames.salesAmount}</Th>
-          <Th width={15}>{columnNames.percentCommission}</Th>
-          <Th width={15}>{columnNames.commissionAmount}</Th>
-          <Td width={25}></Td>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {samples.samples.map(sample => (
-          <Tr key={sample.salesPerson}>
-            <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
-            <Td dataLabel={columnNames.region}>{sample.region}</Td>
-            <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
-            <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
-            <Td dataLabel={columnNames.commissionAmount}>
-              {sample.status === 'notExecutedYet' &&
-                <Label color="blue">Not executed yet</Label>
-              }
-              {sample.status === 'executed' &&
-                <Label color="green">{sample.commissionAmount}</Label>
-              }
-              {sample.status === 'processing' &&
-                <Spinner size="sm" />
-              }
-              {sample.status === 'failed' &&
-                <Label color="red">Somethings wrong happened</Label>
-              }
-              {sample.status === 'formulaInError' &&
-                <Label color="red">Formula in error unable to process</Label>
-              }
-              {sample.status === 'formulaInvalid' &&
-                <Label color="orange">Formula invalid</Label>
-              }
-            </Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+    <Card>
+      <CardBody>
+        <Table variant='compact'>
+          <Thead>
+            <Tr>
+              <Th width={15}>{columnNames.salesPerson}</Th>
+              <Th width={15}>{columnNames.region}</Th>
+              <Th width={15}>{columnNames.salesAmount}</Th>
+              <Th width={15}>{columnNames.percentCommission}</Th>
+              <Th width={15}>{columnNames.commissionAmount}</Th>
+              <Td width={25}></Td>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {samples.samples.map(sample => (
+              <Tr key={sample.salesPerson}>
+                <Td dataLabel={columnNames.salesPerson}>{sample.salesPerson}</Td>
+                <Td dataLabel={columnNames.region}>{sample.region}</Td>
+                <Td dataLabel={columnNames.salesAmount}>{sample.salesAmount}</Td>
+                <Td dataLabel={columnNames.percentCommission}>{sample.percentCommission}</Td>
+                <Td dataLabel={columnNames.commissionAmount}>
+                  {sample.status === 'notExecutedYet' &&
+                    <Label color="blue">Not executed yet</Label>
+                  }
+                  {sample.status === 'executed' &&
+                    <Label color="green">{sample.commissionAmount}</Label>
+                  }
+                  {sample.status === 'processing' &&
+                    <Spinner size="sm" />
+                  }
+                  {sample.status === 'failed' &&
+                    <Label color="red">Somethings wrong happened</Label>
+                  }
+                  {sample.status === 'formulaInError' &&
+                    <Label color="red">Formula in error unable to process</Label>
+                  }
+                  {sample.status === 'formulaInvalid' &&
+                    <Label color="orange">Formula invalid</Label>
+                  }
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </CardBody>
+    </Card>
   )
 }
 
@@ -545,7 +596,6 @@ const ExecutionDebug: React.FunctionComponent<{}> = () => {
   const executionsDebug = useSelector(selectExecutionsDebug);
   const dispatch = useAppDispatch();
   const columnNames = {
-    executionId: 'Execution Id',
     executedAt: 'Executed At',
     inputs: 'Inputs',
     result: 'Result',
@@ -554,91 +604,117 @@ const ExecutionDebug: React.FunctionComponent<{}> = () => {
 
   return (
     <React.Fragment>
-      <ToggleGroup>
-        {samples.samples.map(sample => {
-          return (
-            <ToggleGroupItem
-              key={sample.salesPerson}
-              text={sample.salesPerson}
-              isSelected={sample.salesPerson === executionsDebug.selectedSalesPerson}
-              onChange={() => dispatch(selectSalesPerson(sample.salesPerson))}
-            />)
-        })}
-      </ToggleGroup>
-      <Table>
-        <Thead>
-          <Tr>
-            <Td>{columnNames.executionId}</Td>
-            <Td>{columnNames.executedAt}</Td>
-            <Td>{columnNames.inputs}</Td>
-            <Td>{columnNames.result}</Td>
-            <Td>{columnNames.underline}</Td>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {executionsDebug.executions.filter(executions => executions.salesPerson === executionsDebug.selectedSalesPerson)
-            .flatMap(executions => executions.executions)
-            .map((execution: ExecutionDTO, index: number) => {
+      <Card>
+        <CardHeader>
+          <ToggleGroup>
+            {samples.samples.map(sample => {
               return (
-                <Tr key={index}>
-                  <Td dataLabel={columnNames.executionId}>{execution.executionId}</Td>
-                  <Td dataLabel={columnNames.executedAt}>{execution.executedAt}</Td>
-                  <Td dataLabel={columnNames.inputs}>
-                    <List isPlain isBordered>
-                      {
-                        Object.entries(execution.inputs!)
-                          .map(([key, value]) => {
-                            return (
-                              <ListItem key={key}>{key}: {value}</ListItem>
-                            )
-                          })
-                      }
-                    </List>
-                  </Td>
-                  <Td dataLabel={columnNames.result}>{execution.result}</Td>
-                  <Td dataLabel={columnNames.underline}>
-                    {
-                      formula.formula.substring(0, execution.start!)
-                    }
-                    <b>
-                      {
-                        formula.formula.substring(execution.start!, execution.end! + 1)
-                      }
-                    </b>
-                    {
-                      formula.formula.substring(execution.end! + 1, formula.formula.length)
-                    }
-                  </Td>
-                </Tr>
-              )
+                <ToggleGroupItem
+                  key={sample.salesPerson}
+                  text={sample.salesPerson}
+                  isSelected={sample.salesPerson === executionsDebug.selectedSalesPerson}
+                  onChange={() => dispatch(selectSalesPerson(sample.salesPerson))}
+                />)
             })}
-        </Tbody>
-      </Table>
+          </ToggleGroup>
+        </CardHeader>
+        <CardBody>
+          <Table variant='compact'>
+            <Thead>
+              <Tr>
+                <Td>{columnNames.underline}</Td>
+                <Td>{columnNames.inputs}</Td>
+                <Td>{columnNames.result}</Td>
+                <Td>{columnNames.executedAt}</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {executionsDebug.executions.filter(executions => executions.salesPerson === executionsDebug.selectedSalesPerson)
+                .flatMap(executions => executions.executions)
+                .map((execution: ExecutionDTO, index: number) => {
+                  return (
+                    <Tr key={index}>
+                      <Td dataLabel={columnNames.underline}>
+                        {
+                          formula.formula.substring(0, execution.start!)
+                        }
+                        <b>
+                          {
+                            formula.formula.substring(execution.start!, execution.end! + 1)
+                          }
+                        </b>
+                        {
+                          formula.formula.substring(execution.end! + 1, formula.formula.length)
+                        }
+                      </Td>
+                      <Td dataLabel={columnNames.inputs}>
+                        <List isPlain isBordered>
+                          {
+                            Object.entries(execution.inputs!)
+                              .map(([key, value]) => {
+                                return (
+                                  <ListItem key={key}>{key}: {value}</ListItem>
+                                )
+                              })
+                          }
+                        </List>
+                      </Td>
+                      <Td dataLabel={columnNames.result}>{execution.result}</Td>
+                      <Td dataLabel={columnNames.executedAt}>{execution.executedAt}</Td>
+                    </Tr>
+                  )
+                })}
+            </Tbody>
+          </Table>
+        </CardBody>
+      </Card>
     </React.Fragment>
   );
 }
 
+
 function App() {
+  const [alerts, setAlerts] = React.useState<Partial<AlertProps>[]>([]);
+
+  const getUniqueId = () => new Date().getTime();
+
+  const addAlert = (title: string, variant: AlertProps['variant']) => {
+    const key: React.Key = getUniqueId();
+    setAlerts(prevAlerts => [...prevAlerts, { title, variant, key }]);
+  };
+
+  const removeAlert = (key: React.Key) => {
+    setAlerts(prevAlerts => [...prevAlerts.filter(alert => alert.key !== key)]);
+  };
+
   return (
-    <Page>
-      <PageSection isWidthLimited isCenterAligned>
-        <Card>
-          <CardBody>
-            <Stack hasGutter>
-              <StackItem>
-                <Formula />
-              </StackItem>
-              <StackItem isFilled>
-                <Samples />
-              </StackItem>
-              <StackItem>
-                <ExecutionDebug />
-              </StackItem>
-            </Stack>
-          </CardBody>
-        </Card>
-      </PageSection>
-    </Page>
+    <React.Fragment>
+      <Page>
+        <PageSection isWidthLimited isCenterAligned>
+          <Grid hasGutter>
+            <GridItem span={12}><Formula addAlert={addAlert} /></GridItem>
+            <GridItem span={12}><Samples /></GridItem>
+            <GridItem span={12}><ExecutionDebug /></GridItem>
+          </Grid>
+        </PageSection>
+      </Page>
+      <AlertGroup isToast isLiveRegion>
+        {alerts.map(({ key, variant, title }) => (
+          <Alert
+            variant={AlertVariant[variant!]}
+            title={title}
+            timeout={5000}
+            onTimeout={() => removeAlert(key!)}
+            isLiveRegion
+            actionClose={
+              <AlertActionCloseButton
+                variantLabel={`${variant} alert`} onClose={() => removeAlert(key!)} />
+            }
+            key={key}
+          />
+        ))}
+      </AlertGroup>
+    </React.Fragment>
   );
 };
 
