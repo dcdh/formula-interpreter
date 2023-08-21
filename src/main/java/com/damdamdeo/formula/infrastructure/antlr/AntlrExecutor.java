@@ -38,8 +38,6 @@ public final class AntlrExecutor implements Executor {
             }
             final List<Execution> executions = executionLogger.getByExecutionId(executionId);
             return new ExecutionResult(value, executions);
-        } catch (final AntlrSyntaxErrorException antlrSyntaxErrorException) {
-            throw new ExecutionException(antlrSyntaxErrorException);
         } catch (final Exception exception) {
             throw new ExecutionException(exception);
         }
