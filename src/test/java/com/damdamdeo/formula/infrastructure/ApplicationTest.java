@@ -2,8 +2,6 @@ package com.damdamdeo.formula.infrastructure;
 
 import com.damdamdeo.formula.domain.ExecutedAt;
 import com.damdamdeo.formula.domain.ExecutedAtProvider;
-import com.damdamdeo.formula.domain.ExecutionId;
-import com.damdamdeo.formula.domain.ExecutionIdGenerator;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.apache.http.HttpStatus;
@@ -13,10 +11,9 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 @QuarkusTest
 public class ApplicationTest {
@@ -25,14 +22,12 @@ public class ApplicationTest {
     @InjectMock
     private ExecutedAtProvider executedAtProvider;
 
-    @InjectMock
-    private ExecutionIdGenerator executionIdGenerator;
-
     @Test
     public void shouldExecute() throws JSONException {
         // Given
-        doReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]"))).when(executedAtProvider).now();
-        doReturn(new ExecutionId(new UUID(0, 0))).when(executionIdGenerator).generate();
+        when(executedAtProvider.now())
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
         //language=JSON
         final String request = """
                 {
@@ -46,12 +41,15 @@ public class ApplicationTest {
         final String expectedBody = """
                 {
                     "result": "true",
+                    "processedInNanos": 1000000000,
                     "executions": [
                         {
-                            "executionId": "00000000-0000-0000-0000-000000000000",
-                            "executedAt": "2023-12-25T10:15:30+01:00",
-                            "start": 0,
-                            "end": 3,
+                            "executedAtStart": "2023-12-25T10:15:00+01:00",
+                            "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                            "position": {
+                                "start": 0,
+                                "end": 3
+                            },
                             "inputs": {
                             },
                             "result": "true"

@@ -5,31 +5,24 @@ import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.*;
-import com.damdamdeo.formula.infrastructure.logger.InMemoryExecutionLogger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 public class Application {
+
+    private static final class NowExecutedAtProvider implements ExecutedAtProvider {
+        @Override
+        public ExecutedAt now() {
+            return new ExecutedAt(ZonedDateTime.now());
+        }
+    }
 
     @Produces
     @ApplicationScoped
     public ExecutedAtProvider executedAddProviderProducer() {
-        return () -> new ExecutedAt(ZonedDateTime.now());
-    }
-
-    @Produces
-    @ApplicationScoped
-    public ExecutionIdGenerator executionIdGeneratorProducer() {
-        return () -> new ExecutionId(UUID.randomUUID());
-    }
-
-    @Produces
-    @ApplicationScoped
-    public ExecutionLogger executionLoggerProducer() {
-        return new InMemoryExecutionLogger();
+        return new NowExecutedAtProvider();
     }
 
     @Produces
@@ -40,10 +33,8 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public Executor executorProducer(final ExecutionIdGenerator executionIdGenerator,
-                                     final ExecutionLogger executionLogger,
-                                     final ExecutedAtProvider executedAtProvider) {
-        return new AntlrExecutor(executionIdGenerator, executionLogger, executedAtProvider, new NumericalContext());
+    public Executor executorProducer(final ExecutedAtProvider executedAtProvider) {
+        return new AntlrExecutor(executedAtProvider, new NumericalContext());
     }
 
     @Produces

@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -234,22 +233,34 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "AND(0,0)";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 4, 4, Map.of(), Value.of("0")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 6, 6, Map.of(), Value.of("0")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")), 0, 7, Map.of(
-                            new InputName("left"), Value.of("0"),
-                            new InputName("right"), Value.of("0")
-                    ), Value.of("false"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
+                            new Position(0, 7),
+                            Map.of(
+                                    new InputName("left"), Value.of("0"),
+                                    new InputName("right"), Value.of("0")),
+                            Value.of("false")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(4, 4), Map.of(), Value.of("0")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                            new Position(6, 6), Map.of(), Value.of("0"))
             );
         }
     }
@@ -342,21 +353,33 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "IF(\"true\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 3, 8, Map.of(), Value.of("true")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 10, 15, Map.of(), Value.of("true")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")), 0, 24, Map.of(
-                            new InputName("comparisonValue"), Value.of("true")
-                    ), Value.of("true"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
+                            new Position(0, 24),
+                            Map.of(
+                                    new InputName("comparisonValue"), Value.of("true")),
+                            Value.of("true")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(3, 8), Map.of(), Value.of("true")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                            new Position(10, 15), Map.of(), Value.of("true"))
             );
         }
     }
@@ -423,21 +446,34 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "IFERROR(\"true\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 8, 13, Map.of(), Value.of("true")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 22, 28, Map.of(), Value.of("false")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")), 0, 29, Map.of(
-                            new InputName("comparisonValue"), Value.of("true")
-                    ), Value.of("false"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
+                            new Position(0, 29),
+                            Map.of(
+                                    new InputName("comparisonValue"), Value.of("true")
+                            ),
+                            Value.of("false")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(8, 13), Map.of(), Value.of("true")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                            new Position(22, 28), Map.of(), Value.of("false"))
             );
         }
     }
@@ -504,21 +540,34 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "IFNA(\"#REF!\",\"true\",\"false\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 5, 11, Map.of(), Value.of("#REF!")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 20, 26, Map.of(), Value.of("false")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:32+01:00[Europe/Paris]")), 0, 27, Map.of(
-                            new InputName("comparisonValue"), Value.of("#REF!")
-                    ), Value.of("false"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
+                            new Position(0, 27),
+                            Map.of(
+                                    new InputName("comparisonValue"), Value.of("#REF!")
+                            ),
+                            Value.of("false")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(5, 11), Map.of(), Value.of("#REF!")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                            new Position(20, 26), Map.of(), Value.of("false"))
             );
         }
     }
@@ -628,19 +677,28 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "ISNUM(\"123456\")";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 6, 13, Map.of(), Value.of("123456")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 0, 14, Map.of(
-                            new InputName("value"), Value.of("123456")
-                    ), Value.of("true"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new Position(0, 14),
+                            Map.of(
+                                    new InputName("value"), Value.of("123456")
+                            ),
+                            Value.of("true")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(6, 13), Map.of(), Value.of("123456"))
             );
         }
     }
@@ -711,19 +769,28 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "ISNA(123456)";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 5, 10, Map.of(), Value.of("123456")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 0, 11, Map.of(
-                            new InputName("value"), Value.of("123456")
-                    ), Value.of("false"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new Position(0, 11),
+                            Map.of(
+                                    new InputName("value"), Value.of("123456")
+                            ),
+                            Value.of("false")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(5, 10), Map.of(), Value.of("123456"))
             );
         }
     }
@@ -765,19 +832,28 @@ public class LogicalFunctionsExpressionTest extends AbstractExpressionTest {
             final String givenFormula = "ISERROR(123456)";
             final StructuredData givenStructuredData = new StructuredData(List.of());
             when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")))
-            ;
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
 
             // When
             final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
             // Then
             assertThat(executionResult.executions()).containsExactly(
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 8, 13, Map.of(), Value.of("123456")),
-                    new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:31+01:00[Europe/Paris]")), 0, 14, Map.of(
-                            new InputName("value"), Value.of("123456")
-                    ), Value.of("false"))
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                            new Position(0, 14),
+                            Map.of(
+                                    new InputName("value"), Value.of("123456")
+                            ),
+                            Value.of("false")),
+                    new AntlrExecution(
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                            new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                            new Position(8, 13), Map.of(), Value.of("123456"))
             );
         }
     }

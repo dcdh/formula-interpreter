@@ -7,7 +7,7 @@ import {
   FormGroup, TextInput,
   Label, Spinner, ToggleGroup, ToggleGroupItem, List, ListItem, Popper, Menu, MenuContent,
   MenuList, MenuItem, InputGroup, InputGroupItem, DropdownList, DropdownItem, Dropdown, MenuToggle, MenuToggleElement,
-  Grid, GridItem, CardHeader, ValidatedOptions, AlertProps, AlertGroup, AlertVariant, AlertActionCloseButton
+  Grid, GridItem, CardHeader, ValidatedOptions, AlertProps, AlertGroup, AlertVariant, AlertActionCloseButton, Stack, StackItem, FlexItem, Flex
 } from '@patternfly/react-core';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import { configureStore, createAction } from '@reduxjs/toolkit';
@@ -18,6 +18,7 @@ import { ValidatorEndpointApi, SuggestCompletionEndpointApi, ExecutorEndpointApi
 import { firstValueFrom } from 'rxjs';
 import { AjaxError } from 'rxjs/ajax';
 import { Form, Field } from 'react-final-form';
+import { CheckCircleIcon, OutlinedClockIcon } from '@patternfly/react-icons';
 
 const validator = new ValidatorEndpointApi();
 const suggest = new SuggestCompletionEndpointApi();
@@ -25,14 +26,33 @@ const executor = new ExecutorEndpointApi();
 
 const useAppDispatch: () => AppDispatch = useDispatch
 
-interface Sample {
+interface SampleState {
   salesPerson: string,
   region: string,
   salesAmount: number,
   percentCommission: number,
   commissionAmount: string | null,
   status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid',
-  executions: Array<ExecutionDTO>
+  executions: ExecutionsResultState | null
+};
+
+interface ExecutionsResultState {
+  result: string,
+  processedInNanos: number,
+  executions: Array<ExecutionState>
+};
+
+interface ExecutionState {
+  executedAtStart: string;
+  executedAtEnd: string;
+  position?: PositionState;
+  inputs: { [key: string]: string; };
+  result: string;
+};
+
+interface PositionState {
+  start: number;
+  end: number;
 };
 
 interface FormulaState {
@@ -62,17 +82,17 @@ const initialAutoSuggestionState: AutoSuggestionState = {
 };
 
 interface SamplesState {
-  samples: Sample[];
+  samples: SampleState[];
 };
 
 const initialSamplesState: SamplesState = {
   samples: [
-    { salesPerson: 'Joe', region: 'North', salesAmount: 260, percentCommission: 10, commissionAmount: null, status: 'notExecutedYet', executions: [] },
-    { salesPerson: 'Robert', region: 'South', salesAmount: 660, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
-    { salesPerson: 'Michelle', region: 'East', salesAmount: 940, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
-    { salesPerson: 'Erich', region: 'West', salesAmount: 410, percentCommission: 12, commissionAmount: null, status: 'notExecutedYet', executions: [] },
-    { salesPerson: 'Dafna', region: 'North', salesAmount: 800, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] },
-    { salesPerson: 'Rob', region: 'South', salesAmount: 900, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: [] }
+    { salesPerson: 'Joe', region: 'North', salesAmount: 260, percentCommission: 10, commissionAmount: null, status: 'notExecutedYet', executions: null },
+    { salesPerson: 'Robert', region: 'South', salesAmount: 660, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: null },
+    { salesPerson: 'Michelle', region: 'East', salesAmount: 940, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: null },
+    { salesPerson: 'Erich', region: 'West', salesAmount: 410, percentCommission: 12, commissionAmount: null, status: 'notExecutedYet', executions: null },
+    { salesPerson: 'Dafna', region: 'North', salesAmount: 800, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: null },
+    { salesPerson: 'Rob', region: 'South', salesAmount: 900, percentCommission: 15, commissionAmount: null, status: 'notExecutedYet', executions: null }
   ]
 };
 
@@ -213,14 +233,14 @@ const autoSuggestionSlice = createSlice({
   },
 });
 
-const executeFormulaOnSamples = createAsyncThunk<Sample[], void
+const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
 >('samples/executeFormula', async (_void: void) => {
   const formula: string = store.getState().formula.formula;
-  const samples: Sample[] = store.getState().samples.samples;
+  const samples: SampleState[] = store.getState().samples.samples;
   let status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid' = 'notExecutedYet';
   let commissionAmount: string | null = null;
-  let executions: Array<ExecutionDTO> = [];
-  const results: Sample[] = await Promise.all(samples.map(async function (sample: Sample) {
+  let executions: ExecutionsResultState | null = null;
+  const results: SampleState[] = await Promise.all(samples.map(async function (sample: SampleState) {
     try {
       const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
         executeDTO: {
@@ -235,7 +255,22 @@ const executeFormulaOnSamples = createAsyncThunk<Sample[], void
       }));
       status = 'executed';
       commissionAmount = executionResult.result!;
-      executions = executionResult.executions!;
+      executions = {
+        result: executionResult.result!,
+        processedInNanos: executionResult.processedInNanos!,
+        executions: executionResult.executions!.map((execution: ExecutionDTO) => {
+          return {
+            executedAtStart: execution.executedAtStart!,
+            executedAtEnd: execution.executedAtEnd!,
+            position: {
+              start: execution.position!.start!,
+              end: execution.position!.end!
+            },
+            inputs: execution.inputs!,
+            result: execution.result!
+          }
+        })
+      };
     } catch (error) {
       status = 'failed';
       if (error instanceof AjaxError) {
@@ -310,14 +345,14 @@ const selectTokens = (state: RootState) => state.autoSuggestion.tokens;
 const selectAutoSuggestionStatus = (state: RootState) => state.autoSuggestion.status;
 const selectExecutionsDebug = (state: RootState) => state.executionsDebug;
 
-interface Executions {
+interface ExecutionsState {
   salesPerson: string,
-  executions: Array<ExecutionDTO>
+  executionsResult: ExecutionsResultState
 }
 
 interface ExecutionsDebugState {
   selectedSalesPerson: string | null,
-  executions: Array<Executions>
+  executions: Array<ExecutionsState>
 }
 
 const initialExecutionsDebugState: ExecutionsDebugState = {
@@ -343,10 +378,10 @@ const executionsDebugSlice = createSlice({
         state.executions = []
       })
       .addCase(executeFormulaOnSamples.fulfilled, (state, { payload }) => {
-        state.executions = payload.map(sample => {
+        state.executions = payload.map((sample: SampleState) => {
           return {
             salesPerson: sample.salesPerson,
-            executions: sample.executions
+            executionsResult: sample.executions!
           }
         })
       })
@@ -596,11 +631,20 @@ const ExecutionDebug: React.FunctionComponent<{}> = () => {
   const executionsDebug = useSelector(selectExecutionsDebug);
   const dispatch = useAppDispatch();
   const columnNames = {
-    executedAt: 'Executed At',
+    executedAtStart: 'Executed At Start',
+    executedAtEnd: 'Executed At End',
     inputs: 'Inputs',
     result: 'Result',
     underline: 'Underline'
   };
+
+  const executionsDebugSelected = useSelector((state: RootState) => 
+    state.executionsDebug.executions.filter(executions => executions.salesPerson === state.executionsDebug.selectedSalesPerson)
+      .flatMap(executions => executions.executionsResult)
+  );
+
+  const result: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].result : null;
+  const processedInMillis: number | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].processedInNanos / 1000000 : null;
 
   return (
     <React.Fragment>
@@ -619,53 +663,70 @@ const ExecutionDebug: React.FunctionComponent<{}> = () => {
           </ToggleGroup>
         </CardHeader>
         <CardBody>
-          <Table variant='compact'>
-            <Thead>
-              <Tr>
-                <Td>{columnNames.underline}</Td>
-                <Td>{columnNames.inputs}</Td>
-                <Td>{columnNames.result}</Td>
-                <Td>{columnNames.executedAt}</Td>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {executionsDebug.executions.filter(executions => executions.salesPerson === executionsDebug.selectedSalesPerson)
-                .flatMap(executions => executions.executions)
-                .map((execution: ExecutionDTO, index: number) => {
-                  return (
-                    <Tr key={index}>
-                      <Td dataLabel={columnNames.underline}>
-                        {
-                          formula.formula.substring(0, execution.start!)
-                        }
-                        <b>
-                          {
-                            formula.formula.substring(execution.start!, execution.end! + 1)
-                          }
-                        </b>
-                        {
-                          formula.formula.substring(execution.end! + 1, formula.formula.length)
-                        }
-                      </Td>
-                      <Td dataLabel={columnNames.inputs}>
-                        <List isPlain isBordered>
-                          {
-                            Object.entries(execution.inputs!)
-                              .map(([key, value]) => {
-                                return (
-                                  <ListItem key={key}>{key}: {value}</ListItem>
-                                )
-                              })
-                          }
-                        </List>
-                      </Td>
-                      <Td dataLabel={columnNames.result}>{execution.result}</Td>
-                      <Td dataLabel={columnNames.executedAt}>{execution.executedAt}</Td>
-                    </Tr>
-                  )
-                })}
-            </Tbody>
-          </Table>
+          <Stack>
+            <StackItem>
+              <Flex spaceItems={{ default: 'spaceItemsMd' }}>
+                <FlexItem>
+                  <CheckCircleIcon /> {result}
+                </FlexItem>
+                <FlexItem>
+                  <OutlinedClockIcon /> {processedInMillis !== null &&
+                    `${processedInMillis} milliseconds`} 
+                </FlexItem>
+              </Flex>
+            </StackItem>
+            <StackItem>
+              <Table variant='compact'>
+                <Thead>
+                  <Tr>
+                    <Td>{columnNames.underline}</Td>
+                    <Td>{columnNames.inputs}</Td>
+                    <Td>{columnNames.result}</Td>
+                    <Td>{columnNames.executedAtStart}</Td>
+                    <Td>{columnNames.executedAtEnd}</Td>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {executionsDebugSelected
+                    .flatMap(executionsResult => executionsResult.executions)
+                    .map((execution: ExecutionDTO, index: number) => {
+                      return (
+                        <Tr key={index}>
+                          <Td dataLabel={columnNames.underline}>
+                            {
+                              formula.formula.substring(0, execution.position!.start!)
+                            }
+                            <b>
+                              {
+                                formula.formula.substring(execution.position!.start!, execution.position!.end! + 1)
+                              }
+                            </b>
+                            {
+                              formula.formula.substring(execution.position!.end! + 1, formula.formula.length)
+                            }
+                          </Td>
+                          <Td dataLabel={columnNames.inputs}>
+                            <List isPlain isBordered>
+                              {
+                                Object.entries(execution.inputs!)
+                                  .map(([key, value]) => {
+                                    return (
+                                      <ListItem key={key}>{key}: {value}</ListItem>
+                                    )
+                                  })
+                              }
+                            </List>
+                          </Td>
+                          <Td dataLabel={columnNames.result}>{execution.result}</Td>
+                          <Td dataLabel={columnNames.executedAtStart}>{execution.executedAtStart}</Td>
+                          <Td dataLabel={columnNames.executedAtEnd}>{execution.executedAtEnd}</Td>
+                        </Tr>
+                      )
+                    })}
+                </Tbody>
+              </Table>
+            </StackItem>
+          </Stack>
         </CardBody>
       </Card>
     </React.Fragment>

@@ -11,28 +11,19 @@
  * Do not edit the class manually.
  */
 
-import type {
-    ExecutionDTO,
-} from './';
-
 /**
  * @export
- * @interface ExecutionResultDTO
+ * @interface PositionDTO
  */
-export interface ExecutionResultDTO {
-    /**
-     * @type {string}
-     * @memberof ExecutionResultDTO
-     */
-    result?: string;
+export interface PositionDTO {
     /**
      * @type {number}
-     * @memberof ExecutionResultDTO
+     * @memberof PositionDTO
      */
-    processedInNanos?: number;
+    start?: number;
     /**
-     * @type {Array<ExecutionDTO>}
-     * @memberof ExecutionResultDTO
+     * @type {number}
+     * @memberof PositionDTO
      */
-    executions?: Array<ExecutionDTO>;
+    end?: number;
 }

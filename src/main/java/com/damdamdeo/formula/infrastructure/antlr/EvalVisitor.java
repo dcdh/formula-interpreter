@@ -5,27 +5,37 @@ import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.*;
 import org.antlr.v4.runtime.tree.RuleNode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
-    private final ExecutionId executionId;
+    private static final String INPUT_NAME_LEFT = "left";
+    private static final String INPUT_NAME_RIGHT = "right";
+    private static final String INPUT_NAME_COMPARISON_VALUE = "comparisonValue";
+    private static final String INPUT_NAME_VALUE = "value";
+    private static final String INPUT_NAME_STRUCTURED_REFERENCE = "structuredReference";
     private final ExecutedAtProvider executedAtProvider;
-    private final ExecutionLogger executionLogger;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
-
     private Value currentResult = Value.ofNotAvailable();
+    private final List<Execution> executions;
 
-    public EvalVisitor(final ExecutionId executionId,
-                       final ExecutionLogger executionLogger,
-                       final ExecutedAtProvider executedAtProvider,
+    public EvalVisitor(final ExecutedAtProvider executedAtProvider,
                        final StructuredData structuredData,
                        final NumericalContext numericalContext) {
-        this.executionId = Objects.requireNonNull(executionId);
-        this.executionLogger = Objects.requireNonNull(executionLogger);
         this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
         this.structuredData = Objects.requireNonNull(structuredData);
         this.numericalContext = Objects.requireNonNull(numericalContext);
+        executions = new ArrayList<>();
+    }
+
+    public List<Execution> executions() {
+        return executions
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,6 +52,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArithmeticFunctionsOperatorLeftOpRight(final FormulaParser.ArithmeticFunctionsOperatorLeftOpRightContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
@@ -58,31 +69,22 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (right.isNumeric() && right.isZero()) {
             result = Value.ofDividedByZero();
         } else {
-            final Operator operator;
-            switch (ctx.operator.getType()) {
-                case FormulaParser.ADD:
-                    operator = Operator.ADD;
-                    break;
-                case FormulaParser.SUB:
-                    operator = Operator.SUB;
-                    break;
-                case FormulaParser.DIV:
-                    operator = Operator.DIV;
-                    break;
-                case FormulaParser.MUL:
-                    operator = Operator.MUL;
-                    break;
-                default:
-                    throw new IllegalStateException("Should not be here");
-            }
+            final Operator operator = switch (ctx.operator.getType()) {
+                case FormulaParser.ADD -> Operator.ADD;
+                case FormulaParser.SUB -> Operator.SUB;
+                case FormulaParser.DIV -> Operator.DIV;
+                case FormulaParser.MUL -> Operator.MUL;
+                default -> throw new IllegalStateException("Should not be here");
+            };
             result = operator.execute(left, right, numericalContext);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("left"), left)
-                .appendInput(new InputName("right"), right)
+                .appendInput(new InputName(INPUT_NAME_LEFT), left)
+                .appendInput(new InputName(INPUT_NAME_RIGHT), right)
                 .result(result)
                 .build());
         return result;
@@ -90,6 +92,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitComparisonFunctionsNumerical(final FormulaParser.ComparisonFunctionsNumericalContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
@@ -104,31 +107,22 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (!left.isNumeric() || !right.isNumeric()) {
             result = Value.ofNumericalValueExpected();
         } else {
-            final NumericalComparator numericalComparator;
-            switch (ctx.numericalComparator.getType()) {
-                case FormulaParser.GT:
-                    numericalComparator = NumericalComparator.GT;
-                    break;
-                case FormulaParser.GTE:
-                    numericalComparator = NumericalComparator.GTE;
-                    break;
-                case FormulaParser.LT:
-                    numericalComparator = NumericalComparator.LT;
-                    break;
-                case FormulaParser.LTE:
-                    numericalComparator = NumericalComparator.LTE;
-                    break;
-                default:
-                    throw new IllegalStateException("Should not be here");
-            }
+            final NumericalComparator numericalComparator = switch (ctx.numericalComparator.getType()) {
+                case FormulaParser.GT -> NumericalComparator.GT;
+                case FormulaParser.GTE -> NumericalComparator.GTE;
+                case FormulaParser.LT -> NumericalComparator.LT;
+                case FormulaParser.LTE -> NumericalComparator.LTE;
+                default -> throw new IllegalStateException("Should not be here");
+            };
             result = numericalComparator.execute(left, right, numericalContext);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("left"), left)
-                .appendInput(new InputName("right"), right)
+                .appendInput(new InputName(INPUT_NAME_LEFT), left)
+                .appendInput(new InputName(INPUT_NAME_RIGHT), right)
                 .result(result)
                 .build());
         return result;
@@ -136,6 +130,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitComparisonFunctionsEquality(final FormulaParser.ComparisonFunctionsEqualityContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
@@ -148,25 +143,20 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (left.isDivByZero() || right.isDivByZero()) {
             result = Value.ofDividedByZero();
         } else {
-            final EqualityComparator equalityComparator;
-            switch (ctx.equalityComparator.getType()) {
-                case FormulaParser.EQ:
-                    equalityComparator = EqualityComparator.EQ;
-                    break;
-                case FormulaParser.NEQ:
-                    equalityComparator = EqualityComparator.NEQ;
-                    break;
-                default:
-                    throw new IllegalStateException("Should not be here");
-            }
+            final EqualityComparator equalityComparator = switch (ctx.equalityComparator.getType()) {
+                case FormulaParser.EQ -> EqualityComparator.EQ;
+                case FormulaParser.NEQ -> EqualityComparator.NEQ;
+                default -> throw new IllegalStateException("Should not be here");
+            };
             result = equalityComparator.execute(left, right, numericalContext);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("left"), left)
-                .appendInput(new InputName("right"), right)
+                .appendInput(new InputName(INPUT_NAME_LEFT), left)
+                .appendInput(new InputName(INPUT_NAME_RIGHT), right)
                 .result(result)
                 .build());
         return result;
@@ -174,6 +164,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitLogicalOperatorFunction(final FormulaParser.LogicalOperatorFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value left = this.visit(ctx.left);
         final Value right = this.visit(ctx.right);
         final Value result;
@@ -186,25 +177,20 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (left.isDivByZero() || right.isDivByZero()) {
             result = Value.ofDividedByZero();
         } else {
-            final LogicalOperator logicalOperator;
-            switch (ctx.logicalOperator.getType()) {
-                case FormulaParser.AND:
-                    logicalOperator = LogicalOperator.AND;
-                    break;
-                case FormulaParser.OR:
-                    logicalOperator = LogicalOperator.OR;
-                    break;
-                default:
-                    throw new IllegalStateException("Should not be here");
-            }
+            final LogicalOperator logicalOperator = switch (ctx.logicalOperator.getType()) {
+                case FormulaParser.AND -> LogicalOperator.AND;
+                case FormulaParser.OR -> LogicalOperator.OR;
+                default -> throw new IllegalStateException("Should not be here");
+            };
             result = logicalOperator.execute(left, right);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("left"), left)
-                .appendInput(new InputName("right"), right)
+                .appendInput(new InputName(INPUT_NAME_LEFT), left)
+                .appendInput(new InputName(INPUT_NAME_RIGHT), right)
                 .result(result)
                 .build());
         return result;
@@ -212,6 +198,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfFunction(final FormulaParser.IfFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value comparisonValue = this.visit(ctx.comparison);
         final Value result;
         if (comparisonValue.isNotAvailable()) {
@@ -229,11 +216,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             throw new IllegalStateException("Should not be here");
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .appendInput(new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue)
                 .result(result)
                 .build());
         return result;
@@ -241,6 +229,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfErrorFunction(final FormulaParser.IfErrorFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value comparisonValue = this.visit(ctx.comparison);
         final Value result;
         if (comparisonValue.isError()) {
@@ -248,11 +237,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             result = this.visit(ctx.whenFalse);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .appendInput(new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue)
                 .result(result)
                 .build());
         return result;
@@ -260,6 +250,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfNaFunction(final FormulaParser.IfNaFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value comparisonValue = this.visit(ctx.comparison);
         final Value result;
         if (comparisonValue.isNotAvailable()) {
@@ -267,11 +258,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else {
             result = this.visit(ctx.whenFalse);
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("comparisonValue"), comparisonValue)
+                .appendInput(new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue)
                 .result(result)
                 .build());
         return result;
@@ -279,6 +271,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsFunction(final FormulaParser.IsFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value value = this.visit(ctx.value);
         final Value result;
         if (value.isNotAvailable()) {
@@ -290,28 +283,20 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } else if (value.isDivByZero()) {
             result = Value.ofDividedByZero();
         } else {
-            switch (ctx.isOperator.getType()) {
-                case FormulaParser.ISNUM:
-                    result = value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
-                    break;
-                case FormulaParser.ISTEXT:
-                    result = value.isText() ? Value.ofTrue() : Value.ofFalse();
-                    break;
-                case FormulaParser.ISBLANK:
-                    result = value.isBlank() ? Value.ofTrue() : Value.ofFalse();
-                    break;
-                case FormulaParser.ISLOGICAL:
-                    result = value.isLogical() ? Value.ofTrue() : Value.ofFalse();
-                    break;
-                default:
-                    throw new IllegalStateException("Should not be here");
-            }
+            result = switch (ctx.isOperator.getType()) {
+                case FormulaParser.ISNUM -> value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISTEXT -> value.isText() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISBLANK -> value.isBlank() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISLOGICAL -> value.isLogical() ? Value.ofTrue() : Value.ofFalse();
+                default -> throw new IllegalStateException("Should not be here");
+            };
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("value"), value)
+                .appendInput(new InputName(INPUT_NAME_VALUE), value)
                 .result(result)
                 .build());
         return result;
@@ -319,13 +304,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value value = this.visit(ctx.value);
         final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("value"), value)
+                .appendInput(new InputName(INPUT_NAME_VALUE), value)
                 .result(result)
                 .build());
         return result;
@@ -333,13 +320,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsErrorFunction(final FormulaParser.IsErrorFunctionContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value value = this.visit(ctx.value);
         final Value result = value.isError() ? Value.ofTrue() : Value.ofFalse();
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("value"), value)
+                .appendInput(new InputName(INPUT_NAME_VALUE), value)
                 .result(result)
                 .build());
         return result;
@@ -347,6 +336,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         Value result;
         final String reference = ctx.STRUCTURED_REFERENCE().getText()
                 .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
@@ -356,11 +346,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         } catch (final UnknownReferenceException unknownReferenceException) {
             result = Value.ofUnknownRef();
         }
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
-                .appendInput(new InputName("structuredReference"), new Reference(reference))
+                .appendInput(new InputName(INPUT_NAME_STRUCTURED_REFERENCE), new Reference(reference))
                 .result(result)
                 .build());
         return result;
@@ -368,10 +359,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value result = Value.of(ctx.VALUE().getText());
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
                 .result(result)
                 .build());
@@ -380,10 +373,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         final Value result = Value.of(ctx.NUMERIC().getText());
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
                 .result(result)
                 .build());
@@ -392,11 +387,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         final Value result = Value.of(ctx.getText());
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
                 .result(result)
                 .build());
@@ -405,11 +402,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         final Value result = Value.of(ctx.getText());
-        executionLogger.log(AntlrExecution.Builder.newBuilder()
-                .executionId(executionId)
-                .executedAt(executedAtProvider.now())
+        final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+        executions.add(AntlrExecution.Builder.newBuilder()
+                .executedAtStart(executedAtStart)
+                .executedAtEnd(executedAtEnd)
                 .using(ctx)
                 .result(result)
                 .build());

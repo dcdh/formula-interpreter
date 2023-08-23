@@ -17,7 +17,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -34,13 +33,18 @@ public class ExecutorEndpointTest {
     public void shouldExecute() throws JSONException {
         // Given
         doReturn(new ExecutionResult(new Value("true"), List.of(
-                new AntlrExecution(new ExecutionId(new UUID(0, 0)), new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:30+01:00[Europe/Paris]")), 4, 5, Map.of(
-                        new InputName("reference"), new Value("ref")
-                ), Value.of("10"))
+                new AntlrExecution(
+                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                        new Position(4, 5),
+                        Map.of(new InputName("reference"), new Value("ref")),
+                        Value.of("10"))
         ))).when(executeUseCase)
-                .execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
-                        new StructuredDatum(new Reference("ref"), new Value("val"))
-                ))));
+                .execute(new ExecuteCommand(new Formula("true"),
+                        new StructuredData(
+                                List.of(
+                                        new StructuredDatum(new Reference("ref"), new Value("val"))
+                                ))));
         //language=JSON
         final String request = """
                 {
@@ -56,12 +60,15 @@ public class ExecutorEndpointTest {
         final String expectedBody = """
                 {
                     "result": "true",
+                    "processedInNanos": 1000000000,
                     "executions": [
                         {
-                            "executionId": "00000000-0000-0000-0000-000000000000",
-                            "executedAt": "2023-12-25T10:15:30+01:00",
-                            "start": 4,
-                            "end": 5,
+                            "executedAtStart": "2023-12-25T10:15:00+01:00",
+                            "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                            "position": {
+                                "start": 4,
+                                "end": 5
+                            },
                             "inputs": {
                                 "reference": "ref"
                             },
@@ -85,12 +92,16 @@ public class ExecutorEndpointTest {
     }
 
     @Test
-    public void shouldHandleSyntaxErrorException() throws JSONException {
+    public void shouldHandleSyntaxErrorException() {
         // Given
         doThrow(new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\""))))
-                .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
-                        new StructuredDatum(new Reference("ref"), new Value("val"))
-                ))));
+                .when(executeUseCase).execute(
+                        new ExecuteCommand(
+                                new Formula("true"),
+                                new StructuredData(
+                                        List.of(
+                                                new StructuredDatum(new Reference("ref"), new Value("val")))
+                                )));
         //language=JSON
         final String request = """
                 {

@@ -8,36 +8,28 @@ import java.util.Objects;
 
 public final class AntlrExecutor implements Executor {
 
-    private final ExecutionIdGenerator executionIdGenerator;
-    private final ExecutionLogger executionLogger;
     private final ExecutedAtProvider executedAtProvider;
     private final AntlrValidator antlrValidator;
     private final NumericalContext numericalContext;
 
-    public AntlrExecutor(final ExecutionIdGenerator executionIdGenerator,
-                         final ExecutionLogger executionLogger,
-                         final ExecutedAtProvider executedAtProvider,
+    public AntlrExecutor(final ExecutedAtProvider executedAtProvider,
                          final NumericalContext numericalContext) {
-        this.executionIdGenerator = Objects.requireNonNull(executionIdGenerator);
-        this.executionLogger = Objects.requireNonNull(executionLogger);
         this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
         this.antlrValidator = new AntlrValidator();
         this.numericalContext = Objects.requireNonNull(numericalContext);
     }
-
     @Override
     public ExecutionResult execute(final Formula formula,
                                    final StructuredData structuredData) throws ExecutionException {
         try {
             final ParseTree tree = antlrValidator.doValidate(formula);
-            final ExecutionId executionId = executionIdGenerator.generate();
-            final EvalVisitor visitor = new EvalVisitor(executionId, executionLogger, executedAtProvider, structuredData, numericalContext);
-            final Result value = visitor.visit(tree);
-            if (value == null) {
+            final EvalVisitor visitor = new EvalVisitor(executedAtProvider, structuredData, numericalContext);
+            final Result result = visitor.visit(tree);
+            if (result == null) {
                 throw new IllegalStateException("Should not be null - a response is expected");
             }
-            final List<Execution> executions = executionLogger.getByExecutionId(executionId);
-            return new ExecutionResult(value, executions);
+            final List<Execution> executions = visitor.executions();
+            return new ExecutionResult(result, executions);
         } catch (final Exception exception) {
             throw new ExecutionException(exception);
         }

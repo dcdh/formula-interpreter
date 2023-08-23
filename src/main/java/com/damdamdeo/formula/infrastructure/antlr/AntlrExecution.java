@@ -7,25 +7,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public record AntlrExecution(ExecutionId executionId,
-                             ExecutedAt executedAt,
-                             Integer start, Integer end, Map<InputName, Input> inputs,
+public record AntlrExecution(ExecutedAtStart executedAtStart,
+                             ExecutedAtEnd executedAtEnd,
+                             Position position,
+                             Map<InputName, Input> inputs,
                              Result result) implements Execution {
     public AntlrExecution {
-        Objects.requireNonNull(executionId);
-        Objects.requireNonNull(executedAt);
-        Objects.requireNonNull(start);
-        Objects.requireNonNull(end);
+        Objects.requireNonNull(executedAtStart);
+        Objects.requireNonNull(executedAtEnd);
+        Objects.requireNonNull(position);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(result);
     }
 
     public static final class Builder {
 
-        ExecutionId executionId;
-        ExecutedAt executedAt;
-        Integer start;
-        Integer end;
+        ExecutedAtStart executedAtStart;
+        ExecutedAtEnd executedAtEnd;
+        Position position;
         Map<InputName, Input> inputs = new HashMap<>();
         Result result;
 
@@ -34,18 +33,20 @@ public record AntlrExecution(ExecutionId executionId,
         }
 
         public Builder using(final ParserRuleContext parserRuleContext) {
-            this.start = parserRuleContext.getStart().getStartIndex();
-            this.end = parserRuleContext.getStop().getStopIndex();
+            this.position = new Position(
+                    parserRuleContext.getStart().getStartIndex(),
+                    parserRuleContext.getStop().getStopIndex()
+            );
             return this;
         }
 
-        public Builder executionId(final ExecutionId executionId) {
-            this.executionId = executionId;
+        public Builder executedAtStart(final ExecutedAtStart executedAtStart) {
+            this.executedAtStart = executedAtStart;
             return this;
         }
 
-        public Builder executedAt(final ExecutedAt executedAt) {
-            this.executedAt = executedAt;
+        public Builder executedAtEnd(final ExecutedAtEnd executedAtEnd) {
+            this.executedAtEnd = executedAtEnd;
             return this;
         }
 
@@ -61,7 +62,7 @@ public record AntlrExecution(ExecutionId executionId,
 
         public AntlrExecution build() {
             return new AntlrExecution(
-                    executionId, executedAt, start, end, inputs, result
+                    executedAtStart, executedAtEnd, position, inputs, result
             );
         }
     }

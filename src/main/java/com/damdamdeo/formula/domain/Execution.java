@@ -2,18 +2,19 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Map;
 
-public interface Execution {
+public interface Execution extends Comparable<Execution> {
 
-    ExecutionId executionId();
+    ExecutedAtStart executedAtStart();
 
-    ExecutedAt executedAt();
+    ExecutedAtEnd executedAtEnd();
 
-    Integer start();
-
-    Integer end();
+    Position position();
 
     Map<InputName, Input> inputs();
 
     Result result();
 
+    default int compareTo(final Execution execution) {
+        return executedAtStart().compareTo(execution.executedAtStart());
+    }
 }

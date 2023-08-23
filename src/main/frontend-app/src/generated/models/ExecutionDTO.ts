@@ -11,6 +11,10 @@
  * Do not edit the class manually.
  */
 
+import type {
+    PositionDTO,
+} from './';
+
 /**
  * @export
  * @interface ExecutionDTO
@@ -20,22 +24,17 @@ export interface ExecutionDTO {
      * @type {string}
      * @memberof ExecutionDTO
      */
-    executionId?: string;
+    executedAtStart?: string;
     /**
      * @type {string}
      * @memberof ExecutionDTO
      */
-    executedAt?: string;
+    executedAtEnd?: string;
     /**
-     * @type {number}
+     * @type {PositionDTO}
      * @memberof ExecutionDTO
      */
-    start?: number;
-    /**
-     * @type {number}
-     * @memberof ExecutionDTO
-     */
-    end?: number;
+    position?: PositionDTO;
     /**
      * @type {{ [key: string]: string; }}
      * @memberof ExecutionDTO

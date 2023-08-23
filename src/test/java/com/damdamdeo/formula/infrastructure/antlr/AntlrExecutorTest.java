@@ -1,11 +1,11 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
-import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.infrastructure.logger.InMemoryExecutionLogger;
+import com.damdamdeo.formula.domain.ExecutedAtProvider;
+import com.damdamdeo.formula.domain.ExecutionException;
+import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.StructuredData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -17,11 +17,7 @@ public class AntlrExecutorTest {
     @BeforeEach
     public void setup() {
         final ExecutedAtProvider executedAtProvider = mock(ExecutedAtProvider.class);
-        antlrExecutor = new AntlrExecutor(
-                () -> new ExecutionId(new UUID(0, 0)),
-                new InMemoryExecutionLogger(),
-                executedAtProvider,
-                new NumericalContext());
+        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext());
     }
 
     @Test
