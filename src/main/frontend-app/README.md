@@ -24,3 +24,9 @@ https://react-redux.js.org/tutorials/typescript-quick-start
 
 
 https://github.com/final-form/react-final-form#-react-final-form
+
+https://github.com/reduxjs/redux-templates/tree/master/packages/cra-template-redux-typescript
+> Template for react, redux, typescript application
+
+https://github.com/josepot/redux-views#simple-usage
+> memoized selector

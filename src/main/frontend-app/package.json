@@ -22,6 +22,7 @@
     "react-redux": "^8.1.1",
     "react-scripts": "^5.0.1",
     "redux-query": "^3.5.2",
+    "redux-views": "^1.0.3",
     "rxjs": "^7.8.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
