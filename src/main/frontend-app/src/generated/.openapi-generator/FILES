@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 apis/ExecutorEndpointApi.ts
 apis/SuggestCompletionEndpointApi.ts
 apis/ValidatorEndpointApi.ts

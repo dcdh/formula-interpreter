@@ -25,7 +25,7 @@ public record AntlrExecution(ExecutedAtStart executedAtStart,
         ExecutedAtStart executedAtStart;
         ExecutedAtEnd executedAtEnd;
         Position position;
-        Map<InputName, Input> inputs = new HashMap<>();
+        Map<InputName, Input> inputs;
         Result result;
 
         public static Builder newBuilder() {
@@ -50,8 +50,8 @@ public record AntlrExecution(ExecutedAtStart executedAtStart,
             return this;
         }
 
-        public Builder appendInput(final InputName inputName, final Input value) {
-            inputs.put(inputName, value);
+        public Builder withInputs(final Map<InputName, Input> inputs) {
+            this.inputs = inputs;
             return this;
         }
 
