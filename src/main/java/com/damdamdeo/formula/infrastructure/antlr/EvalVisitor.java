@@ -3,16 +3,11 @@ package com.damdamdeo.formula.infrastructure.antlr;
 import com.damdamdeo.formula.FormulaBaseVisitor;
 import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.*;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.RuleNode;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     private static final String INPUT_NAME_LEFT = "left";
@@ -20,31 +15,18 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     private static final String INPUT_NAME_COMPARISON_VALUE = "comparisonValue";
     private static final String INPUT_NAME_VALUE = "value";
     private static final String INPUT_NAME_STRUCTURED_REFERENCE = "structuredReference";
-    private final ExecutedAtProvider executedAtProvider;
+    private final ExecutionWrapper executionWrapper;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
     private Value currentResult;
-    private final Map<ExecutionId, ElementExecution> executions;
-    private final AtomicInteger currentExecutionId;
 
-    public EvalVisitor(final ExecutedAtProvider executedAtProvider,
+    public EvalVisitor(final ExecutionWrapper executionWrapper,
                        final StructuredData structuredData,
                        final NumericalContext numericalContext) {
-        this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
+        this.executionWrapper = Objects.requireNonNull(executionWrapper);
         this.structuredData = Objects.requireNonNull(structuredData);
         this.numericalContext = Objects.requireNonNull(numericalContext);
         this.currentResult = Value.ofNotAvailable();
-        this.executions = new HashMap<>();
-        this.currentExecutionId = new AtomicInteger(-1);
-    }
-
-    public List<ElementExecution> executions() {
-        return executions
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -78,7 +60,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArithmeticFunctionsOperatorLeftOpRight(final FormulaParser.ArithmeticFunctionsOperatorLeftOpRightContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value left = this.visit(ctx.left);
             final Value right = this.visit(ctx.right);
             final Value result;
@@ -113,7 +95,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitComparisonFunctionsNumerical(final FormulaParser.ComparisonFunctionsNumericalContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value left = this.visit(ctx.left);
             final Value right = this.visit(ctx.right);
             final Value result;
@@ -146,7 +128,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitComparisonFunctionsEquality(final FormulaParser.ComparisonFunctionsEqualityContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value left = this.visit(ctx.left);
             final Value right = this.visit(ctx.right);
             final Value result;
@@ -175,7 +157,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitLogicalOperatorFunction(final FormulaParser.LogicalOperatorFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value left = this.visit(ctx.left);
             final Value right = this.visit(ctx.right);
             final Value result;
@@ -204,7 +186,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfFunction(final FormulaParser.IfFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value comparisonValue = this.visit(ctx.comparison);
             final Value result;
             if (comparisonValue.isNotAvailable()) {
@@ -230,7 +212,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfErrorFunction(final FormulaParser.IfErrorFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value comparisonValue = this.visit(ctx.comparison);
             final Value result;
             if (comparisonValue.isError()) {
@@ -246,7 +228,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIfNaFunction(final FormulaParser.IfNaFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value comparisonValue = this.visit(ctx.comparison);
             final Value result;
             if (comparisonValue.isNotAvailable()) {
@@ -262,7 +244,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsFunction(final FormulaParser.IsFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value value = this.visit(ctx.value);
             final Value result;
             if (value.isNotAvailable()) {
@@ -290,7 +272,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value value = this.visit(ctx.value);
             final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
             final Map<InputName, Input> inputs = Map.of(
@@ -301,7 +283,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitIsErrorFunction(final FormulaParser.IsErrorFunctionContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             final Value value = this.visit(ctx.value);
             final Value result = value.isError() ? Value.ofTrue() : Value.ofFalse();
             final Map<InputName, Input> inputs = Map.of(
@@ -312,7 +294,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return execute(() -> {
+        return executionWrapper.execute(() -> {
             Value result;
             final String reference = ctx.STRUCTURED_REFERENCE().getText()
                     .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
@@ -330,45 +312,23 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
 
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        return execute(() -> new ExecutionResult(Value.of(ctx.VALUE().getText())), ctx);
+        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.VALUE().getText())), ctx);
     }
 
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return execute(() -> new ExecutionResult(Value.of(ctx.NUMERIC().getText())), ctx);
+        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.NUMERIC().getText())), ctx);
     }
 
     @Override
     public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
+        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
     }
 
     @Override
     public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
-    }
-
-    private Value execute(final Callable<ExecutionResult> callable,
-                          final ParserRuleContext parserRuleContext) {
-        Objects.requireNonNull(callable);
-        Objects.requireNonNull(parserRuleContext);
-        try {
-            final ExecutionId executionId = new ExecutionId(currentExecutionId);
-            final ExecutedAtStart executedAtStart = executedAtProvider.now();
-            final ExecutionResult result = callable.call();
-            final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
-            executions.put(executionId, AntlrElementExecution.Builder.newBuilder()
-                    .executedAtStart(executedAtStart)
-                    .executedAtEnd(executedAtEnd)
-                    .using(parserRuleContext)
-                    .withInputs(result.inputs())
-                    .result(result.value())
-                    .build());
-            return result.value();
-        } catch (final Exception exception) {
-            throw new RuntimeException(exception);
-        }
+        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
     }
 }

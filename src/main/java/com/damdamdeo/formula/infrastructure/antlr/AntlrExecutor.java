@@ -24,13 +24,14 @@ public final class AntlrExecutor implements Executor {
                                    final StructuredData structuredData) throws ExecutionException {
         try {
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
+            final ExecutionWrapper executionWrapper = new LoggingExecutionWrapper(executedAtProvider);
             final ParseTree tree = antlrValidator.doValidate(formula);
-            final EvalVisitor visitor = new EvalVisitor(executedAtProvider, structuredData, numericalContext);
+            final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
             final Result result = visitor.visit(tree);
             if (result == null) {
                 throw new IllegalStateException("Should not be null - a response is expected");
             }
-            final List<ElementExecution> elementExecutions = visitor.executions();
+            final List<ElementExecution> elementExecutions = executionWrapper.executions();
             final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
             return new ExecutionResult(result,
                     elementExecutions,
