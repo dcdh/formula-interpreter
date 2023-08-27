@@ -2,14 +2,12 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Map;
 
-public interface Execution {
-    ExecutedAtStart executedAtStart();
-
-    ExecutedAtEnd executedAtEnd();
-
+public interface ElementExecution {
     Position position();
 
     Map<InputName, Input> inputs();
 
     Result result();
+
+    ExecutionProcessedIn executionProcessedIn();
 }

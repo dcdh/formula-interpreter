@@ -5,7 +5,7 @@ import * as Core from '@patternfly/react-core';
 import * as Table from '@patternfly/react-table';
 import * as Icon from '@patternfly/react-icons';
 import { selectFormula } from '../formula/formulaSlice';
-import { ExecutionState, selectSamples } from '../samples/samplesSlice';
+import { ElementExecutionState, selectSamples } from '../samples/samplesSlice';
 import { selectExecutionsDebug, selectExecutionsDebugSelected, selectSalesPerson } from './executionsDebugSlice';
 
 export function ExecutionsDebug() {
@@ -19,12 +19,14 @@ export function ExecutionsDebug() {
     executedAtEnd: 'Executed At End',
     inputs: 'Inputs',
     result: 'Result',
-    underline: 'Underline'
+    underline: 'Underline',
+    processedInMillis: 'Processed (in millis)'
   };
 
   const result: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].result : null;
   const processedInMillis: number | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].processedInNanos / 1000000 : null;
-
+  const executedAtStart: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].executedAtStart : null;
+  const executedAtEnd: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].executedAtEnd : null;
   return (
     <React.Fragment>
       <Core.Card>
@@ -49,6 +51,12 @@ export function ExecutionsDebug() {
                   <Icon.CheckCircleIcon color='green' /> {result}
                 </Core.FlexItem>
                 <Core.FlexItem>
+                  <Icon.OutlinedClockIcon /> {executedAtStart}
+                </Core.FlexItem>
+                <Core.FlexItem>
+                  <Icon.OutlinedClockIcon /> {executedAtEnd}
+                </Core.FlexItem>
+                <Core.FlexItem>
                   <Icon.OutlinedClockIcon /> {processedInMillis !== null &&
                     `${processedInMillis} milliseconds`}
                 </Core.FlexItem>
@@ -63,31 +71,32 @@ export function ExecutionsDebug() {
                     <Table.Td>{columnNames.result}</Table.Td>
                     <Table.Td>{columnNames.executedAtStart}</Table.Td>
                     <Table.Td>{columnNames.executedAtEnd}</Table.Td>
+                    <Table.Td>{columnNames.processedInMillis}</Table.Td>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
                   {executionsDebugSelected
-                    .flatMap(executionsResult => executionsResult.executions)
-                    .map((execution: ExecutionState, index: number) => {
+                    .flatMap(executionsResult => executionsResult.elementExecutions)
+                    .map((elementExecution: ElementExecutionState, index: number) => {
                       return (
                         <Table.Tr key={index}>
                           <Table.Td dataLabel={columnNames.underline}>
                             {
-                              formula.formula.substring(0, execution.position!.start!)
+                              formula.formula.substring(0, elementExecution.position!.start!)
                             }
                             <b>
                               {
-                                formula.formula.substring(execution.position!.start!, execution.position!.end! + 1)
+                                formula.formula.substring(elementExecution.position!.start!, elementExecution.position!.end! + 1)
                               }
                             </b>
                             {
-                              formula.formula.substring(execution.position!.end! + 1, formula.formula.length)
+                              formula.formula.substring(elementExecution.position!.end! + 1, formula.formula.length)
                             }
                           </Table.Td>
                           <Table.Td dataLabel={columnNames.inputs}>
                             <Core.List isPlain isBordered>
                               {
-                                Object.entries(execution.inputs!)
+                                Object.entries(elementExecution.inputs!)
                                   .map(([key, value]) => {
                                     return (
                                       <Core.ListItem key={key}>{key}: {value}</Core.ListItem>
@@ -96,9 +105,10 @@ export function ExecutionsDebug() {
                               }
                             </Core.List>
                           </Table.Td>
-                          <Table.Td dataLabel={columnNames.result}>{execution.result}</Table.Td>
-                          <Table.Td dataLabel={columnNames.executedAtStart}>{execution.executedAtStart}</Table.Td>
-                          <Table.Td dataLabel={columnNames.executedAtEnd}>{execution.executedAtEnd}</Table.Td>
+                          <Table.Td dataLabel={columnNames.result}>{elementExecution.result}</Table.Td>
+                          <Table.Td dataLabel={columnNames.executedAtStart}>{elementExecution.executedAtStart}</Table.Td>
+                          <Table.Td dataLabel={columnNames.executedAtEnd}>{elementExecution.executedAtEnd}</Table.Td>
+                          <Table.Td dataLabel={columnNames.processedInMillis}>{elementExecution.processedInNanos / 1000000}</Table.Td>
                         </Table.Tr>
                       )
                     })}

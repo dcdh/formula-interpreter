@@ -24,7 +24,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
     private Value currentResult;
-    private final Map<ExecutionId, Execution> executions;
+    private final Map<ExecutionId, ElementExecution> executions;
     private final AtomicInteger currentExecutionId;
 
     public EvalVisitor(final ExecutedAtProvider executedAtProvider,
@@ -38,7 +38,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         this.currentExecutionId = new AtomicInteger(-1);
     }
 
-    public List<Execution> executions() {
+    public List<ElementExecution> executions() {
         return executions
                 .entrySet()
                 .stream()
@@ -359,7 +359,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
             final ExecutionResult result = callable.call();
             final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
-            executions.put(executionId, AntlrExecution.Builder.newBuilder()
+            executions.put(executionId, AntlrElementExecution.Builder.newBuilder()
                     .executedAtStart(executedAtStart)
                     .executedAtEnd(executedAtEnd)
                     .using(parserRuleContext)

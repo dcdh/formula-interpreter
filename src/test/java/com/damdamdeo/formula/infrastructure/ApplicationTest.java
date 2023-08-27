@@ -28,7 +28,9 @@ public class ApplicationTest {
         // Given
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
         //language=JSON
         final String request = """
                 {
@@ -41,21 +43,24 @@ public class ApplicationTest {
         //language=JSON
         final String expectedBody = """
                 {
-                    "result": "true",
-                    "processedInNanos": 1000000000,
-                    "executions": [
-                        {
-                            "executedAtStart": "2023-12-25T10:15:00+01:00",
-                            "executedAtEnd": "2023-12-25T10:15:01+01:00",
-                            "position": {
-                                "start": 0,
-                                "end": 3
-                            },
-                            "inputs": {
-                            },
-                            "result": "true"
-                        }
-                    ]
+                     "executedAtStart": "2023-12-25T10:15:00+01:00",
+                     "executedAtEnd": "2023-12-25T10:15:03+01:00",
+                     "processedInNanos": 3000000000,
+                     "result": "true",
+                     "elementExecutions": [
+                         {
+                             "executedAtStart": "2023-12-25T10:15:01+01:00",
+                             "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                             "processedInNanos": 1000000000,
+                             "position": {
+                                 "start": 0,
+                                 "end": 3
+                             },
+                             "inputs": {
+                             },
+                             "result": "true"
+                         }
+                     ]
                 }
                 """;
         final String actualBody = given()
@@ -124,7 +129,9 @@ public class ApplicationTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")));
         //language=JSON
         final String request = """
                 {
@@ -146,15 +153,15 @@ public class ApplicationTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
-                .body("executions[0].position.start", is(0))
-                .body("executions[0].position.end", is(48))
-                .body("executions[1].position.start", is(4))
-                .body("executions[1].position.end", is(20))
-                .body("executions[2].position.start", is(22))
-                .body("executions[2].position.end", is(47))
-                .body("executions[3].position.start", is(26))
-                .body("executions[3].position.end", is(42))
-                .body("executions[4].position.start", is(44))
-                .body("executions[4].position.end", is(46));
+                .body("elementExecutions[0].position.start", is(0))
+                .body("elementExecutions[0].position.end", is(48))
+                .body("elementExecutions[1].position.start", is(4))
+                .body("elementExecutions[1].position.end", is(20))
+                .body("elementExecutions[2].position.start", is(22))
+                .body("elementExecutions[2].position.end", is(47))
+                .body("elementExecutions[3].position.start", is(26))
+                .body("elementExecutions[3].position.end", is(42))
+                .body("elementExecutions[4].position.start", is(44))
+                .body("elementExecutions[4].position.end", is(46));
     }
 }

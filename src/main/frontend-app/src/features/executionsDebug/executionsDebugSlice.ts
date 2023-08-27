@@ -4,13 +4,13 @@ import { executeFormulaOnSamples, ExecutionsResultState, markSamplesAsFormulaInE
 import { createSelector } from 'redux-views';
 
 export interface ExecutionsState {
-  salesPerson: string,
-  executionsResult: ExecutionsResultState
+  salesPerson: string;
+  executionsResult: ExecutionsResultState;
 }
 
 export interface ExecutionsDebugState {
-  selectedSalesPerson: string | null,
-  executions: Array<ExecutionsState>
+  selectedSalesPerson: string | null;
+  executions: Array<ExecutionsState>;
 }
 
 const initialExecutionsDebugState: ExecutionsDebugState = {

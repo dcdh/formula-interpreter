@@ -17,32 +17,37 @@ import type {
 
 /**
  * @export
- * @interface ExecutionDTO
+ * @interface ElementExecutionDTO
  */
-export interface ExecutionDTO {
+export interface ElementExecutionDTO {
     /**
      * @type {string}
-     * @memberof ExecutionDTO
+     * @memberof ElementExecutionDTO
      */
     executedAtStart?: string;
     /**
      * @type {string}
-     * @memberof ExecutionDTO
+     * @memberof ElementExecutionDTO
      */
     executedAtEnd?: string;
     /**
+     * @type {number}
+     * @memberof ElementExecutionDTO
+     */
+    processedInNanos?: number;
+    /**
      * @type {PositionDTO}
-     * @memberof ExecutionDTO
+     * @memberof ElementExecutionDTO
      */
     position?: PositionDTO;
     /**
      * @type {{ [key: string]: string; }}
-     * @memberof ExecutionDTO
+     * @memberof ElementExecutionDTO
      */
     inputs?: { [key: string]: string; };
     /**
      * @type {string}
-     * @memberof ExecutionDTO
+     * @memberof ElementExecutionDTO
      */
     result?: string;
 }

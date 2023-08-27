@@ -8,7 +8,7 @@ export interface FormulaState {
   formula: string;
   invalidMessage: string | null;
   errorMessage: string | null;
-  status: 'notValidated' | 'validationProcessing' | 'valid' | 'invalid' | 'error'
+  status: 'notValidated' | 'validationProcessing' | 'valid' | 'invalid' | 'error';
 };
 
 const initialFormulaState: FormulaState = {
@@ -19,7 +19,7 @@ const initialFormulaState: FormulaState = {
 };
 
 interface RemoteError {
-  message: string
+  message: string;
 };
 
 export const validateFormula = createAsyncThunk<

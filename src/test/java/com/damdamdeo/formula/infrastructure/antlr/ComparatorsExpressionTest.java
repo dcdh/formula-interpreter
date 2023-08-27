@@ -263,29 +263,34 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")));
 
         // When
         final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
 
         // Then
-        assertThat(executionResult.executions()).containsExactly(
-                new AntlrExecution(
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
+        assertThat(executionResult.elementExecutions()).containsExactly(
+                new AntlrElementExecution(
                         new Position(0, 10),
                         Map.of(
                                 new InputName("left"), Value.of("660"),
                                 new InputName("right"), Value.of("260")),
-                        Value.of("true")),
-                new AntlrExecution(
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
-                        new Position(3, 5), Map.of(), Value.of("660")),
-                new AntlrExecution(
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
-                        new Position(7, 9), Map.of(), Value.of("260"))
+                        Value.of("true"),
+                        new ExecutionProcessedIn(
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
+                new AntlrElementExecution(
+                        new Position(3, 5), Map.of(), Value.of("660"),
+                        new ExecutionProcessedIn(
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
+                new AntlrElementExecution(
+                        new Position(7, 9), Map.of(), Value.of("260"),
+                        new ExecutionProcessedIn(
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
         );
     }
 }

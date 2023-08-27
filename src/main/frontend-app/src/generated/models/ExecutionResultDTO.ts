@@ -12,7 +12,7 @@
  */
 
 import type {
-    ExecutionDTO,
+    ElementExecutionDTO,
 } from './';
 
 /**
@@ -24,15 +24,25 @@ export interface ExecutionResultDTO {
      * @type {string}
      * @memberof ExecutionResultDTO
      */
-    result?: string;
+    executedAtStart?: string;
+    /**
+     * @type {string}
+     * @memberof ExecutionResultDTO
+     */
+    executedAtEnd?: string;
     /**
      * @type {number}
      * @memberof ExecutionResultDTO
      */
     processedInNanos?: number;
     /**
-     * @type {Array<ExecutionDTO>}
+     * @type {string}
      * @memberof ExecutionResultDTO
      */
-    executions?: Array<ExecutionDTO>;
+    result?: string;
+    /**
+     * @type {Array<ElementExecutionDTO>}
+     * @memberof ExecutionResultDTO
+     */
+    elementExecutions?: Array<ElementExecutionDTO>;
 }

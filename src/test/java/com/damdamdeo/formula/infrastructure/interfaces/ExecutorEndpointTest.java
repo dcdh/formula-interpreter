@@ -3,7 +3,7 @@ package com.damdamdeo.formula.infrastructure.interfaces;
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.usecase.ExecuteCommand;
 import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
-import com.damdamdeo.formula.infrastructure.antlr.AntlrExecution;
+import com.damdamdeo.formula.infrastructure.antlr.AntlrElementExecution;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import io.quarkus.test.InjectMock;
@@ -32,14 +32,20 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldExecute() throws JSONException {
         // Given
-        doReturn(new ExecutionResult(new Value("true"), List.of(
-                new AntlrExecution(
+        doReturn(new ExecutionResult(
+                new Value("true"),
+                List.of(
+                        new AntlrElementExecution(
+                                new Position(4, 5),
+                                Map.of(new InputName("reference"), new Value("ref")),
+                                Value.of("10"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
+                ),
+                new ExecutionProcessedIn(
                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
-                        new Position(4, 5),
-                        Map.of(new InputName("reference"), new Value("ref")),
-                        Value.of("10"))
-        ))).when(executeUseCase)
+                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))).when(executeUseCase)
                 .execute(new ExecuteCommand(new Formula("true"),
                         new StructuredData(
                                 List.of(
@@ -59,22 +65,25 @@ public class ExecutorEndpointTest {
         //language=JSON
         final String expectedBody = """
                 {
-                    "result": "true",
-                    "processedInNanos": 1000000000,
-                    "executions": [
-                        {
-                            "executedAtStart": "2023-12-25T10:15:00+01:00",
-                            "executedAtEnd": "2023-12-25T10:15:01+01:00",
-                            "position": {
-                                "start": 4,
-                                "end": 5
-                            },
-                            "inputs": {
-                                "reference": "ref"
-                            },
-                            "result": "10"
-                        }
-                    ]
+                     "executedAtStart": "2023-12-25T10:15:00+01:00",
+                     "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                     "processedInNanos": 2000000000,
+                     "result": "true",
+                     "elementExecutions": [
+                         {
+                             "executedAtStart": "2023-12-25T10:15:00+01:00",
+                             "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                             "processedInNanos": 1000000000,
+                             "position": {
+                                 "start": 4,
+                                 "end": 5
+                             },
+                             "inputs": {
+                                 "reference": "ref"
+                             },
+                             "result": "10"
+                         }
+                     ]
                 }
                 """;
         final String actualBody = given()

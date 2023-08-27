@@ -3,21 +3,18 @@ package com.damdamdeo.formula.infrastructure.antlr;
 import com.damdamdeo.formula.domain.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public record AntlrExecution(ExecutedAtStart executedAtStart,
-                             ExecutedAtEnd executedAtEnd,
-                             Position position,
-                             Map<InputName, Input> inputs,
-                             Result result) implements Execution {
-    public AntlrExecution {
-        Objects.requireNonNull(executedAtStart);
-        Objects.requireNonNull(executedAtEnd);
+public record AntlrElementExecution(Position position,
+                                    Map<InputName, Input> inputs,
+                                    Result result,
+                                    ExecutionProcessedIn executionProcessedIn) implements ElementExecution {
+    public AntlrElementExecution {
         Objects.requireNonNull(position);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(result);
+        Objects.requireNonNull(executionProcessedIn);
     }
 
     public static final class Builder {
@@ -60,9 +57,9 @@ public record AntlrExecution(ExecutedAtStart executedAtStart,
             return this;
         }
 
-        public AntlrExecution build() {
-            return new AntlrExecution(
-                    executedAtStart, executedAtEnd, position, inputs, result
+        public AntlrElementExecution build() {
+            return new AntlrElementExecution(
+                    position, inputs, result, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
             );
         }
     }

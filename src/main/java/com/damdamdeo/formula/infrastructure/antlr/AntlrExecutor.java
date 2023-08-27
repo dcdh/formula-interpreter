@@ -18,18 +18,23 @@ public final class AntlrExecutor implements Executor {
         this.antlrValidator = new AntlrValidator();
         this.numericalContext = Objects.requireNonNull(numericalContext);
     }
+
     @Override
     public ExecutionResult execute(final Formula formula,
                                    final StructuredData structuredData) throws ExecutionException {
         try {
+            final ExecutedAtStart executedAtStart = executedAtProvider.now();
             final ParseTree tree = antlrValidator.doValidate(formula);
             final EvalVisitor visitor = new EvalVisitor(executedAtProvider, structuredData, numericalContext);
             final Result result = visitor.visit(tree);
             if (result == null) {
                 throw new IllegalStateException("Should not be null - a response is expected");
             }
-            final List<Execution> executions = visitor.executions();
-            return new ExecutionResult(result, executions);
+            final List<ElementExecution> elementExecutions = visitor.executions();
+            final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+            return new ExecutionResult(result,
+                    elementExecutions,
+                    new ExecutionProcessedIn(executedAtStart, executedAtEnd));
         } catch (final Exception exception) {
             throw new ExecutionException(exception);
         }

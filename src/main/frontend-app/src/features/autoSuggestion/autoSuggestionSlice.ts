@@ -17,7 +17,7 @@ const initialAutoSuggestionState: AutoSuggestionState = {
 };
 
 interface RemoteError {
-  message: string
+  message: string;
 };
 
 export const suggestTokens = createAsyncThunk<

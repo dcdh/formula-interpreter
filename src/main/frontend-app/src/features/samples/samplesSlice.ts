@@ -1,28 +1,31 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, store } from '../../app/store';
-import { ExecutionDTO, ExecutionResultDTO, ExecutorEndpointApi } from "../../generated";
+import { ElementExecutionDTO, ExecutionResultDTO, ExecutorEndpointApi } from "../../generated";
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
 
 export interface SampleState {
-  salesPerson: string,
-  region: string,
-  salesAmount: number,
-  percentCommission: number,
-  commissionAmount: string | null,
-  status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid',
-  executions: ExecutionsResultState | null
+  salesPerson: string;
+  region: string;
+  salesAmount: number;
+  percentCommission: number;
+  commissionAmount: string | null;
+  status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid';
+  executions: ExecutionsResultState | null;
 };
 
 export interface ExecutionsResultState {
-  result: string,
-  processedInNanos: number,
-  executions: Array<ExecutionState>
-};
-
-export interface ExecutionState {
   executedAtStart: string;
   executedAtEnd: string;
+  processedInNanos: number;
+  result: string;
+  elementExecutions: Array<ElementExecutionState>;
+};
+
+export interface ElementExecutionState {
+  executedAtStart: string;
+  executedAtEnd: string;
+  processedInNanos: number;
   position?: PositionState;
   inputs: { [key: string]: string; };
   result: string;
@@ -73,17 +76,20 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
       commissionAmount = executionResult.result!;
       executions = {
         result: executionResult.result!,
+        executedAtStart:executionResult.executedAtStart!,
+        executedAtEnd: executionResult.executedAtEnd!,
         processedInNanos: executionResult.processedInNanos!,
-        executions: executionResult.executions!.map((execution: ExecutionDTO) => {
+        elementExecutions: executionResult.elementExecutions!.map((elementExecution: ElementExecutionDTO) => {
           return {
-            executedAtStart: execution.executedAtStart!,
-            executedAtEnd: execution.executedAtEnd!,
+            executedAtStart: elementExecution.executedAtStart!,
+            executedAtEnd: elementExecution.executedAtEnd!,
+            processedInNanos: elementExecution.processedInNanos!,
             position: {
-              start: execution.position!.start!,
-              end: execution.position!.end!
+              start: elementExecution.position!.start!,
+              end: elementExecution.position!.end!
             },
-            inputs: execution.inputs!,
-            result: execution.result!
+            inputs: elementExecution.inputs!,
+            result: elementExecution.result!
           }
         })
       };
