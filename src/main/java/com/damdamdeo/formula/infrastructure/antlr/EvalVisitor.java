@@ -6,11 +6,12 @@ import com.damdamdeo.formula.domain.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.RuleNode;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
@@ -22,8 +23,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     private final ExecutedAtProvider executedAtProvider;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
-    private Value currentResult = Value.ofNotAvailable();
-    private final List<Execution> executions;
+    private Value currentResult;
+    private final Map<ExecutionId, Execution> executions;
+    private final AtomicInteger currentExecutionId;
 
     public EvalVisitor(final ExecutedAtProvider executedAtProvider,
                        final StructuredData structuredData,
@@ -31,13 +33,17 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
         this.structuredData = Objects.requireNonNull(structuredData);
         this.numericalContext = Objects.requireNonNull(numericalContext);
-        executions = new ArrayList<>();
+        this.currentResult = Value.ofNotAvailable();
+        this.executions = new HashMap<>();
+        this.currentExecutionId = new AtomicInteger(-1);
     }
 
     public List<Execution> executions() {
         return executions
+                .entrySet()
                 .stream()
-                .sorted()
+                .sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
 
@@ -51,6 +57,17 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     @Override
     protected Value defaultResult() {
         return currentResult;
+    }
+
+    public record ExecutionId(Integer id) implements Comparable<ExecutionId> {
+        public ExecutionId(final AtomicInteger currentExecutionId) {
+            this(currentExecutionId.addAndGet(1));
+        }
+
+        @Override
+        public int compareTo(final ExecutionId executionId) {
+            return id.compareTo(executionId.id());
+        }
     }
 
     public record ExecutionResult(Value value, Map<InputName, Input> inputs) {
@@ -338,10 +355,11 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         Objects.requireNonNull(callable);
         Objects.requireNonNull(parserRuleContext);
         try {
+            final ExecutionId executionId = new ExecutionId(currentExecutionId);
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
             final ExecutionResult result = callable.call();
             final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
-            executions.add(AntlrExecution.Builder.newBuilder()
+            executions.put(executionId, AntlrExecution.Builder.newBuilder()
                     .executedAtStart(executedAtStart)
                     .executedAtEnd(executedAtEnd)
                     .using(parserRuleContext)

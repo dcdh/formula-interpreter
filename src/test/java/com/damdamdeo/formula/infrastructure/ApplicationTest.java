@@ -13,6 +13,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import java.time.ZonedDateTime;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -96,7 +97,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void shouldValidate() throws JSONException {
+    public void shouldValidate() {
         // Given
 
         // When && Then
@@ -110,4 +111,50 @@ public class ApplicationTest {
                 .contentType("application/vnd.formula-validator-v1+json");
     }
 
+    @Test
+    public void shouldExecutionsBeInSameOrders() {
+        // Given
+        when(executedAtProvider.now())
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
+        //language=JSON
+        final String request = """
+                {
+                    "formula":"MUL([@[Sales Amount]],DIV([@[% Commission]],100))",
+                    "structuredData": {
+                        "Sales Amount": "260",
+                        "% Commission": "10"
+                    }
+                }
+                """;
+
+        // When && Then
+        given()
+                .contentType("application/vnd.formula-execute-v1+json")
+                .accept("application/vnd.formula-execution-v1+json")
+                .body(request)
+                .when()
+                .post("/execute")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .body("executions[0].position.start", is(0))
+                .body("executions[0].position.end", is(48))
+                .body("executions[1].position.start", is(4))
+                .body("executions[1].position.end", is(20))
+                .body("executions[2].position.start", is(22))
+                .body("executions[2].position.end", is(47))
+                .body("executions[3].position.start", is(26))
+                .body("executions[3].position.end", is(42))
+                .body("executions[4].position.start", is(44))
+                .body("executions[4].position.end", is(46));
+    }
 }

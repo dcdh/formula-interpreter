@@ -2,8 +2,7 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Map;
 
-public interface Execution extends Comparable<Execution> {
-
+public interface Execution {
     ExecutedAtStart executedAtStart();
 
     ExecutedAtEnd executedAtEnd();
@@ -13,8 +12,4 @@ public interface Execution extends Comparable<Execution> {
     Map<InputName, Input> inputs();
 
     Result result();
-
-    default int compareTo(final Execution execution) {
-        return executedAtStart().compareTo(execution.executedAtStart());
-    }
 }
