@@ -21,7 +21,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         ));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
@@ -35,7 +36,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         final StructuredData givenStructuredData = new StructuredData();
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
@@ -51,7 +53,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
         ));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
@@ -72,7 +75,8 @@ public class StructuredReferenceExpressionTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.elementExecutions()).containsExactly(

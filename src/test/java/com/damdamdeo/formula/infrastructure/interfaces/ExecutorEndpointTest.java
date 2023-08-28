@@ -49,15 +49,17 @@ public class ExecutorEndpointTest {
                 .execute(new ExecuteCommand(new Formula("true"),
                         new StructuredData(
                                 List.of(
-                                        new StructuredDatum(new Reference("ref"), new Value("val"))
-                                ))));
+                                        new StructuredDatum(new Reference("ref"), new Value("val")))
+                        ),
+                        DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
                     "structuredData": {
                         "ref": "val"
-                    }
+                    },
+                    "debugFeature": "ACTIVE"
                 }
                 """;
 
@@ -110,14 +112,16 @@ public class ExecutorEndpointTest {
                                 new StructuredData(
                                         List.of(
                                                 new StructuredDatum(new Reference("ref"), new Value("val")))
-                                )));
+                                ),
+                                DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
                     "structuredData": {
                         "ref":"val"
-                    }
+                    },
+                    "debugFeature": "ACTIVE"
                 }
                 """;
 
@@ -139,16 +143,21 @@ public class ExecutorEndpointTest {
     public void shouldHandleException() {
         // Given
         doThrow(new ExecutionException(new Exception("unexpected \"exception\"")))
-                .when(executeUseCase).execute(new ExecuteCommand(new Formula("true"), new StructuredData(List.of(
-                        new StructuredDatum(new Reference("ref"), new Value("val"))
-                ))));
+                .when(executeUseCase).execute(new ExecuteCommand(
+                        new Formula("true"),
+                        new StructuredData(
+                                List.of(
+                                        new StructuredDatum(new Reference("ref"), new Value("val")))
+                        ),
+                        DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
                     "structuredData": {
                         "ref":"val"
-                    }
+                    },
+                    "debugFeature": "ACTIVE"
                 }
                 """;
 

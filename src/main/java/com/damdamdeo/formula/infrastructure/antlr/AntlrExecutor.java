@@ -21,10 +21,14 @@ public final class AntlrExecutor implements Executor {
 
     @Override
     public ExecutionResult execute(final Formula formula,
-                                   final StructuredData structuredData) throws ExecutionException {
+                                   final StructuredData structuredData,
+                                   final DebugFeature debugFeature) throws ExecutionException {
         try {
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
-            final ExecutionWrapper executionWrapper = new LoggingExecutionWrapper(executedAtProvider);
+            final ExecutionWrapper executionWrapper = switch (debugFeature) {
+                case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);
+                case INACTIVE -> new NoOpExecutionWrapper();
+            };
             final ParseTree tree = antlrValidator.doValidate(formula);
             final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
             final Result result = visitor.visit(tree);

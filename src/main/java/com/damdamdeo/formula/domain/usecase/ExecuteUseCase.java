@@ -16,6 +16,6 @@ public final class ExecuteUseCase implements UseCase<ExecutionResult, ExecuteCom
 
     @Override
     public ExecutionResult execute(final ExecuteCommand command) throws ExecutionException {
-        return executor.execute(command.formula(), command.structuredData());
+        return executor.execute(command.formula(), command.structuredData(), command.debugFeature());
     }
 }

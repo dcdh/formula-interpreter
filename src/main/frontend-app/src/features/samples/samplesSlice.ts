@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, store } from '../../app/store';
-import { ElementExecutionDTO, ExecutionResultDTO, ExecutorEndpointApi } from "../../generated";
+import { DebugFeature, ElementExecutionDTO, ExecutionResultDTO, ExecutorEndpointApi } from "../../generated";
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
 
@@ -54,6 +54,7 @@ const initialSamplesState: SamplesState = {
 export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
 >('samples/executeFormula', async (_void: void) => {
   const formula: string = store.getState().formula.formula;
+  const debugFeature: DebugFeature = store.getState().formula.debugFeature;
   const samples: SampleState[] = store.getState().samples.samples;
   let status: 'notExecutedYet' | 'executed' | 'processing' | 'failed' | 'formulaInError' | 'formulaInvalid' = 'notExecutedYet';
   let commissionAmount: string | null = null;
@@ -69,7 +70,8 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
             'Region': sample.region,
             'Sales Amount': sample.salesAmount.toString(),
             '% Commission': sample.percentCommission.toString()
-          }
+          },
+          debugFeature: debugFeature
         }
       }));
       status = 'executed';

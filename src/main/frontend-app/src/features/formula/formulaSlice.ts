@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, store } from '../../app/store';
-import { SyntaxErrorDTO, ValidatorEndpointApi } from '../../generated';
+import { DebugFeature, SyntaxErrorDTO, ValidatorEndpointApi } from '../../generated';
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
 
 export interface FormulaState {
   formula: string;
+  debugFeature: DebugFeature; 
   invalidMessage: string | null;
   errorMessage: string | null;
   status: 'notValidated' | 'validationProcessing' | 'valid' | 'invalid' | 'error';
@@ -13,6 +14,7 @@ export interface FormulaState {
 
 const initialFormulaState: FormulaState = {
   formula: '',
+  debugFeature: DebugFeature.Active,
   invalidMessage: null,
   errorMessage: null,
   status: 'notValidated'
@@ -62,6 +64,12 @@ export const formulaSlice = createSlice({
       state.status = 'notValidated';
       state.invalidMessage = null;
       state.errorMessage = null;
+    },
+    activeDebug: (state) => {
+      state.debugFeature = DebugFeature.Active;
+    },
+    inactiveDebug: (state) => {
+      state.debugFeature = DebugFeature.Inactive;
     }
   },
   extraReducers: (builder) => {
@@ -90,7 +98,7 @@ export const formulaSlice = createSlice({
   },
 });
 
-export const { selectFormulaPreset, defineFormula } = formulaSlice.actions;
+export const { selectFormulaPreset, defineFormula, activeDebug, inactiveDebug } = formulaSlice.actions;
 
 export const selectFormula = (state: RootState) => state.formula;
 

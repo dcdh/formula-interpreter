@@ -205,7 +205,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>ci</arguments>
+                            <arguments>ci --force</arguments>
                         </configuration>
                     </execution>
 <!--                    <execution>-->

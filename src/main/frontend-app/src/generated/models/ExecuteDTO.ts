@@ -11,6 +11,10 @@
  * Do not edit the class manually.
  */
 
+import type {
+    DebugFeature,
+} from './';
+
 /**
  * @export
  * @interface ExecuteDTO
@@ -26,4 +30,11 @@ export interface ExecuteDTO {
      * @memberof ExecuteDTO
      */
     structuredData?: { [key: string]: string; };
+    /**
+     * @type {DebugFeature}
+     * @memberof ExecuteDTO
+     */
+    debugFeature?: DebugFeature;
 }
+
+

@@ -1,3 +1,4 @@
+export * from './DebugFeature';
 export * from './ElementExecutionDTO';
 export * from './ExecuteDTO';
 export * from './ExecutionResultDTO';

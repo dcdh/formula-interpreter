@@ -53,7 +53,8 @@ public class ElementExecutionLoggerTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:19+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.elementExecutions()).containsExactly(
@@ -156,7 +157,8 @@ public class ElementExecutionLoggerTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.elementExecutions()).containsExactly(

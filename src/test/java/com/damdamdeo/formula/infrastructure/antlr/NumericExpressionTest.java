@@ -35,7 +35,8 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         // Given
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData());
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(((Value) executionResult.result()).isNumeric()).isTrue();
@@ -55,7 +56,8 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.result()).isEqualTo(
@@ -78,7 +80,8 @@ public class NumericExpressionTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData);
+        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+                DebugFeature.ACTIVE);
 
         // Then
         assertThat(executionResult.elementExecutions()).containsExactly(

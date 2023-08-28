@@ -30,3 +30,7 @@ https://github.com/reduxjs/redux-templates/tree/master/packages/cra-template-red
 
 https://github.com/josepot/redux-views#simple-usage
 > memoized selector
+
+https://github.com/final-form/react-final-form-listeners#onchange
+> react-final-form-listeners
+> add event binding on change for example :)

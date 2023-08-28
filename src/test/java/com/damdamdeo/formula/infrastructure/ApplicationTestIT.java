@@ -17,7 +17,8 @@ public class ApplicationTestIT {
         final String request = """
                 {
                     "formula":"true",
-                    "structuredData": {}
+                    "structuredData": {},
+                    "debugFeature": "ACTIVE"
                 }
                 """;
 
@@ -72,7 +73,8 @@ public class ApplicationTestIT {
                     "structuredData": {
                         "Sales Amount": "260",
                         "% Commission": "10"
-                    }
+                    },
+                    "debugFeature": "ACTIVE"
                 }
                 """;
 

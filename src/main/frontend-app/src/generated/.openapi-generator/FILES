@@ -4,6 +4,7 @@ apis/SuggestCompletionEndpointApi.ts
 apis/ValidatorEndpointApi.ts
 apis/index.ts
 index.ts
+models/DebugFeature.ts
 models/ElementExecutionDTO.ts
 models/ExecuteDTO.ts
 models/ExecutionResultDTO.ts
