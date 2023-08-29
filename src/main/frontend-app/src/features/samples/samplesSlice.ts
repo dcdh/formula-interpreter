@@ -77,21 +77,21 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
       status = 'executed';
       commissionAmount = executionResult.result!;
       executions = {
-        result: executionResult.result!,
-        executedAtStart:executionResult.executedAtStart!,
-        executedAtEnd: executionResult.executedAtEnd!,
-        processedInNanos: executionResult.processedInNanos!,
-        elementExecutions: executionResult.elementExecutions!.map((elementExecution: ElementExecutionDTO) => {
+        result: executionResult.result,
+        executedAtStart:executionResult.executedAtStart,
+        executedAtEnd: executionResult.executedAtEnd,
+        processedInNanos: executionResult.processedInNanos,
+        elementExecutions: executionResult.elementExecutions.map((elementExecution: ElementExecutionDTO) => {
           return {
-            executedAtStart: elementExecution.executedAtStart!,
-            executedAtEnd: elementExecution.executedAtEnd!,
-            processedInNanos: elementExecution.processedInNanos!,
+            executedAtStart: elementExecution.executedAtStart,
+            executedAtEnd: elementExecution.executedAtEnd,
+            processedInNanos: elementExecution.processedInNanos,
             position: {
-              start: elementExecution.position!.start!,
-              end: elementExecution.position!.end!
+              start: elementExecution.position.start,
+              end: elementExecution.position.end
             },
-            inputs: elementExecution.inputs!,
-            result: elementExecution.result!
+            inputs: elementExecution.inputs,
+            result: elementExecution.result
           }
         })
       };

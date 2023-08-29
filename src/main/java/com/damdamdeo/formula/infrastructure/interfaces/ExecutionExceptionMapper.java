@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
@@ -15,13 +16,41 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
     @APIResponse(responseCode = "400", description = "Syntax exception while executing formula",
             content = @Content(
                     mediaType = "application/vnd.execution-syntax-error-v1+json",
-                    schema = @Schema(implementation = String.class)
+                    schema = @Schema(
+                            implementation = ErrorMessageDTO.class,
+                            required = true,
+                            requiredProperties = {"message"}),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Syntax in error",
+                                    description = "Syntax in error",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "message": "Syntax error at line '0' at position '1' with message 'custom \\"msg\\"'"
+                                            }
+                                            """)
+                    }
             )
     )
     @APIResponse(responseCode = "500", description = "Unhandled exception while executing formula",
             content = @Content(
                     mediaType = "application/vnd.execution-unexpected-exception-v1+json",
-                    schema = @Schema(implementation = String.class)
+                    schema = @Schema(
+                            implementation = ErrorMessageDTO.class,
+                            required = true,
+                            requiredProperties = {"message"}),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Unexpected exception",
+                                    description = "Unexpected exception",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "message": "unexpected \\"exception\\""
+                                            }
+                                            """)
+                    }
             )
     )
     public Response toResponse(final ExecutionException exception) {

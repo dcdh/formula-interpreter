@@ -13,14 +13,15 @@
 
 import type { Observable } from 'rxjs';
 import type { AjaxResponse } from 'rxjs/ajax';
-import { BaseAPI } from '../runtime';
+import { BaseAPI, throwIfNullOrUndefined } from '../runtime';
 import type { OperationOpts } from '../runtime';
 import type {
-    SyntaxErrorDTO,
+    Execute400Response,
+    Validate200Response,
 } from '../models';
 
 export interface ValidateRequest {
-    formula?: string;
+    formula: string;
 }
 
 /**
@@ -30,14 +31,15 @@ export class ValidatorEndpointApi extends BaseAPI {
 
     /**
      */
-    validate({ formula }: ValidateRequest): Observable<SyntaxErrorDTO>
-    validate({ formula }: ValidateRequest, opts?: OperationOpts): Observable<AjaxResponse<SyntaxErrorDTO>>
-    validate({ formula }: ValidateRequest, opts?: OperationOpts): Observable<SyntaxErrorDTO | AjaxResponse<SyntaxErrorDTO>> {
+    validate({ formula }: ValidateRequest): Observable<Validate200Response>
+    validate({ formula }: ValidateRequest, opts?: OperationOpts): Observable<AjaxResponse<Validate200Response>>
+    validate({ formula }: ValidateRequest, opts?: OperationOpts): Observable<Validate200Response | AjaxResponse<Validate200Response>> {
+        throwIfNullOrUndefined(formula, 'formula', 'validate');
 
         const formData = new FormData();
         if (formula !== undefined) { formData.append('formula', formula as any); }
 
-        return this.request<SyntaxErrorDTO>({
+        return this.request<Validate200Response>({
             url: '/validate',
             method: 'POST',
             body: formData,

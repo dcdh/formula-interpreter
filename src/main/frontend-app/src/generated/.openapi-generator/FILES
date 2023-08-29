@@ -6,10 +6,11 @@ apis/index.ts
 index.ts
 models/DebugFeature.ts
 models/ElementExecutionDTO.ts
+models/Execute400Response.ts
 models/ExecuteDTO.ts
 models/ExecutionResultDTO.ts
 models/PositionDTO.ts
-models/SyntaxErrorDTO.ts
+models/Validate200Response.ts
 models/index.ts
 runtime.ts
 servers.ts

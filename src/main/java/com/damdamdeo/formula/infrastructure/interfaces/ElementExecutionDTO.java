@@ -1,17 +1,18 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.ElementExecution;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public record ElementExecutionDTO(ZonedDateTime executedAtStart,
-                                  ZonedDateTime executedAtEnd,
-                                  long processedInNanos,
-                                  PositionDTO position,
-                                  Map<String, String> inputs,
-                                  String result) {
+public record ElementExecutionDTO(@Schema(required = true) ZonedDateTime executedAtStart,
+                                  @Schema(required = true) ZonedDateTime executedAtEnd,
+                                  @Schema(required = true) long processedInNanos,
+                                  @Schema(required = true) PositionDTO position,
+                                  @Schema(required = true) Map<String, String> inputs,
+                                  @Schema(required = true) String result) {
 
     public ElementExecutionDTO(final ElementExecution elementExecution) {
         this(

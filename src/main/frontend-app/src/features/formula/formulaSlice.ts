@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, store } from '../../app/store';
-import { DebugFeature, SyntaxErrorDTO, ValidatorEndpointApi } from '../../generated';
+import { DebugFeature, Validate200Response, ValidatorEndpointApi } from '../../generated';
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
 
@@ -25,14 +25,14 @@ interface RemoteError {
 };
 
 export const validateFormula = createAsyncThunk<
-  SyntaxErrorDTO | null, void,
+  Validate200Response, void,
   {
     rejectValue: RemoteError
   }>('formula/validate', async (_void: void, { rejectWithValue }) => {
     const validator = new ValidatorEndpointApi();
     try {
       const formula: string = store.getState().formula.formula;
-      const syntaxError: SyntaxErrorDTO | null = await firstValueFrom(validator.validate({ formula: formula }));
+      const syntaxError: Validate200Response = await firstValueFrom(validator.validate({ formula: formula }));
       return syntaxError;
     } catch (error) {
       if (error instanceof AjaxError) {
@@ -91,7 +91,7 @@ export const formulaSlice = createSlice({
           state.errorMessage = null;
         } else {
           state.status = 'invalid';
-          state.invalidMessage = payload.msg!;
+          state.invalidMessage = payload.msg;
           state.errorMessage = null;
         }
       });

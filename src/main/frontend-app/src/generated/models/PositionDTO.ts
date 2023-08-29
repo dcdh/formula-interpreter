@@ -20,10 +20,10 @@ export interface PositionDTO {
      * @type {number}
      * @memberof PositionDTO
      */
-    start?: number;
+    start: number;
     /**
      * @type {number}
      * @memberof PositionDTO
      */
-    end?: number;
+    end: number;
 }

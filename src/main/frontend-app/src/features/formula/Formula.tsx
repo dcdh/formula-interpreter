@@ -123,7 +123,7 @@ export function Formula(props: { addAlert: (title: string, variant: Core.AlertPr
                               <Core.DropdownItem
                                 value={"IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"}
                                 key="secondPresetFormula">
-                                Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe mulitply by two
+                                Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two
                               </Core.DropdownItem>
                             </Core.DropdownList>
                           </Core.Dropdown>

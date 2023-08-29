@@ -13,22 +13,12 @@
 
 /**
  * @export
- * @interface SyntaxErrorDTO
+ * @interface Execute400Response
  */
-export interface SyntaxErrorDTO {
-    /**
-     * @type {number}
-     * @memberof SyntaxErrorDTO
-     */
-    line?: number;
-    /**
-     * @type {number}
-     * @memberof SyntaxErrorDTO
-     */
-    charPositionInLine?: number;
+export interface Execute400Response {
     /**
      * @type {string}
-     * @memberof SyntaxErrorDTO
+     * @memberof Execute400Response
      */
-    msg?: string;
+    message: string;
 }

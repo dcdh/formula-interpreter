@@ -1,13 +1,14 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
+import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestUnavailableException;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionException;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionTimedOutException;
-import com.damdamdeo.formula.domain.SuggestionException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
@@ -18,22 +19,78 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
             content = {
                     @Content(
                             mediaType = "application/vnd.autosuggestion-unavailable-v1+json",
-                            schema = @Schema(implementation = String.class)
+                            schema = @Schema(
+                                    implementation = ErrorMessageDTO.class,
+                                    required = true,
+                                    requiredProperties = {"message"}),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Syntax in error",
+                                            description = "Syntax in error",
+                                            //language=JSON
+                                            value = """
+                                                    {
+                                                        "message": "AutoSuggestion service execution unavailable while processing formula 'IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - msg 'error'"
+                                                    }
+                                                    """)
+                            }
                     ),
                     @Content(
                             mediaType = "application/vnd.autosuggestion-execution-exception-v1+json",
-                            schema = @Schema(implementation = String.class)
+                            schema = @Schema(
+                                    implementation = ErrorMessageDTO.class,
+                                    required = true,
+                                    requiredProperties = {"message"}),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Syntax in error",
+                                            description = "Syntax in error",
+                                            //language=JSON
+                                            value = """
+                                                    {
+                                                        "message": "AutoSuggestion service execution exception while processing formula 'IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - msg 'error'"
+                                                    }
+                                                    """)
+                            }
                     ),
                     @Content(
                             mediaType = "application/vnd.autosuggestion-unexpected-exception-v1+json",
-                            schema = @Schema(implementation = String.class)
+                            schema = @Schema(
+                                    implementation = ErrorMessageDTO.class,
+                                    required = true,
+                                    requiredProperties = {"message"}),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Syntax in error",
+                                            description = "Syntax in error",
+                                            //language=JSON
+                                            value = """
+                                                    {
+                                                        "message": "unexpected \\"exception\\""
+                                                    }
+                                                    """)
+                            }
                     )
             }
     )
     @APIResponse(responseCode = "503", description = "AutoSuggestion service has timed out while executing formula",
             content = @Content(
                     mediaType = "application/vnd.autosuggestion-execution-timed-out-v1+json",
-                    schema = @Schema(implementation = String.class)
+                    schema = @Schema(
+                            implementation = ErrorMessageDTO.class,
+                            required = true,
+                            requiredProperties = {"message"}),
+                    examples = {
+                            @ExampleObject(
+                                    name = "Syntax in error",
+                                    description = "Syntax in error",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "message": "AutoSuggestion service has timed out while executing formula 'IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)' - Infinite loop in Grammar - msg 'error'"
+                                            }
+                                            """)
+                    }
             )
     )
     public Response toResponse(final SuggestionException exception) {

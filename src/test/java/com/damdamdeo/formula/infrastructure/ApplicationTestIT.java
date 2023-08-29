@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
+import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
@@ -40,8 +41,9 @@ public class ApplicationTestIT {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .multiPart("suggestedFormula", "IF")
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -55,8 +57,9 @@ public class ApplicationTestIT {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
-                .formParam("formula", "true")
+                .multiPart("formula", "true")
                 .when()
                 .post("/validate")
                 .then()

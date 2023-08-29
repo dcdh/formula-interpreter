@@ -11,30 +11,24 @@
  * Do not edit the class manually.
  */
 
-import type {
-    DebugFeature,
-} from './';
-
 /**
  * @export
- * @interface ExecuteDTO
+ * @interface Validate200Response
  */
-export interface ExecuteDTO {
+export interface Validate200Response {
+    /**
+     * @type {number}
+     * @memberof Validate200Response
+     */
+    line: number;
+    /**
+     * @type {number}
+     * @memberof Validate200Response
+     */
+    charPositionInLine: number;
     /**
      * @type {string}
-     * @memberof ExecuteDTO
+     * @memberof Validate200Response
      */
-    formula: string;
-    /**
-     * @type {{ [key: string]: string; }}
-     * @memberof ExecuteDTO
-     */
-    structuredData: { [key: string]: string; };
-    /**
-     * @type {DebugFeature}
-     * @memberof ExecuteDTO
-     */
-    debugFeature: DebugFeature;
+    msg: string;
 }
-
-

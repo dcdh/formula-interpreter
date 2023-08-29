@@ -8,6 +8,7 @@ import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionEx
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionTimedOutException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -41,8 +42,9 @@ public class SuggestCompletionEndpointTest {
                 ]
                 """;
         final String actualBody = given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .multiPart("suggestedFormula", "IF")
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -63,8 +65,9 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -84,8 +87,9 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -105,8 +109,9 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -124,8 +129,9 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .formParam("suggestedFormula", "IF")
+                .multiPart("suggestedFormula", "IF")
                 .when()
                 .post("/suggestCompletion")
                 .then()

@@ -7,6 +7,7 @@ import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -33,8 +34,9 @@ public class ValidatorEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
-                .formParam("formula", "true")
+                .multiPart("formula", "true")
                 .when()
                 .post("/validate")
                 .then()
@@ -57,8 +59,9 @@ public class ValidatorEndpointTest {
                 }
                 """;
         final String actualBody = given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
-                .formParam("formula", "true")
+                .multiPart("formula", "true")
                 .when()
                 .post("/validate")
                 .then()
@@ -76,8 +79,9 @@ public class ValidatorEndpointTest {
 
         // When && Then
         given()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
-                .formParam("formula", "true")
+                .multiPart("formula", "true")
                 .when()
                 .post("/validate")
                 .then()

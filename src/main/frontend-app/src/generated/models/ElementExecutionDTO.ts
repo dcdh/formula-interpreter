@@ -24,30 +24,30 @@ export interface ElementExecutionDTO {
      * @type {string}
      * @memberof ElementExecutionDTO
      */
-    executedAtStart?: string;
+    executedAtStart: string;
     /**
      * @type {string}
      * @memberof ElementExecutionDTO
      */
-    executedAtEnd?: string;
+    executedAtEnd: string;
     /**
      * @type {number}
      * @memberof ElementExecutionDTO
      */
-    processedInNanos?: number;
+    processedInNanos: number;
     /**
      * @type {PositionDTO}
      * @memberof ElementExecutionDTO
      */
-    position?: PositionDTO;
+    position: PositionDTO;
     /**
      * @type {{ [key: string]: string; }}
      * @memberof ElementExecutionDTO
      */
-    inputs?: { [key: string]: string; };
+    inputs: { [key: string]: string; };
     /**
      * @type {string}
      * @memberof ElementExecutionDTO
      */
-    result?: string;
+    result: string;
 }

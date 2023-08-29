@@ -24,25 +24,25 @@ export interface ExecutionResultDTO {
      * @type {string}
      * @memberof ExecutionResultDTO
      */
-    executedAtStart?: string;
+    executedAtStart: string;
     /**
      * @type {string}
      * @memberof ExecutionResultDTO
      */
-    executedAtEnd?: string;
+    executedAtEnd: string;
     /**
      * @type {number}
      * @memberof ExecutionResultDTO
      */
-    processedInNanos?: number;
+    processedInNanos: number;
     /**
      * @type {string}
      * @memberof ExecutionResultDTO
      */
-    result?: string;
+    result: string;
     /**
      * @type {Array<ElementExecutionDTO>}
      * @memberof ExecutionResultDTO
      */
-    elementExecutions?: Array<ElementExecutionDTO>;
+    elementExecutions: Array<ElementExecutionDTO>;
 }
