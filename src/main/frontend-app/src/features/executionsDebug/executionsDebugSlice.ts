@@ -32,7 +32,10 @@ export const executionsDebugSlice = createSlice({
         state.executions = []
       })
       .addCase(executeFormulaOnSamples.pending, (state) => {
+        /**
+         * Avoid flickering because it is really fast
         state.executions = []
+         */
       })
       .addCase(executeFormulaOnSamples.fulfilled, (state, { payload }) => {
         state.executions = payload.map((sample: SampleState) => {

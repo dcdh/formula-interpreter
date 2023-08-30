@@ -72,9 +72,12 @@ export const autoSuggestionSlice = createSlice({
         state.tokens = [];
       })
       .addCase(suggestTokens.pending, (state) => {
+        /**
+         * Avoid flickering because it is really fast
         state.status = 'loading';
         state.errMessage = null;
         state.tokens = [];
+        */
       })
       .addCase(suggestTokens.fulfilled, (state, { payload }) => {
         state.status = 'idle';

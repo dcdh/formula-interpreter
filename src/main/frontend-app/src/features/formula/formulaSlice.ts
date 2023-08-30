@@ -80,9 +80,12 @@ export const formulaSlice = createSlice({
         state.errorMessage = payload!.message;
       })
       .addCase(validateFormula.pending, (state) => {
+        /**
+         * Avoid flickering because it is really fast
         state.status = 'validationProcessing';
         state.invalidMessage = null;
         state.errorMessage = null;
+        */
       })
       .addCase(validateFormula.fulfilled, (state, { payload }) => {
         if (payload === null) {
