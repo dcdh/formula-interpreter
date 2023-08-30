@@ -15,16 +15,11 @@ public class AntlrValidator implements Validator<AntlrSyntaxError> {
 
     public ParseTree doValidate(final Formula formula) throws AntlrSyntaxErrorException {
         final FormulaLexer lexer = new FormulaLexer(CharStreams.fromString(formula.formula()));
-        lexer.removeErrorListeners();
         final SyntaxErrorListener syntaxErrorListener = new SyntaxErrorListener();
-        lexer.addErrorListener(syntaxErrorListener);
-        if (syntaxErrorListener.hasSyntaxError()) {
-            throw new AntlrSyntaxErrorException(formula, syntaxErrorListener.syntaxError());
-        }
         final FormulaParser parser = new FormulaParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(syntaxErrorListener);
-        ParseTree tree = parser.program();
+        final ParseTree tree = parser.program();
         if (syntaxErrorListener.hasSyntaxError()) {
             throw new AntlrSyntaxErrorException(formula, syntaxErrorListener.syntaxError());
         }
