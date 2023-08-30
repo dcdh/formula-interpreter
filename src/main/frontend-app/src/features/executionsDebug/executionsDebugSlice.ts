@@ -62,8 +62,9 @@ export const selectExecutionsDebugSelected = createSelector(
     (state: RootState) => state.executionsDebug.executions,
     (state: RootState) => state.executionsDebug.selectedSalesPerson
   ],
-  (executions: Array<ExecutionsState>, selectedSalesPerson: string | null) =>
-    executions.filter(executions => executions.salesPerson === selectedSalesPerson)
-      .flatMap(executions => executions.executionsResult));
+  (executions: Array<ExecutionsState>, selectedSalesPerson: string | null) => {
+    return executions.filter(executions => executions.salesPerson === selectedSalesPerson)
+      .flatMap(executions => executions.executionsResult);
+  });
 
 export default executionsDebugSlice.reducer;

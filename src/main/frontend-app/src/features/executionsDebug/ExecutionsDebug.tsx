@@ -14,7 +14,7 @@ export function ExecutionsDebug() {
   const executionsDebug = useAppSelector(selectExecutionsDebug);
   const executionsDebugSelected = useAppSelector(selectExecutionsDebugSelected);
   const dispatch = useAppDispatch();
-  const columnNames = {
+  const names = {
     executedAtStart: 'Executed At Start',
     executedAtEnd: 'Executed At End',
     inputs: 'Inputs',
@@ -44,43 +44,46 @@ export function ExecutionsDebug() {
           </Core.ToggleGroup>
         </Core.CardHeader>
         <Core.CardBody>
-          <Core.Stack>
-            <Core.StackItem>
-              <Core.Flex spaceItems={{ default: 'spaceItemsMd' }}>
-                <Core.FlexItem>
-                  <Icon.CheckCircleIcon color='green' /> {result}
-                </Core.FlexItem>
-                <Core.FlexItem>
-                  <Icon.OutlinedClockIcon /> {executedAtStart}
-                </Core.FlexItem>
-                <Core.FlexItem>
-                  <Icon.OutlinedClockIcon /> {executedAtEnd}
-                </Core.FlexItem>
-                <Core.FlexItem>
-                  <Icon.OutlinedClockIcon /> {processedInMillis !== null &&
-                    `${processedInMillis} milliseconds`}
-                </Core.FlexItem>
-              </Core.Flex>
-            </Core.StackItem>
-            <Core.StackItem>
+          <Core.Sidebar hasBorder>
+            <Core.SidebarPanel width={{ default: 'width_25' }}>
+              <Core.DescriptionList>
+                <Core.DescriptionListGroup>
+                  <Core.DescriptionListTerm>{names.result}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{result}</Core.DescriptionListDescription>
+                </Core.DescriptionListGroup>
+                <Core.DescriptionListGroup>
+                  <Core.DescriptionListTerm>{names.executedAtStart}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{executedAtStart}</Core.DescriptionListDescription>
+                </Core.DescriptionListGroup>
+                <Core.DescriptionListGroup>
+                  <Core.DescriptionListTerm>{names.executedAtEnd}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{executedAtEnd}</Core.DescriptionListDescription>
+                </Core.DescriptionListGroup>
+                <Core.DescriptionListGroup>
+                  <Core.DescriptionListTerm>{names.processedInMillis}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{processedInMillis !== null &&
+                    `${processedInMillis} milliseconds`}</Core.DescriptionListDescription>
+                </Core.DescriptionListGroup>
+              </Core.DescriptionList>
+            </Core.SidebarPanel>
+            <Core.SidebarContent>
               <Table.Table variant='compact'>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Td>{columnNames.underline}</Table.Td>
-                    <Table.Td>{columnNames.inputs}</Table.Td>
-                    <Table.Td>{columnNames.result}</Table.Td>
-                    <Table.Td>{columnNames.executedAtStart}</Table.Td>
-                    <Table.Td>{columnNames.executedAtEnd}</Table.Td>
-                    <Table.Td>{columnNames.processedInMillis}</Table.Td>
+                    <Table.Th width={40}>{names.underline}</Table.Th>
+                    <Table.Th width={15}>{names.inputs}</Table.Th>
+                    <Table.Th width={10}>{names.result}</Table.Th>
+                    <Table.Th width={15}>{names.processedInMillis}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
                   {executionsDebugSelected
                     .flatMap(executionsResult => executionsResult.elementExecutions)
                     .map((elementExecution: ElementExecutionState, index: number) => {
+                      const processedInMillis: number = elementExecution.processedInNanos / 1000000;
                       return (
                         <Table.Tr key={index}>
-                          <Table.Td dataLabel={columnNames.underline}>
+                          <Table.Td dataLabel={names.underline}>
                             {
                               formula.formula.substring(0, elementExecution.position!.start!)
                             }
@@ -93,7 +96,7 @@ export function ExecutionsDebug() {
                               formula.formula.substring(elementExecution.position!.end! + 1, formula.formula.length)
                             }
                           </Table.Td>
-                          <Table.Td dataLabel={columnNames.inputs}>
+                          <Table.Td dataLabel={names.inputs}>
                             <Core.List isPlain isBordered>
                               {
                                 Object.entries(elementExecution.inputs!)
@@ -105,19 +108,29 @@ export function ExecutionsDebug() {
                               }
                             </Core.List>
                           </Table.Td>
-                          <Table.Td dataLabel={columnNames.result}>{elementExecution.result}</Table.Td>
-                          <Table.Td dataLabel={columnNames.executedAtStart}>{elementExecution.executedAtStart}</Table.Td>
-                          <Table.Td dataLabel={columnNames.executedAtEnd}>{elementExecution.executedAtEnd}</Table.Td>
-                          <Table.Td dataLabel={columnNames.processedInMillis}>{elementExecution.processedInNanos / 1000000}</Table.Td>
+                          <Table.Td dataLabel={names.result}>{elementExecution.result}</Table.Td>
+                          <Table.Td dataLabel={names.processedInMillis}>
+                            <Core.Tooltip aria="none" aria-live="polite" content={
+                              <React.Fragment>
+                                <Icon.OutlinedClockIcon /> {elementExecution.executedAtStart} <br></br>
+                                <Icon.OutlinedClockIcon /> {elementExecution.executedAtEnd}
+                              </React.Fragment>
+                            }>
+                              <React.Fragment>
+                                <Icon.OutlinedClockIcon /> {processedInMillis !== null &&
+                                  `${processedInMillis} milliseconds`}
+                              </React.Fragment>
+                            </Core.Tooltip>
+                          </Table.Td>
                         </Table.Tr>
                       )
                     })}
                 </Table.Tbody>
               </Table.Table>
-            </Core.StackItem>
-          </Core.Stack>
+            </Core.SidebarContent>
+          </Core.Sidebar>
         </Core.CardBody>
-      </Core.Card>
-    </React.Fragment>
+      </Core.Card >
+    </React.Fragment >
   );
 }
