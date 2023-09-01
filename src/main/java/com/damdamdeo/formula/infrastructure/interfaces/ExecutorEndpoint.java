@@ -35,7 +35,20 @@ public final class ExecutorEndpoint {
                             required = true
                     ),
                     examples = {
-                            // rajouter IF pour tester que cela pete
+                            @ExampleObject(
+                                    name = "Incomplete formula",
+                                    description = "Should fail to execute",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "formula": "IF",
+                                                "structuredData": {
+                                                    "Sales Amount": "260",
+                                                    "% Commission": "10"
+                                                },
+                                                "debugFeature": "ACTIVE"
+                                            }
+                                            """),
                             @ExampleObject(
                                     name = "Compute commission amount by multiplying Sales Amount by Percent Commission",
                                     description = "Compute commission amount by multiplying Sales Amount by Percent Commission",

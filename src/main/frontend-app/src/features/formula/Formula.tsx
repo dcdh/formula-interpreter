@@ -115,14 +115,19 @@ export function Formula(props: { addAlert: (title: string, variant: Core.AlertPr
                             )}
                           >
                             <Core.DropdownList>
+                            <Core.DropdownItem
+                                value={"IF"}
+                                key="firstPresetFormula">
+                                Incomplete formula
+                              </Core.DropdownItem>
                               <Core.DropdownItem
                                 value={"MUL([@[Sales Amount]],DIV([@[% Commission]],100))"}
-                                key="firstPresetFormula">
+                                key="secondPresetFormula">
                                 Compute commission amount by multiplying Sales Amount by Percent Commission
                               </Core.DropdownItem>
                               <Core.DropdownItem
                                 value={"IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"}
-                                key="secondPresetFormula">
+                                key="thirdPresetFormula">
                                 Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two
                               </Core.DropdownItem>
                             </Core.DropdownList>
