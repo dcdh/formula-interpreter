@@ -4,6 +4,7 @@ import com.damdamdeo.formula.domain.ExecutionException;
 import com.damdamdeo.formula.domain.ExecutionResult;
 import com.damdamdeo.formula.domain.Executor;
 import com.damdamdeo.formula.domain.UseCase;
+import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public final class ExecuteUseCase implements UseCase<ExecutionResult, ExecuteCom
     }
 
     @Override
-    public ExecutionResult execute(final ExecuteCommand command) throws ExecutionException {
+    public Uni<ExecutionResult> execute(final ExecuteCommand command) throws ExecutionException {
         return executor.execute(command.formula(), command.structuredData(), command.debugFeature());
     }
 }

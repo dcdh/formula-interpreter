@@ -4,6 +4,7 @@ import com.damdamdeo.formula.domain.SyntaxError;
 import com.damdamdeo.formula.domain.UseCase;
 import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.Validator;
+import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public final class ValidateUseCase<R extends SyntaxError> implements UseCase<Opt
     }
 
     @Override
-    public Optional<R> execute(final ValidateCommand command) throws ValidationException {
+    public Uni<Optional<R>> execute(final ValidateCommand command) throws ValidationException {
         return validator.validate(command.formula());
     }
 }

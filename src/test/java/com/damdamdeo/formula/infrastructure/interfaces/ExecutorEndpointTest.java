@@ -8,6 +8,7 @@ import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
 public class ExecutorEndpointTest {
@@ -32,20 +32,23 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldExecute() throws JSONException {
         // Given
-        doReturn(new ExecutionResult(
-                new Value("true"),
-                List.of(
-                        new AntlrElementExecution(
-                                new Position(4, 5),
-                                Map.of(new InputName("reference"), new Value("ref")),
-                                Value.of("10"),
-                                new ExecutionProcessedIn(
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
-                ),
-                new ExecutionProcessedIn(
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))).when(executeUseCase)
+        doReturn(
+                Uni.createFrom().item(new ExecutionResult(
+                        new Value("true"),
+                        List.of(
+                                new AntlrElementExecution(
+                                        new Position(4, 5),
+                                        Map.of(new InputName("reference"), new Value("ref")),
+                                        Value.of("10"),
+                                        new ExecutionProcessedIn(
+                                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
+                        ),
+                        new ExecutionProcessedIn(
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))))
+        )
+                .when(executeUseCase)
                 .execute(new ExecuteCommand(new Formula("true"),
                         new StructuredData(
                                 List.of(
@@ -105,7 +108,11 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldHandleSyntaxErrorException() {
         // Given
-        doThrow(new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\""))))
+        doReturn(
+                Uni.createFrom().failure(
+                        new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\"")))
+                )
+        )
                 .when(executeUseCase).execute(
                         new ExecuteCommand(
                                 new Formula("true"),
@@ -142,7 +149,9 @@ public class ExecutorEndpointTest {
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new ExecutionException(new Exception("unexpected \"exception\"")))
+        doReturn(
+                Uni.createFrom().failure(new ExecutionException(new Exception("unexpected \"exception\"")))
+        )
                 .when(executeUseCase).execute(new ExecuteCommand(
                         new Formula("true"),
                         new StructuredData(

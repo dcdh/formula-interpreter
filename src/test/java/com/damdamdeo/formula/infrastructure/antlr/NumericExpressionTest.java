@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -12,8 +13,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class NumericExpressionTest extends AbstractExpressionTest {
-
+public class NumericExpressionTest extends AbstractExecutionTest {
     @ParameterizedTest
     @CsvSource({
             "0",
@@ -35,11 +35,14 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         // Given
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(((Value) executionResult.result()).isNumeric()).isTrue();
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(((Value) executionResultToAssert.result()).isNumeric())
+                        .isTrue()
+        );
     }
 
     @ParameterizedTest
@@ -56,12 +59,14 @@ public class NumericExpressionTest extends AbstractExpressionTest {
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value(expectedValue));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value(expectedValue))
+        );
     }
 
     @Test
@@ -80,30 +85,32 @@ public class NumericExpressionTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.elementExecutions()).containsExactly(
-                new AntlrElementExecution(
-                        new Position(0, 11),
-                        Map.of(
-                                new InputName("left"), Value.of("10"),
-                                new InputName("right"), Value.of("-1.2")),
-                        Value.of("8.8"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                new AntlrElementExecution(
-                        new Position(4, 5), Map.of(), Value.of("10"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                new AntlrElementExecution(
-                        new Position(7, 10), Map.of(), Value.of("-1.2"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
+                        new AntlrElementExecution(
+                                new Position(0, 11),
+                                Map.of(
+                                        new InputName("left"), Value.of("10"),
+                                        new InputName("right"), Value.of("-1.2")),
+                                Value.of("8.8"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
+                        new AntlrElementExecution(
+                                new Position(4, 5), Map.of(), Value.of("10"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
+                        new AntlrElementExecution(
+                                new Position(7, 10), Map.of(), Value.of("-1.2"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
+                )
         );
     }
 }

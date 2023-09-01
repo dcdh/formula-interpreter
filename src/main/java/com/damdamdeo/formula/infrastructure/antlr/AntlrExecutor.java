@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import org.antlr.v4.runtime.tree.ParseTree;
+import io.smallrye.mutiny.Uni;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,29 +20,30 @@ public final class AntlrExecutor implements Executor {
     }
 
     @Override
-    public ExecutionResult execute(final Formula formula,
-                                   final StructuredData structuredData,
-                                   final DebugFeature debugFeature) throws ExecutionException {
-        try {
-            final ExecutedAtStart executedAtStart = executedAtProvider.now();
-            final ExecutionWrapper executionWrapper = switch (debugFeature) {
-                case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);
-                case INACTIVE -> new NoOpExecutionWrapper();
-            };
-            final ParseTree tree = antlrValidator.doValidate(formula);
-            final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
-            final Result result = visitor.visit(tree);
-            if (result == null) {
-                throw new IllegalStateException("Should not be null - a response is expected");
-            }
-            final List<ElementExecution> elementExecutions = executionWrapper.executions();
-            final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
-            return new ExecutionResult(result,
-                    elementExecutions,
-                    new ExecutionProcessedIn(executedAtStart, executedAtEnd));
-        } catch (final Exception exception) {
-            throw new ExecutionException(exception);
-        }
+    public Uni<ExecutionResult> execute(final Formula formula,
+                                        final StructuredData structuredData,
+                                        final DebugFeature debugFeature) throws ExecutionException {
+        final ExecutedAtStart executedAtStart = executedAtProvider.now();
+        return antlrValidator.doValidate(formula)
+                .onItem().transformToUni(parseTree ->
+                        Uni.createFrom().item(() -> {
+                            final ExecutionWrapper executionWrapper = switch (debugFeature) {
+                                case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);
+                                case INACTIVE -> new NoOpExecutionWrapper();
+                            };
+                            final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
+                            final Result result = visitor.visit(parseTree);
+                            if (result == null) {
+                                throw new IllegalStateException("Should not be null - a response is expected");
+                            }
+                            final List<ElementExecution> elementExecutions = executionWrapper.executions();
+                            final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
+                            return new ExecutionResult(result,
+                                    elementExecutions,
+                                    new ExecutionProcessedIn(executedAtStart, executedAtEnd));
+                        })
+                )
+                .onFailure(Exception.class)
+                .transform(ExecutionException::new);
     }
-
 }

@@ -1,5 +1,7 @@
 package com.damdamdeo.formula.domain;
 
+import io.smallrye.mutiny.Uni;
+
 public interface UseCase<R, C extends UseCaseCommand> {
-    R execute(C command);
+    Uni<R> execute(C command);
 }

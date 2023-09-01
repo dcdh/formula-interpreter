@@ -5,6 +5,7 @@ import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.usecase.ValidateCommand;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -82,10 +83,9 @@ public final class ValidatorEndpoint {
                     )
             }
     )
-    public SyntaxErrorDTO validate(@FormParam("formula") final String formula) throws ValidationException {
+    public Uni<SyntaxErrorDTO> validate(@FormParam("formula") final String formula) throws ValidationException {
         return validateUseCase.execute(new ValidateCommand(new Formula(formula)))
-                .map(SyntaxErrorDTO::new)
-                .orElse(null);
+                .map(antlrSyntaxError -> antlrSyntaxError.map(SyntaxErrorDTO::new).orElse(null));
     }
 
 }

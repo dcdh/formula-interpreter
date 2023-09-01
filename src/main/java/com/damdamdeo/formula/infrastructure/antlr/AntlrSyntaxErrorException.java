@@ -4,7 +4,7 @@ import com.damdamdeo.formula.domain.Formula;
 
 import java.util.Objects;
 
-public final class AntlrSyntaxErrorException extends Exception {
+public final class AntlrSyntaxErrorException extends RuntimeException {
 
     private final Formula formula;
     private final AntlrSyntaxError syntaxError;

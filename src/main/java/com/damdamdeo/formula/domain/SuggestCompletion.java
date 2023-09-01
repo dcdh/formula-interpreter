@@ -1,6 +1,8 @@
 package com.damdamdeo.formula.domain;
 
+import io.smallrye.mutiny.Uni;
+
 public interface SuggestCompletion {
-    SuggestionsCompletion suggest(SuggestedFormula suggestedFormula) throws SuggestionException;
+    Uni<SuggestionsCompletion> suggest(SuggestedFormula suggestedFormula) throws SuggestionException;
 
 }

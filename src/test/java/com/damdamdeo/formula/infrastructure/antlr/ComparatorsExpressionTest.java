@@ -2,6 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 
 import com.damdamdeo.formula.domain.*;
+import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ComparatorsExpressionTest extends AbstractExpressionTest {
+public class ComparatorsExpressionTest extends AbstractExecutionTest {
     @ParameterizedTest
     @MethodSource("provideComparisonsWithExpectedValues")
     public void shouldExecuteComparisonForStructuredReferenceLeftAndStructuredReferenceRight(final String leftValue,
@@ -33,12 +34,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value(expectedValue));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value(expectedValue))
+        );
     }
 
     @ParameterizedTest
@@ -56,12 +59,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value(expectedValue));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value(expectedValue))
+        );
     }
 
     @ParameterizedTest
@@ -79,12 +84,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value(expectedValue));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value(expectedValue))
+        );
     }
 
     @ParameterizedTest
@@ -98,12 +105,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value(expectedValue));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value(expectedValue))
+        );
     }
 
     private static Stream<Arguments> provideComparisonsWithExpectedValues() {
@@ -152,12 +161,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value("#REF!"));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value("#REF!"))
+        );
     }
 
     @ParameterizedTest
@@ -173,12 +184,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value("#NA!"));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value("#NA!"))
+        );
     }
 
     @ParameterizedTest
@@ -194,12 +207,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value("#NA!"));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value("#NA!"))
+        );
     }
 
     private static Stream<Arguments> provideAllComparators() {
@@ -229,12 +244,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value("#NUM!"));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value("#NUM!"))
+        );
     }
 
     @ParameterizedTest
@@ -248,12 +265,14 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
         );
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.result()).isEqualTo(
-                new Value("true"));
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.result())
+                        .isEqualTo(new Value("true"))
+        );
     }
 
     private static Stream<Arguments> provideComparatorFunctionsUsingArithmeticsFunction() {
@@ -277,30 +296,32 @@ public class ComparatorsExpressionTest extends AbstractExpressionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")));
 
         // When
-        final ExecutionResult executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
                 DebugFeature.ACTIVE);
 
         // Then
-        assertThat(executionResult.elementExecutions()).containsExactly(
-                new AntlrElementExecution(
-                        new Position(0, 10),
-                        Map.of(
-                                new InputName("left"), Value.of("660"),
-                                new InputName("right"), Value.of("260")),
-                        Value.of("true"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                new AntlrElementExecution(
-                        new Position(3, 5), Map.of(), Value.of("660"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                new AntlrElementExecution(
-                        new Position(7, 9), Map.of(), Value.of("260"),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
+        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
+                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
+                        new AntlrElementExecution(
+                                new Position(0, 10),
+                                Map.of(
+                                        new InputName("left"), Value.of("660"),
+                                        new InputName("right"), Value.of("260")),
+                                Value.of("true"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
+                        new AntlrElementExecution(
+                                new Position(3, 5), Map.of(), Value.of("660"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
+                        new AntlrElementExecution(
+                                new Position(7, 9), Map.of(), Value.of("260"),
+                                new ExecutionProcessedIn(
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
+                )
         );
     }
 }

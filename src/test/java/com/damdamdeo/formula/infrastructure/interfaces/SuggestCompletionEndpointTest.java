@@ -1,6 +1,8 @@
 package com.damdamdeo.formula.infrastructure.interfaces;
 
-import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.SuggestedFormula;
+import com.damdamdeo.formula.domain.SuggestionException;
+import com.damdamdeo.formula.domain.SuggestionsCompletion;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestUnavailableException;
@@ -8,6 +10,7 @@ import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionEx
 import com.damdamdeo.formula.infrastructure.antlr.AntlrAutoSuggestionExecutionTimedOutException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -20,7 +23,6 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
 public class SuggestCompletionEndpointTest {
@@ -31,7 +33,9 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldSuggestCompletion() throws JSONException {
         // Given
-        doReturn(new SuggestionsCompletion(List.of("(")))
+        doReturn(
+                Uni.createFrom().item(new SuggestionsCompletion(List.of("(")))
+        )
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
@@ -60,7 +64,9 @@ public class SuggestCompletionEndpointTest {
         // Given
         final SuggestedFormula givenSuggestedFormula
                 = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionException(givenSuggestedFormula, new RuntimeException("error"))))
+        doReturn(
+                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestionExecutionException(givenSuggestedFormula, new RuntimeException("error"))))
+        )
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
@@ -82,7 +88,9 @@ public class SuggestCompletionEndpointTest {
         // Given
         final SuggestedFormula givenSuggestedFormula
                 = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doThrow(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(givenSuggestedFormula, new RuntimeException("error"))))
+        doReturn(
+                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(givenSuggestedFormula, new RuntimeException("error"))))
+        )
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
@@ -104,7 +112,9 @@ public class SuggestCompletionEndpointTest {
         // Given
         final SuggestedFormula givenSuggestedFormula
                 = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doThrow(new SuggestionException(new AntlrAutoSuggestUnavailableException(givenSuggestedFormula, new RuntimeException("error"))))
+        doReturn(
+                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestUnavailableException(givenSuggestedFormula, new RuntimeException("error"))))
+        )
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
@@ -124,7 +134,9 @@ public class SuggestCompletionEndpointTest {
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new SuggestionException(new Exception("unexpected \"exception\"")))
+        doReturn(
+                Uni.createFrom().failure(new SuggestionException(new Exception("unexpected \"exception\"")))
+        )
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then

@@ -7,6 +7,7 @@ import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -19,7 +20,6 @@ import java.util.Optional;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 
 @QuarkusTest
 public class ValidatorEndpointTest {
@@ -30,7 +30,10 @@ public class ValidatorEndpointTest {
     @Test
     public void shouldValidate() {
         // Given
-        doReturn(Optional.empty()).when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
+        doReturn(
+                Uni.createFrom().item(Optional::empty)
+        )
+                .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
         given()
@@ -47,7 +50,10 @@ public class ValidatorEndpointTest {
     @Test
     public void shouldHandleSyntaxErrorException() throws JSONException {
         // Given
-        doReturn(Optional.of(new AntlrSyntaxError(0, 1, "msg"))).when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
+        doReturn(
+                Uni.createFrom().item(Optional.of(new AntlrSyntaxError(0, 1, "msg")))
+        )
+                .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
         //language=JSON
@@ -74,7 +80,9 @@ public class ValidatorEndpointTest {
     @Test
     public void shouldHandleException() {
         // Given
-        doThrow(new ValidationException(new Exception("unexpected \"exception\"")))
+        doReturn(
+                Uni.createFrom().failure(new ValidationException(new Exception("unexpected \"exception\"")))
+        )
                 .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then

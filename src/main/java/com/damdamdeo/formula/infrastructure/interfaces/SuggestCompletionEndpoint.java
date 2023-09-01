@@ -2,8 +2,10 @@ package com.damdamdeo.formula.infrastructure.interfaces;
 
 import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionException;
+import com.damdamdeo.formula.domain.SuggestionsCompletion;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -70,7 +72,8 @@ public final class SuggestCompletionEndpoint {
                     )
             )
     )
-    public List<String> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
-        return suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula))).suggestions();
+    public Uni<List<String>> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
+        return suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula)))
+                .map(SuggestionsCompletion::suggestions);
     }
 }
