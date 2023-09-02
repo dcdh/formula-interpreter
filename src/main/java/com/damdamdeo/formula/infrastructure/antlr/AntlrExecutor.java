@@ -9,14 +9,15 @@ import java.util.Objects;
 public final class AntlrExecutor implements Executor {
 
     private final ExecutedAtProvider executedAtProvider;
-    private final AntlrValidator antlrValidator;
     private final NumericalContext numericalContext;
+    private final AntlrParseTreeGenerator antlrParseTreeGenerator;
 
     public AntlrExecutor(final ExecutedAtProvider executedAtProvider,
-                         final NumericalContext numericalContext) {
+                         final NumericalContext numericalContext,
+                         final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         this.executedAtProvider = Objects.requireNonNull(executedAtProvider);
-        this.antlrValidator = new AntlrValidator();
         this.numericalContext = Objects.requireNonNull(numericalContext);
+        this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
     }
 
     @Override
@@ -24,8 +25,9 @@ public final class AntlrExecutor implements Executor {
                                         final StructuredData structuredData,
                                         final DebugFeature debugFeature) throws ExecutionException {
         final ExecutedAtStart executedAtStart = executedAtProvider.now();
-        return antlrValidator.doValidate(formula)
-                .onItem().transformToUni(parseTree ->
+        return antlrParseTreeGenerator.generate(formula)
+                .onItem()
+                .transformToUni(parseTree ->
                         Uni.createFrom().item(() -> {
                             final ExecutionWrapper executionWrapper = switch (debugFeature) {
                                 case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);

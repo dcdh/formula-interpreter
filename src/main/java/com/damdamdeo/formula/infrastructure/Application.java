@@ -27,14 +27,21 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public Validator<AntlrSyntaxError> validatorProducer() {
-        return new AntlrValidator();
+    public AntlrParseTreeGenerator antlrParseTreeGenerator() {
+        return new AntlrParseTreeGenerator();
     }
 
     @Produces
     @ApplicationScoped
-    public Executor executorProducer(final ExecutedAtProvider executedAtProvider) {
-        return new AntlrExecutor(executedAtProvider, new NumericalContext());
+    public Validator<AntlrSyntaxError> validatorProducer(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+        return new AntlrValidator(antlrParseTreeGenerator);
+    }
+
+    @Produces
+    @ApplicationScoped
+    public Executor executorProducer(final ExecutedAtProvider executedAtProvider,
+                                     final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+        return new AntlrExecutor(executedAtProvider, new NumericalContext(), antlrParseTreeGenerator);
     }
 
     @Produces
