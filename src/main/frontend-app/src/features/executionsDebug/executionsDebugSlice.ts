@@ -9,12 +9,12 @@ export interface ExecutionsState {
 }
 
 export interface ExecutionsDebugState {
-  selectedSalesPerson: string | null;
+  selectedSalesPerson: string;
   executions: Array<ExecutionsState>;
 }
 
 const initialExecutionsDebugState: ExecutionsDebugState = {
-  selectedSalesPerson: null,
+  selectedSalesPerson: 'Joe',
   executions: []
 }
 
