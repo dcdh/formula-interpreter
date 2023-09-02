@@ -16,8 +16,9 @@ public class AntlrValidator implements Validator<AntlrSyntaxError> {
     }
 
     @Override
-    public Uni<Optional<AntlrSyntaxError>> validate(final Formula formula) throws ValidationException {
+    public Uni<Optional<AntlrSyntaxError>> validate(final Formula formula) {
         return this.antlrParseTreeGenerator.generate(formula)
+                .onItem().transform(AntlrParseTreeGenerator.GeneratorResult::parseTree)
                 .onItem().transform(parseTree -> Optional.<AntlrSyntaxError>empty())
                 .onFailure(AntlrSyntaxErrorException.class)
                 .recoverWithUni(syntaxErrorException -> Uni.createFrom().item(Optional.of(((AntlrSyntaxErrorException) syntaxErrorException).syntaxError())))

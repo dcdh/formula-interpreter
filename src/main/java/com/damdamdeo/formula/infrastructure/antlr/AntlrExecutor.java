@@ -23,11 +23,11 @@ public final class AntlrExecutor implements Executor {
     @Override
     public Uni<ExecutionResult> execute(final Formula formula,
                                         final StructuredData structuredData,
-                                        final DebugFeature debugFeature) throws ExecutionException {
+                                        final DebugFeature debugFeature) {
         final ExecutedAtStart executedAtStart = executedAtProvider.now();
         return antlrParseTreeGenerator.generate(formula)
-                .onItem()
-                .transformToUni(parseTree ->
+                .onItem().transform(AntlrParseTreeGenerator.GeneratorResult::parseTree)
+                .onItem().transformToUni(parseTree ->
                         Uni.createFrom().item(() -> {
                             final ExecutionWrapper executionWrapper = switch (debugFeature) {
                                 case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);

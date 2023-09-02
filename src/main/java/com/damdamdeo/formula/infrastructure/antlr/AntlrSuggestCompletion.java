@@ -23,7 +23,7 @@ public class AntlrSuggestCompletion implements SuggestCompletion {
     private static final Logger LOGGER = LogManager.getLogger(AntlrSuggestCompletion.class);
 
     @Override
-    public Uni<SuggestionsCompletion> suggest(final SuggestedFormula suggestedFormula) throws SuggestionException {
+    public Uni<SuggestionsCompletion> suggest(final SuggestedFormula suggestedFormula) {
         return Uni.createFrom().item(() -> {
             final ExecutorService executor = Executors.newSingleThreadExecutor();
             try {

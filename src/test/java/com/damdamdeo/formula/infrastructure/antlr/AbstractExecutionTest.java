@@ -24,7 +24,7 @@ public abstract class AbstractExecutionTest {
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
-        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new AntlrParseTreeGenerator());
+        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new DefaultAntlrParseTreeGenerator());
     }
 
     protected Formula formula4Test(final String formula) {

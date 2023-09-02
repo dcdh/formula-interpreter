@@ -1,6 +1,5 @@
 package com.damdamdeo.formula.domain.usecase;
 
-import com.damdamdeo.formula.domain.ExecutionException;
 import com.damdamdeo.formula.domain.ExecutionResult;
 import com.damdamdeo.formula.domain.Executor;
 import com.damdamdeo.formula.domain.UseCase;
@@ -16,7 +15,7 @@ public final class ExecuteUseCase implements UseCase<ExecutionResult, ExecuteCom
     }
 
     @Override
-    public Uni<ExecutionResult> execute(final ExecuteCommand command) throws ExecutionException {
+    public Uni<ExecutionResult> execute(final ExecuteCommand command) {
         return executor.execute(command.formula(), command.structuredData(), command.debugFeature());
     }
 }

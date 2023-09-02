@@ -5,6 +5,8 @@ import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.*;
+import io.quarkus.cache.Cache;
+import io.quarkus.cache.CacheName;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
@@ -12,7 +14,7 @@ import java.time.ZonedDateTime;
 
 public class Application {
 
-    private static final class NowExecutedAtProvider implements ExecutedAtProvider {
+    private static final class ZonedDateTimeExecutedAtProvider implements ExecutedAtProvider {
         @Override
         public ExecutedAt now() {
             return new ExecutedAt(ZonedDateTime.now());
@@ -22,25 +24,34 @@ public class Application {
     @Produces
     @ApplicationScoped
     public ExecutedAtProvider executedAddProviderProducer() {
-        return new NowExecutedAtProvider();
+        return new ZonedDateTimeExecutedAtProvider();
     }
 
     @Produces
     @ApplicationScoped
-    public AntlrParseTreeGenerator antlrParseTreeGenerator() {
-        return new AntlrParseTreeGenerator();
+    @DefaultGenerator
+    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer() {
+        return new DefaultAntlrParseTreeGenerator();
     }
 
     @Produces
     @ApplicationScoped
-    public Validator<AntlrSyntaxError> validatorProducer(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+    @CachedGenerator
+    public AntlrParseTreeGenerator cachedAntlrParseTreeGeneratorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator,
+                                                                         @CacheName("formula") final Cache cache) {
+        return new CachedAntlrParseTreeGenerator(antlrParseTreeGenerator, cache);
+    }
+
+    @Produces
+    @ApplicationScoped
+    public Validator<AntlrSyntaxError> validatorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         return new AntlrValidator(antlrParseTreeGenerator);
     }
 
     @Produces
     @ApplicationScoped
     public Executor executorProducer(final ExecutedAtProvider executedAtProvider,
-                                     final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+                                     @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         return new AntlrExecutor(executedAtProvider, new NumericalContext(), antlrParseTreeGenerator);
     }
 
@@ -64,7 +75,7 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public ValidateUseCase<AntlrSyntaxError> validateUseCase(final Validator<AntlrSyntaxError> validator) {
+    public ValidateUseCase<AntlrSyntaxError> validateUseCaseProducer(final Validator<AntlrSyntaxError> validator) {
         return new ValidateUseCase<>(validator);
     }
 

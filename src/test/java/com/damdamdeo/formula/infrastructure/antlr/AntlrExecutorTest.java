@@ -18,7 +18,7 @@ public class AntlrExecutorTest extends AbstractExecutionTest {
     @BeforeEach
     public void setup() {
         executedAtProvider = mock(ExecutedAtProvider.class);
-        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new AntlrParseTreeGenerator());
+        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new DefaultAntlrParseTreeGenerator());
     }
 
     @AfterEach

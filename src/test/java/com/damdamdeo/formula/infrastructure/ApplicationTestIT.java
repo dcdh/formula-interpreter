@@ -67,7 +67,7 @@ public class ApplicationTestIT {
     }
 
     @Test
-    public void shouldExecutionsBeInSameOrders() {
+    public void shouldExecutionsBeInExpectedOrders() {
         // Given
         //language=JSON
         final String request = """
