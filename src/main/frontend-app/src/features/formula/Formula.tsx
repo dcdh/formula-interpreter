@@ -41,6 +41,7 @@ export function Formula(props: { addAlert: (title: string, variant: Core.AlertPr
       setAutoSuggestionVisible(true);
     }
     if (formulaKeyUpEvent.key === 'Enter') {
+      setAutoSuggestionVisible(false);
       executeFormula();
     } else {
       dispatch(suggestTokens())
@@ -160,6 +161,8 @@ export function Formula(props: { addAlert: (title: string, variant: Core.AlertPr
                                 trigger={
                                   <Core.TextInput id="formulaDefinition"
                                     onChange={props.input.onChange}
+                                    onFocus={focus => setAutoSuggestionVisible(true)}
+                                    onBlur={close => setAutoSuggestionVisible(false)}
                                     value={props.input.value}
                                     onKeyUp={formulaKeyUpEvent => onFormulaDefinition(formulaKeyUpEvent)}
                                     validated={
