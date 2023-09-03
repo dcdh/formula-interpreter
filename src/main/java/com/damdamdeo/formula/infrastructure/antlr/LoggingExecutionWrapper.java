@@ -1,7 +1,6 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +22,8 @@ public final class LoggingExecutionWrapper implements ExecutionWrapper {
     }
 
     @Override
-    public Value execute(final Callable<EvalVisitor.ExecutionResult> callable,
-                         final ParserRuleContext parserRuleContext) {
+    public Value execute(final Callable<EvalVisitor.ExecutionResult> callable) {
         Objects.requireNonNull(callable);
-        Objects.requireNonNull(parserRuleContext);
         try {
             final EvalVisitor.ExecutionId executionId = new EvalVisitor.ExecutionId(currentExecutionId);
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
@@ -35,7 +32,7 @@ public final class LoggingExecutionWrapper implements ExecutionWrapper {
             executions.put(executionId, AntlrElementExecution.Builder.newBuilder()
                     .executedAtStart(executedAtStart)
                     .executedAtEnd(executedAtEnd)
-                    .using(parserRuleContext)
+                    .withPositions(result.psoitions())
                     .withInputs(result.inputs())
                     .result(result.value())
                     .build());

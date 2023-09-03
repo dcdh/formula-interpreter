@@ -1,17 +1,17 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import org.antlr.v4.runtime.ParserRuleContext;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public record AntlrElementExecution(Position position,
+public record AntlrElementExecution(List<Position> positions,
                                     Map<InputName, Input> inputs,
                                     Result result,
                                     ExecutionProcessedIn executionProcessedIn) implements ElementExecution {
     public AntlrElementExecution {
-        Objects.requireNonNull(position);
+        Objects.requireNonNull(positions);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(result);
         Objects.requireNonNull(executionProcessedIn);
@@ -21,7 +21,7 @@ public record AntlrElementExecution(Position position,
 
         ExecutedAtStart executedAtStart;
         ExecutedAtEnd executedAtEnd;
-        Position position;
+        List<Position> positions;
         Map<InputName, Input> inputs;
         Result result;
 
@@ -29,11 +29,8 @@ public record AntlrElementExecution(Position position,
             return new Builder();
         }
 
-        public Builder using(final ParserRuleContext parserRuleContext) {
-            this.position = new Position(
-                    parserRuleContext.getStart().getStartIndex(),
-                    parserRuleContext.getStop().getStopIndex()
-            );
+        public Builder withPositions(final List<Position> positions) {
+            this.positions = positions;
             return this;
         }
 
@@ -59,7 +56,7 @@ public record AntlrElementExecution(Position position,
 
         public AntlrElementExecution build() {
             return new AntlrElementExecution(
-                    position, inputs, result, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
+                    positions, inputs, result, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
             );
         }
     }

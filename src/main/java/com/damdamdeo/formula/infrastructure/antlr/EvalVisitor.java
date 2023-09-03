@@ -5,6 +5,8 @@ import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.*;
 import org.antlr.v4.runtime.tree.RuleNode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,10 +54,12 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         }
     }
 
-    public record ExecutionResult(Value value, Map<InputName, Input> inputs) {
+    public record ExecutionResult(Value value, Map<InputName, Input> inputs, List<Position> positions) {
         public ExecutionResult(final Value value) {
-            this(value, Map.of());
+            this(value, Map.of(), new ArrayList<>());
         }
+
+        TODO wrapper !!!
     }
 
     @Override

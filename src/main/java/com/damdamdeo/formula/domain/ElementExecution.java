@@ -1,9 +1,10 @@
 package com.damdamdeo.formula.domain;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ElementExecution {
-    Position position();
+    List<Position> positions();
 
     Map<InputName, Input> inputs();
 
