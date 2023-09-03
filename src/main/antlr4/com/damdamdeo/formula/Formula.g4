@@ -45,6 +45,7 @@ logical_operand: argument
 
 if_comparison: argument
              | comparison_functions
+             | logical_functions
              ;
 
 when_if: arithmetic_functions

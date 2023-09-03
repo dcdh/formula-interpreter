@@ -130,6 +130,26 @@ export function Formula(props: { addAlert: (title: string, variant: Core.AlertPr
                                 key="thirdPresetFormula">
                                 Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two
                               </Core.DropdownItem>
+                              <Core.DropdownItem
+                                value={"IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"}
+                                key="fourthPresetFormula">
+                                Fail on unknown Structured Reference
+                              </Core.DropdownItem>
+                              <Core.DropdownItem
+                                value={"IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"}
+                                key="fifthPresetFormula">
+                                Fail when dividing by zero
+                              </Core.DropdownItem>
+                              <Core.DropdownItem
+                                value={"MUL([@[Sales Amount]],\"not a number\")"}
+                                key="sixthPresetFormula">
+                                Fail when doing an operation on not a number
+                              </Core.DropdownItem>
+                              <Core.DropdownItem
+                                value={"IF(ISNUM([@[Sales Amount]]),\"I am a number\", \"I am not a number\")"}
+                                key="seventhPresetFormula">
+                                Check if it is a number
+                              </Core.DropdownItem>
                             </Core.DropdownList>
                           </Core.Dropdown>
                         </Core.InputGroupItem>

@@ -76,6 +76,62 @@ public final class ExecutorEndpoint {
                                                 },
                                                 "debugFeature": "ACTIVE"
                                             }
+                                            """),
+                            @ExampleObject(
+                                    name = "Fail on unknown Structured Reference",
+                                    description = "Should return #REF! on unknown Structured Reference",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "formula": "IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
+                                                "structuredData": {
+                                                    "Sales Person": "Joe",
+                                                    "Sales Amount": "260",
+                                                    "% Commission": "10"
+                                                },
+                                                "debugFeature": "ACTIVE"
+                                            }
+                                            """),
+                            @ExampleObject(
+                                    name = "Fail when dividing by zero",
+                                    description = "Should return #DIV/0! when dividing by zero",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "formula": "IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
+                                                "structuredData": {
+                                                    "Sales Person": "Joe",
+                                                    "Sales Amount": "260",
+                                                    "% Commission": "10"
+                                                },
+                                                "debugFeature": "ACTIVE"
+                                            }
+                                            """),
+                            @ExampleObject(
+                                    name = "Fail when doing an operation on not a number",
+                                    description = "Should return #NUM! when doing an operation on not a number",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "formula": "MUL([@[Sales Amount]],\\"not a number\\")",
+                                                "structuredData": {
+                                                    "Sales Amount": "260"
+                                                },
+                                                "debugFeature": "ACTIVE"
+                                            }
+                                            """),
+                            @ExampleObject(
+                                    name = "Check if it is a number",
+                                    description = "Should return I am a number if the Structured Reference is a number",
+                                    //language=JSON
+                                    value = """
+                                            {
+                                                "formula": "IF(ISNUM([@[Sales Amount]]),\\"I am a number\\", \\"I am not a number\\")",
+                                                "structuredData": {
+                                                    "Sales Amount": "260"
+                                                },
+                                                "debugFeature": "ACTIVE"
+                                            }
                                             """)
                     }
             )
