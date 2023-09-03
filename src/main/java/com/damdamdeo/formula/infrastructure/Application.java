@@ -57,8 +57,9 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public ExecuteUseCase executeUseCaseProducer(final Executor executor) {
-        return new ExecuteUseCase(executor);
+    public ExecuteUseCase executeUseCaseProducer(final Executor executor,
+                                                 final ExecutedAtProvider executedAtProvider) {
+        return new ExecuteUseCase(executor, executedAtProvider);
     }
 
     @Produces

@@ -1,7 +1,4 @@
-package com.damdamdeo.formula.infrastructure.antlr;
-
-import com.damdamdeo.formula.domain.*;
-import org.antlr.v4.runtime.ParserRuleContext;
+package com.damdamdeo.formula.domain;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.stream.Collectors;
 
 public final class LoggingExecutionWrapper implements ExecutionWrapper {
     private final ExecutedAtProvider executedAtProvider;
-    private final Map<EvalVisitor.ExecutionId, ElementExecution> executions;
+    private final Map<ExecutionId, ElementExecution> executions;
     private final AtomicInteger currentExecutionId;
 
     public LoggingExecutionWrapper(final ExecutedAtProvider executedAtProvider) {
@@ -23,23 +20,22 @@ public final class LoggingExecutionWrapper implements ExecutionWrapper {
     }
 
     @Override
-    public Value execute(final Callable<EvalVisitor.ExecutionResult> callable,
-                         final ParserRuleContext parserRuleContext) {
+    public Value execute(final Callable<ContextualResult> callable) {
         Objects.requireNonNull(callable);
-        Objects.requireNonNull(parserRuleContext);
         try {
-            final EvalVisitor.ExecutionId executionId = new EvalVisitor.ExecutionId(currentExecutionId);
+            final ExecutionId executionId = new ExecutionId(currentExecutionId);
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
-            final EvalVisitor.ExecutionResult result = callable.call();
+            final ContextualResult contextualResult = callable.call();
             final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
-            executions.put(executionId, AntlrElementExecution.Builder.newBuilder()
-                    .executedAtStart(executedAtStart)
-                    .executedAtEnd(executedAtEnd)
-                    .using(parserRuleContext)
-                    .withInputs(result.inputs())
-                    .result(result.value())
-                    .build());
-            return result.value();
+            executions.put(executionId,
+                    ElementExecution.Builder.newBuilder()
+                            .withExecutedAtStart(executedAtStart)
+                            .withExecutedAtEnd(executedAtEnd)
+                            .withPosition(contextualResult.position())
+                            .withInputs(contextualResult.inputs())
+                            .withResult(contextualResult.result())
+                            .build());
+            return contextualResult.result();
         } catch (final Exception exception) {
             throw new RuntimeException(exception);
         }

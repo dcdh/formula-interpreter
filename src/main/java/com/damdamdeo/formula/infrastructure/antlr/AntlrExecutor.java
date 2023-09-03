@@ -23,16 +23,12 @@ public final class AntlrExecutor implements Executor {
     @Override
     public Uni<ExecutionResult> execute(final Formula formula,
                                         final StructuredData structuredData,
-                                        final DebugFeature debugFeature) {
+                                        final ExecutionWrapper executionWrapper) {
         final ExecutedAtStart executedAtStart = executedAtProvider.now();
         return antlrParseTreeGenerator.generate(formula)
                 .onItem().transform(AntlrParseTreeGenerator.GeneratorResult::parseTree)
                 .onItem().transformToUni(parseTree ->
                         Uni.createFrom().item(() -> {
-                            final ExecutionWrapper executionWrapper = switch (debugFeature) {
-                                case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);
-                                case INACTIVE -> new NoOpExecutionWrapper();
-                            };
                             final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
                             final Result result = visitor.visit(parseTree);
                             if (result == null) {

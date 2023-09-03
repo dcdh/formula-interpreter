@@ -39,7 +39,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -64,7 +64,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -89,7 +89,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -110,7 +110,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -163,7 +163,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -187,7 +187,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -210,7 +210,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -231,7 +231,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -269,27 +269,31 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("false"),
                                     new Position(0, 7),
                                     Map.of(
                                             new InputName("left"), Value.of("0"),
                                             new InputName("right"), Value.of("0")),
-                                    Value.of("false"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(4, 4), Map.of(), Value.of("0"),
+                            new ElementExecution(
+                                    Value.of("0"),
+                                    new Position(4, 4),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(6, 6), Map.of(), Value.of("0"),
+                            new ElementExecution(
+                                    Value.of("0"),
+                                    new Position(6, 6),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
@@ -309,7 +313,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenIfFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -358,7 +362,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -380,7 +384,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -406,26 +410,30 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("true"),
                                     new Position(0, 24),
                                     Map.of(
                                             new InputName("comparisonValue"), Value.of("true")),
-                                    Value.of("true"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(3, 8), Map.of(), Value.of("true"),
+                            new ElementExecution(
+                                    Value.of("true"),
+                                    new Position(3, 8),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(10, 15), Map.of(), Value.of("true"),
+                            new ElementExecution(
+                                    Value.of("true"),
+                                    new Position(10, 15),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
@@ -445,7 +453,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenIfFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -510,27 +518,31 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("false"),
                                     new Position(0, 29),
                                     Map.of(
                                             new InputName("comparisonValue"), Value.of("true")
                                     ),
-                                    Value.of("false"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(8, 13), Map.of(), Value.of("true"),
+                            new ElementExecution(
+                                    Value.of("true"),
+                                    new Position(8, 13),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(22, 28), Map.of(), Value.of("false"),
+                            new ElementExecution(
+                                    Value.of("false"),
+                                    new Position(22, 28),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
@@ -550,7 +562,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenIfFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -615,27 +627,31 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("false"),
                                     new Position(0, 27),
                                     Map.of(
                                             new InputName("comparisonValue"), Value.of("#REF!")
                                     ),
-                                    Value.of("false"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(5, 11), Map.of(), Value.of("#REF!"),
+                            new ElementExecution(
+                                    Value.of("#REF!"),
+                                    new Position(5, 11),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(20, 26), Map.of(), Value.of("false"),
+                            new ElementExecution(
+                                    Value.of("false"),
+                                    new Position(20, 26),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))
@@ -658,7 +674,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -678,7 +694,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -715,7 +731,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -737,7 +753,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -770,22 +786,24 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("true"),
                                     new Position(0, 14),
                                     Map.of(
                                             new InputName("value"), Value.of("123456")
                                     ),
-                                    Value.of("true"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(6, 13), Map.of(), Value.of("123456"),
+                            new ElementExecution(
+                                    Value.of("123456"),
+                                    new Position(6, 13),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]"))))
@@ -808,7 +826,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -833,7 +851,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -854,7 +872,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -878,22 +896,24 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("false"),
                                     new Position(0, 11),
                                     Map.of(
                                             new InputName("value"), Value.of("123456")
                                     ),
-                                    Value.of("false"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(5, 10), Map.of(), Value.of("123456"),
+                            new ElementExecution(
+                                    Value.of("123456"),
+                                    new Position(5, 10),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]"))))
@@ -916,7 +936,7 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new NoOpExecutionWrapper());
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -951,22 +971,24 @@ public class LogicalFunctionsExpressionTest extends AbstractExecutionTest {
 
             // When
             final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                    DebugFeature.ACTIVE);
+                    new LoggingExecutionWrapper(executedAtProvider));
 
             // Then
             assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                     assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                            new AntlrElementExecution(
+                            new ElementExecution(
+                                    Value.of("false"),
                                     new Position(0, 14),
                                     Map.of(
                                             new InputName("value"), Value.of("123456")
                                     ),
-                                    Value.of("false"),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
-                            new AntlrElementExecution(
-                                    new Position(8, 13), Map.of(), Value.of("123456"),
+                            new ElementExecution(
+                                    Value.of("123456"),
+                                    new Position(8, 13),
+                                    Map.of(),
                                     new ExecutionProcessedIn(
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                             new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]"))))

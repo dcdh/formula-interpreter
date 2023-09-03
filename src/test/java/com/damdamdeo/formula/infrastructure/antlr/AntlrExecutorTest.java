@@ -31,7 +31,7 @@ public class AntlrExecutorTest extends AbstractExecutionTest {
         // Given
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredData(), DebugFeature.ACTIVE);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredData(), new NoOpExecutionWrapper());
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -49,7 +49,7 @@ public class AntlrExecutorTest extends AbstractExecutionTest {
         // Given
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData(), DebugFeature.ACTIVE);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData(), new NoOpExecutionWrapper());
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -65,11 +65,11 @@ public class AntlrExecutorTest extends AbstractExecutionTest {
     @Test
     public void shouldLogWhenDebugFeatureIsActive() {
         // Given
-        final DebugFeature givenDebugFeature = DebugFeature.ACTIVE;
+        final ExecutionWrapper givenExecutionWrapper = new LoggingExecutionWrapper(executedAtProvider);
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenDebugFeature);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenExecutionWrapper);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -80,11 +80,11 @@ public class AntlrExecutorTest extends AbstractExecutionTest {
     @Test
     public void shouldNotLogWhenDebugFeatureIsInactive() {
         // Given
-        final DebugFeature givenDebugFeature = DebugFeature.INACTIVE;
+        final ExecutionWrapper givenExecutionWrapper = new NoOpExecutionWrapper();
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenDebugFeature);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenExecutionWrapper);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->

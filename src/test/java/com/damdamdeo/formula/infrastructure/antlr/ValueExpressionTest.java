@@ -27,7 +27,7 @@ public class ValueExpressionTest extends AbstractExecutionTest {
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
-                DebugFeature.ACTIVE);
+                new NoOpExecutionWrapper());
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -49,15 +49,15 @@ public class ValueExpressionTest extends AbstractExecutionTest {
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                DebugFeature.ACTIVE);
+                new LoggingExecutionWrapper(executedAtProvider));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new AntlrElementExecution(
+                        new ElementExecution(
+                                Value.of("Hello World"),
                                 new Position(0, 12),
                                 Map.of(),
-                                Value.of("Hello World"),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))

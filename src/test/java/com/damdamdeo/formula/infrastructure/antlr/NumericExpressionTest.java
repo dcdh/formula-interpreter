@@ -36,7 +36,7 @@ public class NumericExpressionTest extends AbstractExecutionTest {
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
-                DebugFeature.ACTIVE);
+                new NoOpExecutionWrapper());
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -60,7 +60,7 @@ public class NumericExpressionTest extends AbstractExecutionTest {
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                DebugFeature.ACTIVE);
+                new NoOpExecutionWrapper());
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -86,27 +86,31 @@ public class NumericExpressionTest extends AbstractExecutionTest {
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                DebugFeature.ACTIVE);
+                new LoggingExecutionWrapper(executedAtProvider));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new AntlrElementExecution(
+                        new ElementExecution(
+                                Value.of("8.8"),
                                 new Position(0, 11),
                                 Map.of(
                                         new InputName("left"), Value.of("10"),
                                         new InputName("right"), Value.of("-1.2")),
-                                Value.of("8.8"),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                        new AntlrElementExecution(
-                                new Position(4, 5), Map.of(), Value.of("10"),
+                        new ElementExecution(
+                                Value.of("10"),
+                                new Position(4, 5),
+                                Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
-                        new AntlrElementExecution(
-                                new Position(7, 10), Map.of(), Value.of("-1.2"),
+                        new ElementExecution(
+                                Value.of("-1.2"),
+                                new Position(7, 10),
+                                Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))

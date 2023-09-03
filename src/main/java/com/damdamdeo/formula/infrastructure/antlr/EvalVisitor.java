@@ -7,14 +7,8 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Value> {
-    private static final String INPUT_NAME_LEFT = "left";
-    private static final String INPUT_NAME_RIGHT = "right";
-    private static final String INPUT_NAME_COMPARISON_VALUE = "comparisonValue";
-    private static final String INPUT_NAME_VALUE = "value";
-    private static final String INPUT_NAME_STRUCTURED_REFERENCE = "structuredReference";
     private final ExecutionWrapper executionWrapper;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
@@ -39,23 +33,6 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     @Override
     protected Value defaultResult() {
         return currentResult;
-    }
-
-    public record ExecutionId(Integer id) implements Comparable<ExecutionId> {
-        public ExecutionId(final AtomicInteger currentExecutionId) {
-            this(currentExecutionId.addAndGet(1));
-        }
-
-        @Override
-        public int compareTo(final ExecutionId executionId) {
-            return id.compareTo(executionId.id());
-        }
-    }
-
-    public record ExecutionResult(Value value, Map<InputName, Input> inputs) {
-        public ExecutionResult(final Value value) {
-            this(value, Map.of());
-        }
     }
 
     @Override
@@ -87,10 +64,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = operator.execute(left, right, numericalContext);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_LEFT), left,
-                    new InputName(INPUT_NAME_RIGHT), right);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofLeft(), left,
+                    InputName.ofRight(), right);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -120,10 +101,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = numericalComparator.execute(left, right, numericalContext);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_LEFT), left,
-                    new InputName(INPUT_NAME_RIGHT), right);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofLeft(), left,
+                    InputName.ofRight(), right);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -149,10 +134,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = equalityComparator.execute(left, right, numericalContext);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_LEFT), left,
-                    new InputName(INPUT_NAME_RIGHT), right);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofLeft(), left,
+                    InputName.ofRight(), right);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -178,10 +167,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = logicalOperator.execute(left, right);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_LEFT), left,
-                    new InputName(INPUT_NAME_RIGHT), right);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofLeft(), left,
+                    InputName.ofRight(), right);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -205,9 +198,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 throw new IllegalStateException("Should not be here");
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofComparisonValue(), comparisonValue);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -221,9 +218,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = this.visit(ctx.whenFalse);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofComparisonValue(), comparisonValue);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -237,9 +238,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = this.visit(ctx.whenFalse);
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_COMPARISON_VALUE), comparisonValue);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofComparisonValue(), comparisonValue);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -265,9 +270,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 };
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_VALUE), value);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofValue(), value);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -276,9 +285,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final Value value = this.visit(ctx.value);
             final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_VALUE), value);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofValue(), value);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -287,9 +300,13 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final Value value = this.visit(ctx.value);
             final Value result = value.isError() ? Value.ofTrue() : Value.ofFalse();
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_VALUE), value);
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofValue(), value);
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
@@ -305,30 +322,51 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 result = Value.ofUnknownRef();
             }
             final Map<InputName, Input> inputs = Map.of(
-                    new InputName(INPUT_NAME_STRUCTURED_REFERENCE), new Reference(reference));
-            return new ExecutionResult(result, inputs);
-        }, ctx);
+                    InputName.ofStructuredReference(), new Reference(reference));
+            return new ContextualResult(result, inputs,
+                    new Position(
+                            ctx.getStart().getStartIndex(),
+                            ctx.getStop().getStopIndex())
+            );
+        });
     }
 
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.VALUE().getText())), ctx);
+        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.VALUE().getText()),
+                new Position(
+                        ctx.getStart().getStartIndex(),
+                        ctx.getStop().getStopIndex())
+        ));
     }
 
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.NUMERIC().getText())), ctx);
+        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.NUMERIC().getText()),
+                new Position(
+                        ctx.getStart().getStartIndex(),
+                        ctx.getStop().getStopIndex())
+        ));
     }
 
     @Override
     public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
+        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.getText()),
+                new Position(
+                        ctx.getStart().getStartIndex(),
+                        ctx.getStop().getStopIndex())
+        ));
     }
 
     @Override
     public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return executionWrapper.execute(() -> new ExecutionResult(Value.of(ctx.getText())), ctx);
+        return executionWrapper.execute(() -> new ContextualResult(
+                Value.of(ctx.getText()),
+                new Position(
+                        ctx.getStart().getStartIndex(),
+                        ctx.getStop().getStopIndex())
+        ));
     }
 }
