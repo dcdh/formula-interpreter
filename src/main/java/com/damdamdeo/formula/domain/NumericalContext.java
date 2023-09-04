@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.infrastructure.antlr;
+package com.damdamdeo.formula.domain;
 
 import java.math.RoundingMode;
 

@@ -1,7 +1,5 @@
 package com.damdamdeo.formula.domain;
 
-import com.damdamdeo.formula.infrastructure.antlr.NumericalContext;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
