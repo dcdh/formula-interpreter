@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.domain;
+package com.damdamdeo.formula.domain.usecase;
 
 import io.smallrye.mutiny.Uni;
 

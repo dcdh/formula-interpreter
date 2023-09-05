@@ -1,5 +1,7 @@
-package com.damdamdeo.formula.domain;
+package com.damdamdeo.formula.domain.spi;
 
+import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.SyntaxError;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Optional;

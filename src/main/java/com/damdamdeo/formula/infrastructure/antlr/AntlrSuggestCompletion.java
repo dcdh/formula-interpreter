@@ -2,7 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.FormulaLexer;
 import com.damdamdeo.formula.FormulaParser;
-import com.damdamdeo.formula.domain.SuggestCompletion;
+import com.damdamdeo.formula.domain.spi.SuggestCompletion;
 import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;

@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure;
 
 import com.damdamdeo.formula.domain.ExecutedAt;
-import com.damdamdeo.formula.domain.ExecutedAtProvider;
+import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
 import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrParseTreeGenerator;
 import com.damdamdeo.formula.infrastructure.antlr.DefaultGenerator;

@@ -1,8 +1,7 @@
 package com.damdamdeo.formula.domain.usecase;
 
 import com.damdamdeo.formula.domain.SyntaxError;
-import com.damdamdeo.formula.domain.UseCase;
-import com.damdamdeo.formula.domain.Validator;
+import com.damdamdeo.formula.domain.spi.Validator;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;

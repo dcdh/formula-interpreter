@@ -2,7 +2,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.domain.ValidationException;
-import com.damdamdeo.formula.domain.Validator;
+import com.damdamdeo.formula.domain.spi.Validator;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;

@@ -1,8 +1,7 @@
 package com.damdamdeo.formula.domain.usecase;
 
-import com.damdamdeo.formula.domain.SuggestCompletion;
+import com.damdamdeo.formula.domain.spi.SuggestCompletion;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;
-import com.damdamdeo.formula.domain.UseCase;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;
