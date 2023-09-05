@@ -182,60 +182,39 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         return executionWrapper.execute(() -> {
             final Value comparisonValue = this.visit(ctx.comparison);
             final Value result;
-            if (comparisonValue.isNotAvailable()) {
-                result = Value.ofNotAvailable();
-            } else if (comparisonValue.isUnknownRef()) {
-                result = Value.ofUnknownRef();
-            } else if (comparisonValue.isNotANumericalValue()) {
-                result = Value.ofNumericalValueExpected();
-            } else if (comparisonValue.isDivByZero()) {
-                result = Value.ofDividedByZero();
-            } else if (comparisonValue.isTrue()) {
-                result = this.visit(ctx.whenTrue);
-            } else if (comparisonValue.isFalse()) {
-                result = this.visit(ctx.whenFalse);
-            } else {
-                throw new IllegalStateException("Should not be here");
-            }
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofComparisonValue(), comparisonValue);
-            return new ContextualResult(result, inputs,
-                    new Position(
-                            ctx.getStart().getStartIndex(),
-                            ctx.getStop().getStopIndex())
-            );
-        });
-    }
-
-    @Override
-    public Value visitIfErrorFunction(final FormulaParser.IfErrorFunctionContext ctx) {
-        return executionWrapper.execute(() -> {
-            final Value comparisonValue = this.visit(ctx.comparison);
-            final Value result;
-            if (comparisonValue.isError()) {
-                result = this.visit(ctx.whenTrue);
-            } else {
-                result = this.visit(ctx.whenFalse);
-            }
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofComparisonValue(), comparisonValue);
-            return new ContextualResult(result, inputs,
-                    new Position(
-                            ctx.getStart().getStartIndex(),
-                            ctx.getStop().getStopIndex())
-            );
-        });
-    }
-
-    @Override
-    public Value visitIfNaFunction(final FormulaParser.IfNaFunctionContext ctx) {
-        return executionWrapper.execute(() -> {
-            final Value comparisonValue = this.visit(ctx.comparison);
-            final Value result;
-            if (comparisonValue.isNotAvailable()) {
-                result = this.visit(ctx.whenTrue);
-            } else {
-                result = this.visit(ctx.whenFalse);
+            switch (ctx.ifOperator.getType()) {
+                case FormulaParser.IF -> {
+                    if (comparisonValue.isNotAvailable()) {
+                        result = Value.ofNotAvailable();
+                    } else if (comparisonValue.isUnknownRef()) {
+                        result = Value.ofUnknownRef();
+                    } else if (comparisonValue.isNotANumericalValue()) {
+                        result = Value.ofNumericalValueExpected();
+                    } else if (comparisonValue.isDivByZero()) {
+                        result = Value.ofDividedByZero();
+                    } else if (comparisonValue.isTrue()) {
+                        result = this.visit(ctx.whenTrue);
+                    } else if (comparisonValue.isFalse()) {
+                        result = this.visit(ctx.whenFalse);
+                    } else {
+                        throw new IllegalStateException("Should not be here");
+                    }
+                }
+                case FormulaParser.IFERROR -> {
+                    if (comparisonValue.isError()) {
+                        result = this.visit(ctx.whenTrue);
+                    } else {
+                        result = this.visit(ctx.whenFalse);
+                    }
+                }
+                case FormulaParser.IFNA -> {
+                    if (comparisonValue.isNotAvailable()) {
+                        result = this.visit(ctx.whenTrue);
+                    } else {
+                        result = this.visit(ctx.whenFalse);
+                    }
+                }
+                default -> throw new IllegalStateException("Should not be here");
             }
             final Map<InputName, Input> inputs = Map.of(
                     InputName.ofComparisonValue(), comparisonValue);
@@ -251,54 +230,15 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     public Value visitIsFunction(final FormulaParser.IsFunctionContext ctx) {
         return executionWrapper.execute(() -> {
             final Value value = this.visit(ctx.value);
-            final Value result;
-            if (value.isNotAvailable()) {
-                result = Value.ofNotAvailable();
-            } else if (value.isUnknownRef()) {
-                result = Value.ofUnknownRef();
-            } else if (value.isNotANumericalValue()) {
-                result = Value.ofNumericalValueExpected();
-            } else if (value.isDivByZero()) {
-                result = Value.ofDividedByZero();
-            } else {
-                result = switch (ctx.isOperator.getType()) {
-                    case FormulaParser.ISNUM -> value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
-                    case FormulaParser.ISTEXT -> value.isText() ? Value.ofTrue() : Value.ofFalse();
-                    case FormulaParser.ISBLANK -> value.isBlank() ? Value.ofTrue() : Value.ofFalse();
-                    case FormulaParser.ISLOGICAL -> value.isLogical() ? Value.ofTrue() : Value.ofFalse();
-                    default -> throw new IllegalStateException("Should not be here");
-                };
-            }
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofValue(), value);
-            return new ContextualResult(result, inputs,
-                    new Position(
-                            ctx.getStart().getStartIndex(),
-                            ctx.getStop().getStopIndex())
-            );
-        });
-    }
-
-    @Override
-    public Value visitIsNaFunction(final FormulaParser.IsNaFunctionContext ctx) {
-        return executionWrapper.execute(() -> {
-            final Value value = this.visit(ctx.value);
-            final Value result = value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofValue(), value);
-            return new ContextualResult(result, inputs,
-                    new Position(
-                            ctx.getStart().getStartIndex(),
-                            ctx.getStop().getStopIndex())
-            );
-        });
-    }
-
-    @Override
-    public Value visitIsErrorFunction(final FormulaParser.IsErrorFunctionContext ctx) {
-        return executionWrapper.execute(() -> {
-            final Value value = this.visit(ctx.value);
-            final Value result = value.isError() ? Value.ofTrue() : Value.ofFalse();
+            final Value result = switch (ctx.isOperator.getType()) {
+                case FormulaParser.ISNA -> value.isNotAvailable() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISERROR -> value.isError() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISNUM -> value.isNumeric() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISTEXT -> value.isText() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISBLANK -> value.isBlank() ? Value.ofTrue() : Value.ofFalse();
+                case FormulaParser.ISLOGICAL -> value.isLogical() ? Value.ofTrue() : Value.ofFalse();
+                default -> throw new IllegalStateException("Should not be here");
+            };
             final Map<InputName, Input> inputs = Map.of(
                     InputName.ofValue(), value);
             return new ContextualResult(result, inputs,

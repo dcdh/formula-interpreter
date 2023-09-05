@@ -31,12 +31,8 @@ comparend: argument
          ;
 
 logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=logical_operand')' #logicalOperatorFunction
-                 | IF'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
-                 | IFERROR'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifErrorFunction
-                 | IFNA'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifNaFunction
-                 | isOperator=(ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
-                 | ISNA'('value=argument')' #isNaFunction
-                 | ISERROR'('value=argument')' #isErrorFunction
+                 | ifOperator=(IF | IFERROR | IFNA)'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
+                 | isOperator=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
                  ;
 
 logical_operand: argument
