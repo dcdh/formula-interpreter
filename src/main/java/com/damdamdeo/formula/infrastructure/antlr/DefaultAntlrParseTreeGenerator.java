@@ -13,12 +13,12 @@ public final class DefaultAntlrParseTreeGenerator implements AntlrParseTreeGener
     public Uni<GeneratorResult> generate(final Formula formula) {
         return Uni.createFrom().item(() -> {
             final FormulaLexer lexer = new FormulaLexer(CharStreams.fromString(formula.formula()));
-            final SyntaxErrorListener syntaxErrorListener = new SyntaxErrorListener();
+            final AntlrSyntaxErrorListener antlrSyntaxErrorListener = new AntlrSyntaxErrorListener();
             final FormulaParser parser = new FormulaParser(new CommonTokenStream(lexer));
             parser.removeErrorListeners();
-            parser.addErrorListener(syntaxErrorListener);
+            parser.addErrorListener(antlrSyntaxErrorListener);
             final ParseTree tree = parser.program();
-            return new GeneratorResult(formula, tree, syntaxErrorListener);
+            return new GeneratorResult(formula, tree, antlrSyntaxErrorListener);
         });
     }
 }

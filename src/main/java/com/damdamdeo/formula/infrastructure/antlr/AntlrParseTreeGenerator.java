@@ -12,19 +12,19 @@ public interface AntlrParseTreeGenerator {
     final class GeneratorResult {
         private final Formula formula;
         private final ParseTree parseTree;
-        private final SyntaxErrorListener syntaxErrorListener;
+        private final AntlrSyntaxErrorListener antlrSyntaxErrorListener;
 
         public GeneratorResult(final Formula formula,
                                final ParseTree parseTree,
-                               final SyntaxErrorListener syntaxErrorListener) {
+                               final AntlrSyntaxErrorListener antlrSyntaxErrorListener) {
             this.formula = Objects.requireNonNull(formula);
             this.parseTree = Objects.requireNonNull(parseTree);
-            this.syntaxErrorListener = Objects.requireNonNull(syntaxErrorListener);
+            this.antlrSyntaxErrorListener = Objects.requireNonNull(antlrSyntaxErrorListener);
         }
 
         public ParseTree parseTree() throws AntlrSyntaxErrorException {
-            if (syntaxErrorListener.hasSyntaxError()) {
-                throw new AntlrSyntaxErrorException(formula, syntaxErrorListener.syntaxError());
+            if (antlrSyntaxErrorListener.hasSyntaxError()) {
+                throw new AntlrSyntaxErrorException(formula, antlrSyntaxErrorListener.syntaxError());
             }
             return parseTree;
         }

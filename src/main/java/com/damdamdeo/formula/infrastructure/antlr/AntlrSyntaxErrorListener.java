@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-public final class SyntaxErrorListener extends BaseErrorListener {
+public final class AntlrSyntaxErrorListener extends BaseErrorListener {
 
     private AntlrSyntaxError antlrSyntaxError;
 
