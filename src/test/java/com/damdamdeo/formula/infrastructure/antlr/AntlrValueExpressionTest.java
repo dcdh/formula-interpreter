@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ValueExpressionTest extends AbstractExecutionTest {
+public class AntlrValueExpressionTest extends AbstractFunctionTest {
     @ParameterizedTest
     @CsvSource({
             "\"Hello World\",Hello World",

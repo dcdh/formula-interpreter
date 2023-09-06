@@ -12,7 +12,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ElementExecutionLoggerTest extends AbstractExecutionTest {
+public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     private String givenFormula;
 
     @BeforeEach

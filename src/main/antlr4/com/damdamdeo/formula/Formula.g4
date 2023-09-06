@@ -4,7 +4,9 @@ program: expr EOF ;
 
 expr: arithmetic_functions
     | comparison_functions
-    | logical_functions
+    | logical_boolean_functions
+    | logical_comparison_functions
+    | information_functions
     | argument
     ;
 
@@ -15,40 +17,52 @@ argument: STRUCTURED_REFERENCE  #argumentStructuredReference
         | FALSE #argumentBooleanFalse
         ;
 
-arithmetic_functions: operator=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')' #arithmeticFunctionsOperatorLeftOpRight
+// custom functions defined to simplify grammar
+arithmetic_functions: function=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')'
                     ;
 
 operand: argument
        | arithmetic_functions
        ;
 
-comparison_functions: numericalComparator=(GT | GTE | LT | LTE)'('left=comparend','right=comparend')' #comparisonFunctionsNumerical
-                    | equalityComparator=(EQ | NEQ)'('left=comparend','right=comparend')' #comparisonFunctionsEquality
+comparison_functions: function=(EQ | NEQ | GT | GTE | LT | LTE)'('left=comparend','right=comparend')'
                     ;
 
 comparend: argument
          | arithmetic_functions
          ;
 
-logical_functions: logicalOperator=(AND | OR)'('left=logical_operand','right=logical_operand')' #logicalOperatorFunction
-                 | ifOperator=(IF | IFERROR | IFNA)'('comparison=if_comparison','whenTrue=when_if','whenFalse=when_if')' #ifFunction
-                 | isOperator=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')' #isFunction
+// custom functions defined to simplify grammar
+logical_boolean_functions: function=(AND | OR)'('left=boolean_operand','right=boolean_operand')'
                  ;
 
-logical_operand: argument
+boolean_operand: argument
                | comparison_functions
+               | logical_boolean_functions
+               | logical_comparison_functions
+               | information_functions
                ;
 
-if_comparison: argument
-             | comparison_functions
-             | logical_functions
-             ;
+logical_comparison_functions: function=(IF | IFERROR | IFNA)'('comparison=logical_comparison','whenTrue=logical_when','whenFalse=logical_when')'
+                 ;
 
-when_if: arithmetic_functions
-       | comparison_functions
-       | logical_functions
-       | argument
-       ;
+logical_comparison: argument
+                  | comparison_functions
+                  | logical_boolean_functions
+                  | logical_comparison_functions
+                  | information_functions
+                  ;
+
+logical_when: arithmetic_functions
+            | comparison_functions
+            | logical_boolean_functions
+            | logical_comparison_functions
+            | information_functions
+            | argument
+            ;
+
+information_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')'
+                     ;
 
 ADD: 'ADD' ;
 SUB: 'SUB' ;

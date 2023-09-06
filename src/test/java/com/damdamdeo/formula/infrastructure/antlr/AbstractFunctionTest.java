@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractExecutionTest {
+public abstract class AbstractFunctionTest {
     protected AntlrExecutor antlrExecutor;
     protected ExecutedAtProvider executedAtProvider;
 
