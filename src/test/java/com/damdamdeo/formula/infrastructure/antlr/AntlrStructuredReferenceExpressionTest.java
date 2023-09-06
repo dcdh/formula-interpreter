@@ -11,8 +11,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class StructuredReferenceExpressionTest extends AbstractExecutionTest {
-
+public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest {
     @Test
     public void shouldReturnStructuredReferenceValue() {
         // Given

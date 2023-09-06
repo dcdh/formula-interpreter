@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class AntlrExecutorTest extends AbstractExecutionTest {
+public class AntlrExecutorTest extends AbstractFunctionTest {
     private AntlrExecutor antlrExecutor;
     private ExecutedAtProvider executedAtProvider;
 

@@ -10,22 +10,26 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
+public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
-    @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                                            final String expectedValue) {
+    @MethodSource("provideLogicalFunctionsWithExpectedValues")
+    public void shouldExecuteLogicalFunctionsForStructuredReferenceLeftAndStructuredReferenceRight(
+            final Value leftValue,
+            final String givenLogicalFunction,
+            final Value rightValue,
+            final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
-                        new StructuredDatum(new Reference("South Sales Amount"), "260")
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue.value()),
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue.value())
                 )
         );
 
@@ -36,19 +40,28 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
-                                                                              final String expectedValue) {
+    @MethodSource("provideLogicalFunctionsWithExpectedValues")
+    public void shouldExecuteLogicalFunctionsForStructuredReferenceLeftAndValueRight(final Value leftValue,
+                                                                                     final String givenLogicalFunction,
+                                                                                     final Value rightValue,
+                                                                                     final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],260)", givenOperation);
+        final String givenFormula;
+        if (rightValue.isError() || rightValue.isText()) {
+            givenFormula = String.format("""
+                    %s([@[North Sales Amount]],"%s")""", givenLogicalFunction, rightValue.value());
+        } else {
+            givenFormula = String.format("""
+                    %s([@[North Sales Amount]],%s)""", givenLogicalFunction, rightValue.value());
+        }
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660")
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue.value())
                 )
         );
 
@@ -59,19 +72,28 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                              final String expectedValue) {
+    @MethodSource("provideLogicalFunctionsWithExpectedValues")
+    public void shouldExecuteLogicalFunctionsForValueLeftAndStructuredReferenceRight(final Value leftValue,
+                                                                                     final String givenLogicalFunction,
+                                                                                     final Value rightValue,
+                                                                                     final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s(660,[@[South Sales Amount]])", givenOperation);
+        final String givenFormula;
+        if (leftValue.isError() || leftValue.isText()) {
+            givenFormula = String.format("""
+                    %s("%s",[@[South Sales Amount]])""", givenLogicalFunction, leftValue.value());
+        } else {
+            givenFormula = String.format("""
+                    %s(%s,[@[South Sales Amount]])""", givenLogicalFunction, leftValue.value());
+        }
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), "260")
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue.value())
                 )
         );
 
@@ -82,16 +104,31 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
-                                                                final String expectedValue) {
+    @MethodSource("provideLogicalFunctionsWithExpectedValues")
+    public void shouldExecuteLogicalFunctionsForValueLeftAndValueRight(final Value leftValue,
+                                                                       final String givenLogicalFunction,
+                                                                       final Value rightValue,
+                                                                       final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s(660,260)", givenOperation);
+        final String givenFormula;
+        if ((leftValue.isError() || leftValue.isText()) && (rightValue.isError() || rightValue.isText())) {
+            givenFormula = String.format("""
+                    %s("%s","%s")""", givenLogicalFunction, leftValue.value(), rightValue.value());
+        } else if (leftValue.isError() || leftValue.isText()) {
+            givenFormula = String.format("""
+                    %s("%s",%s)""", givenLogicalFunction, leftValue.value(), rightValue.value());
+        } else if (rightValue.isError() || rightValue.isText()) {
+            givenFormula = String.format("""
+                    %s(%s,"%s")""", givenLogicalFunction, leftValue.value(), rightValue.value());
+        } else {
+            givenFormula = String.format("""
+                    %s(%s,%s)""", givenLogicalFunction, leftValue.value(), rightValue.value());
+        }
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
@@ -101,41 +138,29 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
-    private static Stream<Arguments> provideOperationsWithExpectedValues() {
+    private static Stream<Arguments> provideLogicalFunctionsWithExpectedValues() {
         return Stream.of(
-                Arguments.of("ADD", "920"),
-                Arguments.of("SUB", "400"),
-                Arguments.of("DIV", "2.538462"),
-                Arguments.of("MUL", "171600")
-        );
-    }
-
-    @Test
-    public void shouldCompoundArithmeticFunctions() {
-        // Given
-        final String givenFormula = "DIV(ADD(2,MUL(2,4)),2)";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
-
-        // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                new NoOpExecutionWrapper());
-
-        // Then
-        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value("5"))
-        );
+                        LogicalBooleanFunctionTest.provideAnd()
+                                .map(and -> Arguments.of(and.get()[0], "AND", and.get()[1], and.get()[2])),
+                        LogicalBooleanFunctionTest.provideCommonResponses()
+                                .map(and -> Arguments.of(and.get()[0], "AND", and.get()[1], and.get()[2])),
+                        LogicalBooleanFunctionTest.provideOr()
+                                .map(or -> Arguments.of(or.get()[0], "OR", or.get()[1], or.get()[2])),
+                        LogicalBooleanFunctionTest.provideCommonResponses()
+                                .map(or -> Arguments.of(or.get()[0], "OR", or.get()[1], or.get()[2]))
+                )
+                .flatMap(Function.identity());
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperations")
-    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) {
+    @MethodSource("provideLogicalOperator")
+    public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenLogicalFunction) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), "660")
@@ -154,14 +179,15 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperations")
-    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) {
+    @MethodSource("provideLogicalOperator")
+    public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), (String) null),
                         new StructuredDatum(new Reference("South Sales Amount"), "260")
+
                 )
         );
 
@@ -177,10 +203,10 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideOperations")
-    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) {
+    @MethodSource("provideLogicalOperator")
+    public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
                         new StructuredDatum(new Reference("North Sales Amount"), "660"),
@@ -199,15 +225,19 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         );
     }
 
+    private static Stream<Arguments> provideLogicalOperator() {
+        return Stream.of(
+                Arguments.of("OR"),
+                Arguments.of("AND"));
+    }
+
     @ParameterizedTest
-    @MethodSource("provideOperations")
-    public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) {
+    @MethodSource("provideLogicalFunctionsUsingComparisonsFunction")
+    public void shouldUseComparisonsFunctions(final String givenFormula) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
-                        new StructuredDatum(new Reference("South Sales Amount"), "boom")
+                        new StructuredDatum(new Reference("North Sales Amount"), "660")
                 )
         );
 
@@ -218,40 +248,26 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value("#NUM!"))
+                        .isEqualTo(new Value("true"))
         );
     }
 
-    private static Stream<Arguments> provideOperations() {
+    private static Stream<Arguments> provideLogicalFunctionsUsingComparisonsFunction() {
         return Stream.of(
-                Arguments.of("ADD"),
-                Arguments.of("SUB"),
-                Arguments.of("DIV"),
-                Arguments.of("MUL")
-        );
-    }
-
-    @Test
-    public void shouldDivideByZeroProduceAnError() {
-        // Given
-        final String givenFormula = "DIV(10,0)";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
-
-        // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
-                new NoOpExecutionWrapper());
-
-        // Then
-        assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
-                        .isEqualTo(new Value("#DIV/0!"))
-        );
+                Arguments.of("""
+                        OR(EQ("true","true"),EQ("true","true"))"""),
+                Arguments.of("""
+                        AND(EQ("true","true"),EQ("true","true"))"""),
+                Arguments.of("""
+                        OR(EQ(true,true),EQ(true,true))"""),
+                Arguments.of("""
+                        AND(EQ(true,true),EQ(true,true))"""));
     }
 
     @Test
     public void shouldLogExecution() {
         // Given
-        final String givenFormula = "DIV(10,0)";
+        final String givenFormula = "AND(0,0)";
         final StructuredData givenStructuredData = new StructuredData(List.of());
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
@@ -271,23 +287,24 @@ public class ArithmeticFunctionsExpressionTest extends AbstractExecutionTest {
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
-                                Value.of("#DIV/0!"),
-                                new Position(0, 8),
-                                Map.of(new InputName("left"), Value.of("10"),
+                                Value.of("false"),
+                                new Position(0, 7),
+                                Map.of(
+                                        new InputName("left"), Value.of("0"),
                                         new InputName("right"), Value.of("0")),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
-                                Value.of("10"),
-                                new Position(4, 5),
+                                Value.of("0"),
+                                new Position(4, 4),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0"),
-                                new Position(7, 7),
+                                new Position(6, 6),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),

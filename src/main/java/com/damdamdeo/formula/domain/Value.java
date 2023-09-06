@@ -13,6 +13,7 @@ public record Value(String value) implements Input, Result {
     private static final Value UNKNOWN_REF = new Value("#REF!");
     private static final Value NOT_A_NUMERICAL_VALUE = new Value("#NUM!");
     private static final Value DIV_BY_ZERO = new Value("#DIV/0!");
+    private static final Value NOT_A_LOGICAL_VALUE = new Value("#LOG!");
 
     public static Value ofNotAvailable() {
         return NOT_AVAILABLE;
@@ -38,6 +39,10 @@ public record Value(String value) implements Input, Result {
         return Value.FALSE;
     }
 
+    public static Value ofLogicalValueExpected() {
+        return NOT_A_LOGICAL_VALUE;
+    }
+
     public static Value of(final String value) {
         return new Value(value);
     }
@@ -49,6 +54,10 @@ public record Value(String value) implements Input, Result {
 
     public Value(BigDecimal value) {
         this(value.stripTrailingZeros().toPlainString());
+    }
+
+    public Value(Boolean value) {
+        this(value.toString());
     }
 
     public boolean isNotAvailable() {
@@ -67,8 +76,12 @@ public record Value(String value) implements Input, Result {
         return DIV_BY_ZERO.equals(this);
     }
 
+    public boolean isNotALogicalValue() {
+        return NOT_A_LOGICAL_VALUE.equals(this);
+    }
+
     public boolean isError() {
-        return isNotAvailable() || isUnknownRef() || isNotANumericalValue() || isDivByZero();
+        return isNotAvailable() || isUnknownRef() || isNotANumericalValue() || isDivByZero() || isNotALogicalValue();
     }
 
     public boolean isNumeric() {
@@ -85,7 +98,7 @@ public record Value(String value) implements Input, Result {
                && !isDivByZero()
                && !isTrue()
                && !isFalse()
-               && !isBlank()
+//               && !isBlank()
                && !isNumeric()
                 ;
     }
