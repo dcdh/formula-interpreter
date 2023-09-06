@@ -162,90 +162,90 @@ public record Value(String value) implements Input, Result {
         );
     }
 
-    public Value greaterThan(final Value valueToCheck,
+    public Value greaterThan(final Value valueToCheckAgainst,
                              final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToCheck.isNumeric()) {
+        if (!isNumeric() || !valueToCheckAgainst.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheck.value())
+                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                .setScale(numericalContext.scale(), numericalContext.roundingMode())) > 0 ? Value.TRUE : Value.FALSE;
     }
 
-    public Value greaterThanOrEqualTo(final Value valueToCheck,
+    public Value greaterThanOrEqualTo(final Value valueToCheckAgainst,
                                       final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToCheck.isNumeric()) {
+        if (!isNumeric() || !valueToCheckAgainst.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheck.value())
+                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                .setScale(numericalContext.scale(), numericalContext.roundingMode())) >= 0 ? Value.TRUE : Value.FALSE;
     }
 
-    public Value equalTo(final Value valueToCheck,
+    public Value equalTo(final Value valueToCheckAgainst,
                          final NumericalContext numericalContext) {
-        if (!isNumeric() && valueToCheck.isNumeric()) {
+        if (!isNumeric() && valueToCheckAgainst.isNumeric()) {
             return Value.FALSE;
         }
-        if (isNumeric() && !valueToCheck.isNumeric()) {
+        if (isNumeric() && !valueToCheckAgainst.isNumeric()) {
             return Value.FALSE;
         }
         if (isNumeric() && isNumeric()) {
             return new BigDecimal(value)
                            .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                           .compareTo(new BigDecimal(valueToCheck.value())
+                           .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                    .setScale(numericalContext.scale(), numericalContext.roundingMode())) == 0 ? Value.TRUE : Value.FALSE;
         }
-        return value.equals(valueToCheck.value()) ? Value.TRUE : Value.FALSE;
+        return value.equals(valueToCheckAgainst.value()) ? Value.TRUE : Value.FALSE;
     }
 
-    public Value notEqualTo(final Value valueToCheck,
+    public Value notEqualTo(final Value valueToCheckAgainst,
                             final NumericalContext numericalContext) {
-        if (!isNumeric() && valueToCheck.isNumeric()) {
+        if (!isNumeric() && valueToCheckAgainst.isNumeric()) {
             return Value.TRUE;
         }
-        if (isNumeric() && !valueToCheck.isNumeric()) {
+        if (isNumeric() && !valueToCheckAgainst.isNumeric()) {
             return Value.TRUE;
         }
         if (isNumeric() && isNumeric()) {
             return new BigDecimal(value)
                            .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                           .compareTo(new BigDecimal(valueToCheck.value())
+                           .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                    .setScale(numericalContext.scale(), numericalContext.roundingMode())) != 0 ? Value.TRUE : Value.FALSE;
         }
-        return value.equals(valueToCheck.value()) ? Value.FALSE : Value.TRUE;
+        return value.equals(valueToCheckAgainst.value()) ? Value.FALSE : Value.TRUE;
     }
 
-    public Value lessThan(final Value valueToCheck,
+    public Value lessThan(final Value valueToCheckAgainst,
                           final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToCheck.isNumeric()) {
+        if (!isNumeric() || !valueToCheckAgainst.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheck.value())
+                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                .setScale(numericalContext.scale(), numericalContext.roundingMode())) < 0 ? Value.TRUE : Value.FALSE;
     }
 
-    public Value lessThanOrEqualTo(final Value valueToCheck,
+    public Value lessThanOrEqualTo(final Value valueToCheckAgainst,
                                    final NumericalContext numericalContext) {
-        if (!isNumeric() || !valueToCheck.isNumeric()) {
+        if (!isNumeric() || !valueToCheckAgainst.isNumeric()) {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
                        .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheck.value())
+                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
                                .setScale(numericalContext.scale(), numericalContext.roundingMode())) <= 0 ? Value.TRUE : Value.FALSE;
     }
 
-    public Value or(final Value valueToCheck) {
-        return isTrue() || valueToCheck.isTrue() ? Value.TRUE : Value.FALSE;
+    public Value or(final Value valueToCheckAgainst) {
+        return isTrue() || valueToCheckAgainst.isTrue() ? Value.TRUE : Value.FALSE;
     }
 
-    public Value and(final Value valueToCheck) {
-        return isTrue() && valueToCheck.isTrue() ? Value.TRUE : Value.FALSE;
+    public Value and(final Value valueToCheckAgainst) {
+        return isTrue() && valueToCheckAgainst.isTrue() ? Value.TRUE : Value.FALSE;
     }
 
     @Override
