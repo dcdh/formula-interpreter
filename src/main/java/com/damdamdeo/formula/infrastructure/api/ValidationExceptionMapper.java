@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.infrastructure.interfaces;
+package com.damdamdeo.formula.infrastructure.api;
 
 import com.damdamdeo.formula.domain.ValidationException;
 import jakarta.ws.rs.core.Response;

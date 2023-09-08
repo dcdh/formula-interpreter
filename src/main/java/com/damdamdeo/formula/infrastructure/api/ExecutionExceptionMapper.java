@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.infrastructure.interfaces;
+package com.damdamdeo.formula.infrastructure.api;
 
 import com.damdamdeo.formula.domain.ExecutionException;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;

@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.infrastructure.interfaces;
+package com.damdamdeo.formula.infrastructure.api;
 
 import com.damdamdeo.formula.domain.ElementExecution;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
