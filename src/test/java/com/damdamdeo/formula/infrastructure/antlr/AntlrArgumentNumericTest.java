@@ -65,7 +65,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("0.00"),
-                                new Position(0, 3),
+                                new Range(0, 3),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),

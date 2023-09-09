@@ -91,15 +91,15 @@ public class ApplicationTestIT {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
-                .body("elementExecutions[0].position.start", is(0))
-                .body("elementExecutions[0].position.end", is(48))
-                .body("elementExecutions[1].position.start", is(4))
-                .body("elementExecutions[1].position.end", is(20))
-                .body("elementExecutions[2].position.start", is(22))
-                .body("elementExecutions[2].position.end", is(47))
-                .body("elementExecutions[3].position.start", is(26))
-                .body("elementExecutions[3].position.end", is(42))
-                .body("elementExecutions[4].position.start", is(44))
-                .body("elementExecutions[4].position.end", is(46));
+                .body("elementExecutions[0].range.start", is(0))
+                .body("elementExecutions[0].range.end", is(48))
+                .body("elementExecutions[1].range.start", is(4))
+                .body("elementExecutions[1].range.end", is(20))
+                .body("elementExecutions[2].range.start", is(22))
+                .body("elementExecutions[2].range.end", is(47))
+                .body("elementExecutions[3].range.start", is(26))
+                .body("elementExecutions[3].range.end", is(42))
+                .body("elementExecutions[4].range.start", is(44))
+                .body("elementExecutions[4].range.end", is(46));
     }
 }

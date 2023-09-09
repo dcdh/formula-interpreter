@@ -97,7 +97,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("true"),
-                                new Position(0, 14),
+                                new Range(0, 14),
                                 Map.of(
                                         new InputName("value"), Value.of("123456")
                                 ),
@@ -106,7 +106,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("123456"),
-                                new Position(6, 13),
+                                new Range(6, 13),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),

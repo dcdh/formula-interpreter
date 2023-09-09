@@ -7,11 +7,11 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Schema(name = "ElementExecution", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "position", "inputs", "result"})
+@Schema(name = "ElementExecution", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "range", "inputs", "result"})
 public record ElementExecutionDTO(@Schema(required = true) ZonedDateTime executedAtStart,
                                   @Schema(required = true) ZonedDateTime executedAtEnd,
                                   @Schema(required = true) long processedInNanos,
-                                  @Schema(required = true) PositionDTO position,
+                                  @Schema(required = true) RangeDTO range,
                                   @Schema(required = true) Map<String, String> inputs,
                                   @Schema(required = true) String result) {
 
@@ -20,7 +20,7 @@ public record ElementExecutionDTO(@Schema(required = true) ZonedDateTime execute
                 elementExecution.executionProcessedIn().executedAtStart().at(),
                 elementExecution.executionProcessedIn().executedAtEnd().at(),
                 elementExecution.executionProcessedIn().in().toNanos(),
-                new PositionDTO(elementExecution.position()),
+                new RangeDTO(elementExecution.range()),
                 elementExecution.inputs().entrySet().stream()
                         .collect(Collectors.toMap(
                                 entry -> entry.getKey().name(),

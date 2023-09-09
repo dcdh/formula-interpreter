@@ -2,8 +2,8 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public record Position(Integer start, Integer end) {
-    public Position {
+public record Range(Integer start, Integer end) {
+    public Range {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
     }

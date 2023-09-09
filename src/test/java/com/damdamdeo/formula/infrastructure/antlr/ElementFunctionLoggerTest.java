@@ -61,7 +61,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("40"),
-                                new Position(0, 119),
+                                new Range(0, 119),
                                 Map.of(
                                         new InputName("comparisonValue"), Value.of("true")),
                                 new ExecutionProcessedIn(
@@ -69,7 +69,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:18+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("true"),
-                                new Position(3, 29),
+                                new Range(3, 29),
                                 Map.of(
                                         new InputName("left"), Value.of("Joe"),
                                         new InputName("right"), Value.of("Joe")),
@@ -78,7 +78,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("Joe"),
-                                new Position(6, 22),
+                                new Range(6, 22),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("Sales Person")),
                                 new ExecutionProcessedIn(
@@ -86,14 +86,14 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("Joe"),
-                                new Position(24, 28),
+                                new Range(24, 28),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("40"),
-                                new Position(31, 77),
+                                new Range(31, 77),
                                 Map.of(
                                         new InputName("left"), Value.of("20"),
                                         new InputName("right"), Value.of("2")),
@@ -102,7 +102,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("20"),
-                                new Position(35, 74),
+                                new Range(35, 74),
                                 Map.of(
                                         new InputName("left"), Value.of("200"),
                                         new InputName("right"), Value.of("0.10")),
@@ -111,7 +111,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("200"),
-                                new Position(39, 55),
+                                new Range(39, 55),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("Sales Amount")),
                                 new ExecutionProcessedIn(
@@ -119,7 +119,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0.10"),
-                                new Position(57, 73),
+                                new Range(57, 73),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("% Commission")),
                                 new ExecutionProcessedIn(
@@ -127,7 +127,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("2"),
-                                new Position(76, 76),
+                                new Range(76, 76),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")),
@@ -171,7 +171,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("20"),
-                                new Position(0, 119),
+                                new Range(0, 119),
                                 Map.of(
                                         new InputName("comparisonValue"), Value.of("false")),
                                 new ExecutionProcessedIn(
@@ -179,7 +179,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("false"),
-                                new Position(3, 29),
+                                new Range(3, 29),
                                 Map.of(
                                         new InputName("left"), Value.of("Robert"),
                                         new InputName("right"), Value.of("Joe")),
@@ -188,7 +188,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("Robert"),
-                                new Position(6, 22),
+                                new Range(6, 22),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("Sales Person")),
                                 new ExecutionProcessedIn(
@@ -196,14 +196,14 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("Joe"),
-                                new Position(24, 28),
+                                new Range(24, 28),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("20"),
-                                new Position(79, 118),
+                                new Range(79, 118),
                                 Map.of(
                                         new InputName("left"), Value.of("200"),
                                         new InputName("right"), Value.of("0.10")),
@@ -212,7 +212,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("200"),
-                                new Position(83, 99),
+                                new Range(83, 99),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("Sales Amount")),
                                 new ExecutionProcessedIn(
@@ -220,7 +220,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0.10"),
-                                new Position(101, 117),
+                                new Range(101, 117),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("% Commission")),
                                 new ExecutionProcessedIn(

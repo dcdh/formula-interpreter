@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 apis/ExecutorEndpointApi.ts
 apis/SuggestCompletionEndpointApi.ts
 apis/ValidatorEndpointApi.ts
@@ -10,7 +9,7 @@ models/ElementExecution.ts
 models/ErrorMessage.ts
 models/Execute.ts
 models/ExecutionResult.ts
-models/Position.ts
+models/Range.ts
 models/SyntaxError.ts
 models/Validate200Response.ts
 models/index.ts

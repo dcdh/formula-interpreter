@@ -26,12 +26,12 @@ export interface ElementExecutionState {
   executedAtStart: string;
   executedAtEnd: string;
   processedInNanos: number;
-  position?: PositionState;
+  range: RangeState;
   inputs: { [key: string]: string; };
   result: string;
 };
 
-export interface PositionState {
+export interface RangeState {
   start: number;
   end: number;
 };
@@ -86,9 +86,9 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
             executedAtStart: elementExecution.executedAtStart,
             executedAtEnd: elementExecution.executedAtEnd,
             processedInNanos: elementExecution.processedInNanos,
-            position: {
-              start: elementExecution.position.start,
-              end: elementExecution.position.end
+            range: {
+              start: elementExecution.range.start,
+              end: elementExecution.range.end
             },
             inputs: elementExecution.inputs,
             result: elementExecution.result

@@ -85,15 +85,15 @@ export function ExecutionsDebug() {
                         <Table.Tr key={index}>
                           <Table.Td dataLabel={names.underline}>
                             {
-                              formula.formula.substring(0, elementExecution.position!.start!)
+                              formula.formula.substring(0, elementExecution.range!.start!)
                             }
                             <b>
                               {
-                                formula.formula.substring(elementExecution.position!.start!, elementExecution.position!.end! + 1)
+                                formula.formula.substring(elementExecution.range!.start!, elementExecution.range!.end! + 1)
                               }
                             </b>
                             {
-                              formula.formula.substring(elementExecution.position!.end! + 1, formula.formula.length)
+                              formula.formula.substring(elementExecution.range!.end! + 1, formula.formula.length)
                             }
                           </Table.Td>
                           <Table.Td dataLabel={names.inputs}>

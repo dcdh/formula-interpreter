@@ -321,7 +321,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("true"),
-                                new Position(0, 10),
+                                new Range(0, 10),
                                 Map.of(
                                         new InputName("left"), Value.of("660"),
                                         new InputName("right"), Value.of("260")),
@@ -330,14 +330,14 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("660"),
-                                new Position(3, 5),
+                                new Range(3, 5),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("260"),
-                                new Position(7, 9),
+                                new Range(7, 9),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),

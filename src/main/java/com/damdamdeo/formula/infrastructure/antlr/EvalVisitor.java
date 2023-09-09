@@ -53,7 +53,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                     InputName.ofLeft(), left,
                     InputName.ofRight(), right);
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -79,7 +79,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                     InputName.ofLeft(), left,
                     InputName.ofRight(), right);
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -101,7 +101,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                     InputName.ofLeft(), left,
                     InputName.ofRight(), right);
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -124,7 +124,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final Map<InputName, Input> inputs = Map.of(
                     InputName.ofComparisonValue(), comparisonValue);
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -148,7 +148,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final Map<InputName, Input> inputs = Map.of(
                     InputName.ofValue(), value);
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -170,7 +170,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
             final Map<InputName, Input> inputs = Map.of(
                     InputName.ofStructuredReference(), new Reference(reference));
             return new ContextualResult(result, inputs,
-                    new Position(
+                    new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
             );
@@ -180,7 +180,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     @Override
     public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.VALUE().getText()),
-                new Position(
+                new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
         ));
@@ -189,7 +189,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     @Override
     public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.NUMERIC().getText()),
-                new Position(
+                new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
         ));
@@ -199,7 +199,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.getText()),
-                new Position(
+                new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
         ));
@@ -210,7 +210,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return executionWrapper.execute(() -> new ContextualResult(
                 Value.of(ctx.getText()),
-                new Position(
+                new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
         ));

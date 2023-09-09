@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public record ContextualResult(Value result,
                                Map<InputName, Input> inputs,
-                               Position position) implements Result {
+                               Range range) implements Result {
     public ContextualResult {
         Objects.requireNonNull(result);
         Objects.requireNonNull(inputs);
-        Objects.requireNonNull(position);
+        Objects.requireNonNull(range);
     }
 
-    public ContextualResult(final Value result, final Position position) {
-        this(result, Map.of(), position);
+    public ContextualResult(final Value result, final Range range) {
+        this(result, Map.of(), range);
     }
 
     @Override

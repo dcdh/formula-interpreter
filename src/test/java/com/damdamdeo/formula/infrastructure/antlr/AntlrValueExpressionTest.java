@@ -56,7 +56,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("Hello World"),
-                                new Position(0, 12),
+                                new Range(0, 12),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),

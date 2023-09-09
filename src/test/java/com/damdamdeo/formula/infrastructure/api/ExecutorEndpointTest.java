@@ -37,7 +37,7 @@ public class ExecutorEndpointTest {
                         List.of(
                                 new ElementExecution(
                                         Value.of("10"),
-                                        new Position(4, 5),
+                                        new Range(4, 5),
                                         Map.of(new InputName("reference"), new Value("ref")),
                                         new ExecutionProcessedIn(
                                                 new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
@@ -78,7 +78,7 @@ public class ExecutorEndpointTest {
                              "executedAtStart": "2023-12-25T10:15:00+01:00",
                              "executedAtEnd": "2023-12-25T10:15:01+01:00",
                              "processedInNanos": 1000000000,
-                             "position": {
+                             "range": {
                                  "start": 4,
                                  "end": 5
                              },
@@ -142,7 +142,7 @@ public class ExecutorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType("application/vnd.execution-syntax-error-v1+json")
-                .body("message", is("Syntax error at line '0' at position '1' with message 'custom \"msg\"'"));
+                .body("message", is("Syntax error at line '0' at range '1' with message 'custom \"msg\"'"));
     }
 
     @Test

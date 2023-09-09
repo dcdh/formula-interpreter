@@ -89,7 +89,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("10%"),
-                                new Position(0, 16),
+                                new Range(0, 16),
                                 Map.of(
                                         new InputName("structuredReference"), new Reference("% Commission")),
                                 new ExecutionProcessedIn(

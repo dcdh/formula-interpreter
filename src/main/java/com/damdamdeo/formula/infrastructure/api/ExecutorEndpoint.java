@@ -157,7 +157,7 @@ public final class ExecutorEndpoint {
                                                     "executedAtStart": "2023-08-28T23:54:43.962445291+02:00",
                                                     "executedAtEnd": "2023-08-28T23:54:43.965758021+02:00",
                                                     "processedInNanos": 3312730,
-                                                    "position": {
+                                                    "range": {
                                                         "start": 0,
                                                         "end": 48
                                                     },
@@ -171,7 +171,7 @@ public final class ExecutorEndpoint {
                                                     "executedAtStart": "2023-08-28T23:54:43.962602627+02:00",
                                                     "executedAtEnd": "2023-08-28T23:54:43.963690954+02:00",
                                                     "processedInNanos": 1088327,
-                                                    "position": {
+                                                    "range": {
                                                         "start": 4,
                                                         "end": 20
                                                     },
@@ -184,7 +184,7 @@ public final class ExecutorEndpoint {
                                                     "executedAtStart": "2023-08-28T23:54:43.964600978+02:00",
                                                     "executedAtEnd": "2023-08-28T23:54:43.965641273+02:00",
                                                     "processedInNanos": 1040295,
-                                                    "position": {
+                                                    "range": {
                                                         "start": 22,
                                                         "end": 47
                                                     },
@@ -198,7 +198,7 @@ public final class ExecutorEndpoint {
                                                     "executedAtStart": "2023-08-28T23:54:43.964623803+02:00",
                                                     "executedAtEnd": "2023-08-28T23:54:43.964672892+02:00",
                                                     "processedInNanos": 49089,
-                                                    "position": {
+                                                    "range": {
                                                         "start": 26,
                                                         "end": 42
                                                     },
@@ -211,7 +211,7 @@ public final class ExecutorEndpoint {
                                                     "executedAtStart": "2023-08-28T23:54:43.964804017+02:00",
                                                     "executedAtEnd": "2023-08-28T23:54:43.964843986+02:00",
                                                     "processedInNanos": 39969,
-                                                    "position": {
+                                                    "range": {
                                                         "start": 44,
                                                         "end": 46
                                                     },

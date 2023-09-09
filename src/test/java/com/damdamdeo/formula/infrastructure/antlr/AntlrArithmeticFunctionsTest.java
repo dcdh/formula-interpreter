@@ -272,7 +272,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.elementExecutions()).containsExactly(
                         new ElementExecution(
                                 Value.of("#DIV/0!"),
-                                new Position(0, 8),
+                                new Range(0, 8),
                                 Map.of(new InputName("left"), Value.of("10"),
                                         new InputName("right"), Value.of("0")),
                                 new ExecutionProcessedIn(
@@ -280,14 +280,14 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("10"),
-                                new Position(4, 5),
+                                new Range(4, 5),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0"),
-                                new Position(7, 7),
+                                new Range(7, 7),
                                 Map.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),

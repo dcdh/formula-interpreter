@@ -3,6 +3,6 @@ export * from './ElementExecution';
 export * from './ErrorMessage';
 export * from './Execute';
 export * from './ExecutionResult';
-export * from './Position';
+export * from './Range';
 export * from './SyntaxError';
 export * from './Validate200Response';

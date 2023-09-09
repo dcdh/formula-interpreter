@@ -28,7 +28,7 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
                                                     //language=JSON
                                                     value = """
                                                             {
-                                                                "message": "Syntax error at line '0' at position '1' with message 'custom \\"msg\\"'"
+                                                                "message": "Syntax error at line '0' at range '1' with message 'custom \\"msg\\"'"
                                                             }
                                                             """)
                                     }

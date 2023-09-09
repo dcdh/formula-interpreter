@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public record ElementExecution(Value result,
-                               Position position,
+                               Range range,
                                Map<InputName, Input> inputs,
                                ExecutionProcessedIn executionProcessedIn) {
     public ElementExecution {
         Objects.requireNonNull(result);
-        Objects.requireNonNull(position);
+        Objects.requireNonNull(range);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(executionProcessedIn);
     }
@@ -18,7 +18,7 @@ public record ElementExecution(Value result,
 
         ExecutedAtStart executedAtStart;
         ExecutedAtEnd executedAtEnd;
-        Position position;
+        Range range;
         Map<InputName, Input> inputs;
         Value result;
 
@@ -26,8 +26,8 @@ public record ElementExecution(Value result,
             return new ElementExecution.Builder();
         }
 
-        public ElementExecution.Builder withPosition(final Position position) {
-            this.position = position;
+        public ElementExecution.Builder withPosition(final Range range) {
+            this.range = range;
             return this;
         }
 
@@ -53,7 +53,7 @@ public record ElementExecution(Value result,
 
         public ElementExecution build() {
             return new ElementExecution(
-                    result, position, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
+                    result, range, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
             );
         }
     }

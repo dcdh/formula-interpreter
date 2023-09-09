@@ -12,7 +12,7 @@
  */
 
 import type {
-    Position,
+    Range,
 } from './';
 
 /**
@@ -36,10 +36,10 @@ export interface ElementExecution {
      */
     processedInNanos: number;
     /**
-     * @type {Position}
+     * @type {Range}
      * @memberof ElementExecution
      */
-    position: Position;
+    range: Range;
     /**
      * @type {{ [key: string]: string; }}
      * @memberof ElementExecution

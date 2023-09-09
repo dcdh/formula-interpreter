@@ -33,7 +33,7 @@ public final class LoggingExecutionWrapper implements ExecutionWrapper {
                     ElementExecution.Builder.newBuilder()
                             .withExecutedAtStart(executedAtStart)
                             .withExecutedAtEnd(executedAtEnd)
-                            .withPosition(contextualResult.position())
+                            .withPosition(contextualResult.range())
                             .withInputs(contextualResult.inputs())
                             .withResult(contextualResult.result())
                             .build());
