@@ -9,49 +9,54 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 @Provider
 public final class ExecutionExceptionMapper implements ExceptionMapper<ExecutionException> {
     @Override
-    @APIResponse(responseCode = "400", description = "Syntax exception while executing formula",
-            content = @Content(
-                    mediaType = "application/vnd.execution-syntax-error-v1+json",
-                    schema = @Schema(
-                            implementation = ErrorMessageDTO.class,
-                            required = true,
-                            requiredProperties = {"message"}),
-                    examples = {
-                            @ExampleObject(
-                                    name = "Syntax in error",
-                                    description = "Syntax in error",
-                                    //language=JSON
-                                    value = """
-                                            {
-                                                "message": "Syntax error at line '0' at position '1' with message 'custom \\"msg\\"'"
-                                            }
-                                            """)
-                    }
-            )
-    )
-    @APIResponse(responseCode = "500", description = "Unhandled exception while executing formula",
-            content = @Content(
-                    mediaType = "application/vnd.execution-unexpected-exception-v1+json",
-                    schema = @Schema(
-                            implementation = ErrorMessageDTO.class,
-                            required = true,
-                            requiredProperties = {"message"}),
-                    examples = {
-                            @ExampleObject(
-                                    name = "Unexpected exception",
-                                    description = "Unexpected exception",
-                                    //language=JSON
-                                    value = """
-                                            {
-                                                "message": "unexpected \\"exception\\""
-                                            }
-                                            """)
-                    }
-            )
+    @APIResponses(
+            value = {
+                    @APIResponse(responseCode = "400", description = "Syntax exception while executing formula",
+                            content = @Content(
+                                    mediaType = "application/vnd.execution-syntax-error-v1+json",
+                                    schema = @Schema(
+                                            implementation = ErrorMessageDTO.class,
+                                            required = true,
+                                            requiredProperties = {"message"}),
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Syntax in error",
+                                                    description = "Syntax in error",
+                                                    //language=JSON
+                                                    value = """
+                                                            {
+                                                                "message": "Syntax error at line '0' at position '1' with message 'custom \\"msg\\"'"
+                                                            }
+                                                            """)
+                                    }
+                            )
+                    ),
+                    @APIResponse(responseCode = "500", description = "Unhandled exception while executing formula",
+                            content = @Content(
+                                    mediaType = "application/vnd.execution-unexpected-exception-v1+json",
+                                    schema = @Schema(
+                                            implementation = ErrorMessageDTO.class,
+                                            required = true,
+                                            requiredProperties = {"message"}),
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Unexpected exception",
+                                                    description = "Unexpected exception",
+                                                    //language=JSON
+                                                    value = """
+                                                            {
+                                                                "message": "unexpected \\"exception\\""
+                                                            }
+                                                            """)
+                                    }
+                            )
+                    )
+            }
     )
     public Response toResponse(final ExecutionException exception) {
         final String body = new ErrorMessageDTO(exception).toJson();
