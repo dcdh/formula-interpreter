@@ -13,17 +13,17 @@
 
 /**
  * @export
- * @interface Position
+ * @interface Range
  */
-export interface Position {
+export interface Range {
     /**
      * @type {number}
-     * @memberof Position
+     * @memberof Range
      */
     start: number;
     /**
      * @type {number}
-     * @memberof Position
+     * @memberof Range
      */
     end: number;
 }

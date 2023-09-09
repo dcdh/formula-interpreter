@@ -12,43 +12,27 @@
  */
 
 import type {
-    Input,
     Range,
 } from './';
 
 /**
  * @export
- * @interface ElementExecution
+ * @interface Input
  */
-export interface ElementExecution {
+export interface Input {
     /**
      * @type {string}
-     * @memberof ElementExecution
+     * @memberof Input
      */
-    executedAtStart: string;
+    name: string;
     /**
      * @type {string}
-     * @memberof ElementExecution
+     * @memberof Input
      */
-    executedAtEnd: string;
-    /**
-     * @type {number}
-     * @memberof ElementExecution
-     */
-    processedInNanos: number;
+    value: string;
     /**
      * @type {Range}
-     * @memberof ElementExecution
+     * @memberof Input
      */
     range: Range;
-    /**
-     * @type {Array<Input>}
-     * @memberof ElementExecution
-     */
-    inputs: Array<Input>;
-    /**
-     * @type {string}
-     * @memberof ElementExecution
-     */
-    result: string;
 }

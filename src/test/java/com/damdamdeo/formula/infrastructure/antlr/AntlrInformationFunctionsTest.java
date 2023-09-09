@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -32,7 +31,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value(expectedValue))
         );
     }
@@ -52,26 +51,26 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value(expectedValue))
         );
     }
 
     private static Stream<Arguments> provideValues() {
         return Stream.of(
-                InformationFunctionTest.provideIsNotAvailable()
-                        .map(isNa -> Arguments.of("ISNA", isNa.get()[0], isNa.get()[1])),
-                InformationFunctionTest.provideIsError()
-                        .map(isError -> Arguments.of("ISERROR", isError.get()[0], isError.get()[1])),
-                InformationFunctionTest.provideIsNumeric()
-                        .map(isNumeric -> Arguments.of("ISNUM", isNumeric.get()[0], isNumeric.get()[1])),
-                InformationFunctionTest.provideIsText()
-                        .map(isText -> Arguments.of("ISTEXT", isText.get()[0], isText.get()[1])),
-                InformationFunctionTest.provideIsBlank()
-                        .map(isBlank -> Arguments.of("ISBLANK", isBlank.get()[0], isBlank.get()[1])),
-                InformationFunctionTest.provideIsLogical()
-                        .map(isLogical -> Arguments.of("ISLOGICAL", isLogical.get()[0], isLogical.get()[1]))
-        )
+                        InformationFunctionTest.provideIsNotAvailable()
+                                .map(isNa -> Arguments.of("ISNA", isNa.get()[0], isNa.get()[1])),
+                        InformationFunctionTest.provideIsError()
+                                .map(isError -> Arguments.of("ISERROR", isError.get()[0], isError.get()[1])),
+                        InformationFunctionTest.provideIsNumeric()
+                                .map(isNumeric -> Arguments.of("ISNUM", isNumeric.get()[0], isNumeric.get()[1])),
+                        InformationFunctionTest.provideIsText()
+                                .map(isText -> Arguments.of("ISTEXT", isText.get()[0], isText.get()[1])),
+                        InformationFunctionTest.provideIsBlank()
+                                .map(isBlank -> Arguments.of("ISBLANK", isBlank.get()[0], isBlank.get()[1])),
+                        InformationFunctionTest.provideIsLogical()
+                                .map(isLogical -> Arguments.of("ISLOGICAL", isLogical.get()[0], isLogical.get()[1]))
+                )
                 .flatMap(Function.identity());
     }
 
@@ -98,8 +97,8 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("true"),
                                 new Range(0, 14),
-                                Map.of(
-                                        new InputName("value"), Value.of("123456")
+                                List.of(
+                                        new Input(new InputName("value"), Value.of("123456"), new Range(6, 13))
                                 ),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
@@ -107,7 +106,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("123456"),
                                 new Range(6, 13),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]"))))

@@ -4,16 +4,17 @@ import com.damdamdeo.formula.FormulaBaseVisitor;
 import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.ValueProvider;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
-public final class EvalVisitor extends FormulaBaseVisitor<Value> {
+public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     private final ExecutionWrapper executionWrapper;
     private final StructuredData structuredData;
     private final NumericalContext numericalContext;
-    private Value currentResult;
+    private Result currentResult;
 
     public EvalVisitor(final ExecutionWrapper executionWrapper,
                        final StructuredData structuredData,
@@ -21,26 +22,47 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
         this.executionWrapper = Objects.requireNonNull(executionWrapper);
         this.structuredData = Objects.requireNonNull(structuredData);
         this.numericalContext = Objects.requireNonNull(numericalContext);
-        this.currentResult = Value.ofNotAvailable();
+        this.currentResult = new Result();
     }
 
     @Override
-    public Value visitChildren(final RuleNode node) {
-        final Value value = super.visitChildren(node);
+    public Result visitChildren(final RuleNode node) {
+        final Result value = super.visitChildren(node);
         this.currentResult = value;
         return value;
     }
 
     @Override
-    protected Value defaultResult() {
+    protected Result defaultResult() {
         return currentResult;
     }
 
+    final class AntlrValueProvider implements ValueProvider {
+
+        private final ParseTree tree;
+        private Result result = null;
+
+        AntlrValueProvider(final ParseTree tree) {
+            this.tree = Objects.requireNonNull(tree);
+        }
+
+        @Override
+        public Value provide() {
+            result = visit(tree);
+            return result.value();
+        }
+
+        public Result getResult() {
+            Objects.requireNonNull(result, "Range must have been defined");
+            return result;
+        }
+    }
+
     @Override
-    public Value visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
+    public Result visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
         return executionWrapper.execute(() -> {
-            final Value left = this.visit(ctx.left);
-            final Value right = this.visit(ctx.right);
+            final Result leftResult = this.visit(ctx.left);
+            final Result rightResult = this.visit(ctx.right);
             final ArithmeticFunction arithmeticFunction = switch (ctx.function.getType()) {
                 case FormulaParser.ADD -> ArithmeticFunction.ofAddition();
                 case FormulaParser.SUB -> ArithmeticFunction.ofSubtraction();
@@ -48,11 +70,18 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 case FormulaParser.MUL -> ArithmeticFunction.ofMultiplication();
                 default -> throw new IllegalStateException("Should not be here");
             };
-            final Value result = arithmeticFunction.execute(left, right, numericalContext);
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofLeft(), left,
-                    InputName.ofRight(), right);
-            return new ContextualResult(result, inputs,
+            final Value value = arithmeticFunction.execute(leftResult.value(), rightResult.value(), numericalContext);
+            return new Result(value,
+                    List.of(
+                            new Input(
+                                    InputName.ofLeft(),
+                                    leftResult.value(),
+                                    leftResult.range()),
+                            new Input(
+                                    InputName.ofRight(),
+                                    rightResult.value(),
+                                    rightResult.range())
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -61,10 +90,10 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
+    public Result visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
         return executionWrapper.execute(() -> {
-            final Value left = this.visit(ctx.left);
-            final Value right = this.visit(ctx.right);
+            final Result leftResult = this.visit(ctx.left);
+            final Result rightResult = this.visit(ctx.right);
             final ComparisonFunction comparisonFunction = switch (ctx.function.getType()) {
                 case FormulaParser.EQ -> EqualityComparisonFunction.ofEqual();
                 case FormulaParser.NEQ -> EqualityComparisonFunction.ofNotEqual();
@@ -74,11 +103,18 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 case FormulaParser.LTE -> NumericalComparisonFunction.ofLessThanOrEqualTo();
                 default -> throw new IllegalStateException("Should not be here");
             };
-            final Value result = comparisonFunction.execute(left, right, numericalContext);
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofLeft(), left,
-                    InputName.ofRight(), right);
-            return new ContextualResult(result, inputs,
+            final Value value = comparisonFunction.execute(leftResult.value(), rightResult.value(), numericalContext);
+            return new Result(value,
+                    List.of(
+                            new Input(
+                                    InputName.ofLeft(),
+                                    leftResult.value(),
+                                    leftResult.range()),
+                            new Input(
+                                    InputName.ofRight(),
+                                    rightResult.value(),
+                                    rightResult.range())
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -87,20 +123,27 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
+    public Result visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
         return executionWrapper.execute(() -> {
-            final Value left = this.visit(ctx.left);
-            final Value right = this.visit(ctx.right);
+            final Result leftResult = this.visit(ctx.left);
+            final Result rightResult = this.visit(ctx.right);
             final LogicalBooleanFunction logicalBooleanFunction = switch (ctx.function.getType()) {
                 case FormulaParser.AND -> LogicalBooleanFunction.ofAnd();
                 case FormulaParser.OR -> LogicalBooleanFunction.ofOr();
                 default -> throw new IllegalStateException("Should not be here");
             };
-            final Value result = logicalBooleanFunction.execute(left, right);
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofLeft(), left,
-                    InputName.ofRight(), right);
-            return new ContextualResult(result, inputs,
+            final Value value = logicalBooleanFunction.execute(leftResult.value(), rightResult.value());
+            return new Result(value,
+                    List.of(
+                            new Input(
+                                    InputName.ofLeft(),
+                                    leftResult.value(),
+                                    leftResult.range()),
+                            new Input(
+                                    InputName.ofRight(),
+                                    rightResult.value(),
+                                    rightResult.range())
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -109,21 +152,25 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
+    public Result visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
         return executionWrapper.execute(() -> {
-            final Value comparisonValue = this.visit(ctx.comparison);
-            final ValueProvider onTrue = () -> this.visit(ctx.whenTrue);
-            final ValueProvider onFalse = () -> this.visit(ctx.whenFalse);
+            final Result comparisonResult = this.visit(ctx.comparison);
+            final AntlrValueProvider onTrue = new AntlrValueProvider(ctx.whenTrue);
+            final AntlrValueProvider onFalse = new AntlrValueProvider(ctx.whenFalse);
             final LogicalComparisonFunction logicalComparisonFunction = switch (ctx.function.getType()) {
                 case FormulaParser.IF -> LogicalComparisonFunction.ofIf(onTrue, onFalse);
                 case FormulaParser.IFERROR -> LogicalComparisonFunction.ofIfError(onTrue, onFalse);
                 case FormulaParser.IFNA -> LogicalComparisonFunction.ofIfNotAvailable(onTrue, onFalse);
                 default -> throw new IllegalStateException("Should not be here");
             };
-            final Value result = logicalComparisonFunction.execute(comparisonValue);
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofComparisonValue(), comparisonValue);
-            return new ContextualResult(result, inputs,
+            final Value value = logicalComparisonFunction.execute(comparisonResult.value());
+            return new Result(value,
+                    List.of(
+                            new Input(
+                                    InputName.ofComparisonValue(),
+                                    comparisonResult.value(),
+                                    comparisonResult.range())
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -132,9 +179,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitInformation_functions(final FormulaParser.Information_functionsContext ctx) {
+    public Result visitInformation_functions(final FormulaParser.Information_functionsContext ctx) {
         return executionWrapper.execute(() -> {
-            final Value value = this.visit(ctx.value);
+            final Result value = this.visit(ctx.value);
             final InformationFunction informationFunction = switch (ctx.function.getType()) {
                 case FormulaParser.ISNA -> InformationFunction.ofIsNotAvailable();
                 case FormulaParser.ISERROR -> InformationFunction.ofIsError();
@@ -144,10 +191,14 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
                 case FormulaParser.ISLOGICAL -> InformationFunction.ofIsLogical();
                 default -> throw new IllegalStateException("Should not be here");
             };
-            final Value result = informationFunction.execute(value) ? Value.ofTrue() : Value.ofFalse();
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofValue(), value);
-            return new ContextualResult(result, inputs,
+            final Value result = informationFunction.execute(value.value()) ? Value.ofTrue() : Value.ofFalse();
+            return new Result(result,
+                    List.of(
+                            new Input(
+                                    InputName.ofValue(),
+                                    value.value(),
+                                    value.range())
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -156,20 +207,26 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
+    public Result visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         return executionWrapper.execute(() -> {
             Value result;
-            final String reference = ctx.STRUCTURED_REFERENCE().getText()
+            final Reference reference = new Reference(ctx.STRUCTURED_REFERENCE().getText()
                     .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
-                    .substring(3);
+                    .substring(3));
             try {
-                result = this.structuredData.getValueByReference(new Reference(reference));
+                result = this.structuredData.getValueByReference(reference);
             } catch (final UnknownReferenceException unknownReferenceException) {
                 result = Value.ofUnknownRef();
             }
-            final Map<InputName, Input> inputs = Map.of(
-                    InputName.ofStructuredReference(), new Reference(reference));
-            return new ContextualResult(result, inputs,
+            return new Result(result,
+                    List.of(
+                            new Input(
+                                    InputName.ofStructuredReference(),
+                                    reference,
+                                    new Range(
+                                            ctx.getStart().getStartIndex() + 3,
+                                            ctx.getStop().getStopIndex() - 2))
+                    ),
                     new Range(
                             ctx.getStart().getStartIndex(),
                             ctx.getStop().getStopIndex())
@@ -178,8 +235,8 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.VALUE().getText()),
+    public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
+        return executionWrapper.execute(() -> new Result(Value.of(ctx.VALUE().getText()),
                 new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
@@ -187,8 +244,8 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.NUMERIC().getText()),
+    public Result visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
+        return executionWrapper.execute(() -> new Result(Value.of(ctx.NUMERIC().getText()),
                 new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
@@ -196,9 +253,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+    public Result visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return executionWrapper.execute(() -> new ContextualResult(Value.of(ctx.getText()),
+        return executionWrapper.execute(() -> new Result(Value.of(ctx.getText()),
                 new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
@@ -206,9 +263,9 @@ public final class EvalVisitor extends FormulaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+    public Result visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return executionWrapper.execute(() -> new ContextualResult(
+        return executionWrapper.execute(() -> new Result(
                 Value.of(ctx.getText()),
                 new Range(
                         ctx.getStart().getStartIndex(),

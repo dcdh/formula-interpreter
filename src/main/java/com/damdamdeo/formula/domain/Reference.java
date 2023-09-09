@@ -2,7 +2,7 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public record Reference(String reference) implements Input {
+public record Reference(String reference) implements InputValue {
     public Reference {
         Objects.requireNonNull(reference);
     }

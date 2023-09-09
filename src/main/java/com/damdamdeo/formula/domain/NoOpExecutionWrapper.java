@@ -4,9 +4,9 @@ import java.util.concurrent.Callable;
 
 public final class NoOpExecutionWrapper implements ExecutionWrapper {
     @Override
-    public Value execute(final Callable<ContextualResult> callable) {
+    public Result execute(final Callable<Result> callable) {
         try {
-            return callable.call().result();
+            return callable.call();
         } catch (final Exception exception) {
             throw new RuntimeException(exception);
         }

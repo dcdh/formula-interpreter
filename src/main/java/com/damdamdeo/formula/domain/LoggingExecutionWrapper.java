@@ -22,22 +22,22 @@ public final class LoggingExecutionWrapper implements ExecutionWrapper {
     }
 
     @Override
-    public Value execute(final Callable<ContextualResult> callable) {
+    public Result execute(final Callable<Result> callable) {
         Objects.requireNonNull(callable);
         try {
             final ExecutionId executionId = new ExecutionId(currentExecutionId);
             final ExecutedAtStart executedAtStart = executedAtProvider.now();
-            final ContextualResult contextualResult = callable.call();
+            final Result result = callable.call();
             final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
             executions.put(executionId,
                     ElementExecution.Builder.newBuilder()
                             .withExecutedAtStart(executedAtStart)
                             .withExecutedAtEnd(executedAtEnd)
-                            .withPosition(contextualResult.range())
-                            .withInputs(contextualResult.inputs())
-                            .withResult(contextualResult.result())
+                            .withPosition(result.range())
+                            .withInputs(result.inputs())
+                            .withValue(result.value())
                             .build());
-            return contextualResult.result();
+            return result;
         } catch (final Exception exception) {
             throw new RuntimeException(exception);
         }

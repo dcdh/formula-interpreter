@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -39,7 +38,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -71,7 +70,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -103,7 +102,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -137,7 +136,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -173,7 +172,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -197,7 +196,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -220,7 +219,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -247,7 +246,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("true"))
         );
     }
@@ -289,23 +288,23 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("false"),
                                 new Range(0, 7),
-                                Map.of(
-                                        new InputName("left"), Value.of("0"),
-                                        new InputName("right"), Value.of("0")),
+                                List.of(
+                                        new Input(new InputName("left"), Value.of("0"), new Range(4, 4)),
+                                        new Input(new InputName("right"), Value.of("0"), new Range(6, 6))),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0"),
                                 new Range(4, 4),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("0"),
                                 new Range(6, 6),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))

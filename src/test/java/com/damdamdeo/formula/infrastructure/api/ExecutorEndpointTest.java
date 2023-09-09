@@ -16,7 +16,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -27,18 +26,18 @@ public class ExecutorEndpointTest {
 
     @InjectMock
     private ExecuteUseCase executeUseCase;
-
     @Test
     public void shouldExecute() throws JSONException {
         // Given
         doReturn(
                 Uni.createFrom().item(new ExecutionResult(
-                        new Value("true"),
+                        new Result(new Value("true"), new Range(0, 10)),
                         List.of(
                                 new ElementExecution(
                                         Value.of("10"),
                                         new Range(4, 5),
-                                        Map.of(new InputName("reference"), new Value("ref")),
+                                        List.of(
+                                                new Input(new InputName("reference"), new Value("ref"), new Range(2, 3))),
                                         new ExecutionProcessedIn(
                                                 new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
                                                 new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
@@ -82,9 +81,16 @@ public class ExecutorEndpointTest {
                                  "start": 4,
                                  "end": 5
                              },
-                             "inputs": {
-                                 "reference": "ref"
-                             },
+                             "inputs": [
+                                 {
+                                     "name": "reference",
+                                     "value": "ref",
+                                     "range": {
+                                         "start": 2,
+                                         "end": 3
+                                     }
+                                 }
+                             ],
                              "result": "10"
                          }
                      ]

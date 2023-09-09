@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -40,7 +39,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(((Value) executionResultToAssert.result()).isNumeric())
+                assertThat(executionResultToAssert.result().value().isNumeric())
                         .isTrue()
         );
     }
@@ -66,7 +65,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("0.00"),
                                 new Range(0, 3),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))

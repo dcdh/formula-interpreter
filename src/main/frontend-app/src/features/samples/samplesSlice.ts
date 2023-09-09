@@ -3,6 +3,7 @@ import { RootState, store } from '../../app/store';
 import { DebugFeature, ElementExecution, ExecutionResult, ExecutorEndpointApi } from "../../generated";
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
+import { Input } from '../../generated/models/Input';
 
 export interface SampleState {
   salesPerson: string;
@@ -22,12 +23,18 @@ export interface ExecutionsResultState {
   elementExecutions: Array<ElementExecutionState>;
 };
 
+export interface InputState {
+  range: RangeState;
+  name: string;
+  value: string;
+};
+
 export interface ElementExecutionState {
   executedAtStart: string;
   executedAtEnd: string;
   processedInNanos: number;
   range: RangeState;
-  inputs: { [key: string]: string; };
+  inputs: Array<InputState>;
   result: string;
 };
 
@@ -78,7 +85,7 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
       commissionAmount = executionResult.result!;
       executions = {
         result: executionResult.result,
-        executedAtStart:executionResult.executedAtStart,
+        executedAtStart: executionResult.executedAtStart,
         executedAtEnd: executionResult.executedAtEnd,
         processedInNanos: executionResult.processedInNanos,
         elementExecutions: executionResult.elementExecutions.map((elementExecution: ElementExecution) => {
@@ -90,7 +97,16 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
               start: elementExecution.range.start,
               end: elementExecution.range.end
             },
-            inputs: elementExecution.inputs,
+            inputs: elementExecution.inputs.map((input: Input) => {
+              return {
+                name: input.name,
+                value: input.value,
+                range: {
+                  start: input.range.start,
+                  end: input.range.end
+                }
+              }
+            }),
             result: elementExecution.result
           }
         })

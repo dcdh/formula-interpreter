@@ -5,7 +5,7 @@ import * as Core from '@patternfly/react-core';
 import * as Table from '@patternfly/react-table';
 import * as Icon from '@patternfly/react-icons';
 import { selectFormula } from '../formula/formulaSlice';
-import { ElementExecutionState, selectSamples } from '../samples/samplesSlice';
+import { ElementExecutionState, InputState, selectSamples } from '../samples/samplesSlice';
 import { selectExecutionsDebug, selectExecutionsDebugSelected, selectSalesPerson } from './executionsDebugSlice';
 
 export function ExecutionsDebug() {
@@ -85,27 +85,22 @@ export function ExecutionsDebug() {
                         <Table.Tr key={index}>
                           <Table.Td dataLabel={names.underline}>
                             {
-                              formula.formula.substring(0, elementExecution.range!.start!)
+                              formula.formula.substring(0, elementExecution.range.start!)
                             }
                             <b>
                               {
-                                formula.formula.substring(elementExecution.range!.start!, elementExecution.range!.end! + 1)
+                                formula.formula.substring(elementExecution.range.start, elementExecution.range.end + 1)
                               }
                             </b>
                             {
-                              formula.formula.substring(elementExecution.range!.end! + 1, formula.formula.length)
+                              formula.formula.substring(elementExecution.range.end! + 1, formula.formula.length)
                             }
                           </Table.Td>
                           <Table.Td dataLabel={names.inputs}>
                             <Core.List isPlain isBordered>
-                              {
-                                Object.entries(elementExecution.inputs!)
-                                  .map(([key, value]) => {
-                                    return (
-                                      <Core.ListItem key={key}>{key}: {value}</Core.ListItem>
-                                    )
-                                  })
-                              }
+                              {elementExecution.inputs.map((input: InputState) => (
+                                <Core.ListItem key={input.name}>{input.name}: {input.value}</Core.ListItem>
+                              ))}
                             </Core.List>
                           </Table.Td>
                           <Table.Td dataLabel={names.result}>{elementExecution.result}</Table.Td>

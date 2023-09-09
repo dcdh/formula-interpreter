@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
 
-public record Value(String value) implements Input, Result {
+public record Value(String value) implements InputValue {
     private static final Value TRUE = new Value("true");
     private static final Value FALSE = new Value("false");
     private static final Value ZERO = new Value("0");

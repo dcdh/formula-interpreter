@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("10%"))
         );
     }
@@ -43,7 +42,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -62,7 +61,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -90,8 +89,8 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
                         new ElementExecution(
                                 Value.of("10%"),
                                 new Range(0, 16),
-                                Map.of(
-                                        new InputName("structuredReference"), new Reference("% Commission")),
+                                List.of(
+                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new Range(3, 14))),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))

@@ -11,4 +11,8 @@ public record ExecutionResult(Result result,
         Objects.requireNonNull(elementExecutions);
         Objects.requireNonNull(executionProcessedIn);
     }
+
+    public String value() {
+        return result.value().value();
+    }
 }

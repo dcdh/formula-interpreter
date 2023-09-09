@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -31,7 +30,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(new Value(expectedResult))
         );
     }
@@ -57,7 +56,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("Hello World"),
                                 new Range(0, 12),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]"))))

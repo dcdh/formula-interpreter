@@ -1,14 +1,14 @@
 package com.damdamdeo.formula.domain;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
-public record ElementExecution(Value result,
+public record ElementExecution(Value value,
                                Range range,
-                               Map<InputName, Input> inputs,
+                               List<Input> inputs,
                                ExecutionProcessedIn executionProcessedIn) {
     public ElementExecution {
-        Objects.requireNonNull(result);
+        Objects.requireNonNull(value);
         Objects.requireNonNull(range);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(executionProcessedIn);
@@ -19,8 +19,8 @@ public record ElementExecution(Value result,
         ExecutedAtStart executedAtStart;
         ExecutedAtEnd executedAtEnd;
         Range range;
-        Map<InputName, Input> inputs;
-        Value result;
+        List<Input> inputs;
+        Value value;
 
         public static ElementExecution.Builder newBuilder() {
             return new ElementExecution.Builder();
@@ -41,19 +41,19 @@ public record ElementExecution(Value result,
             return this;
         }
 
-        public ElementExecution.Builder withInputs(final Map<InputName, Input> inputs) {
+        public ElementExecution.Builder withInputs(final List<Input> inputs) {
             this.inputs = inputs;
             return this;
         }
 
-        public ElementExecution.Builder withResult(final Value result) {
-            this.result = result;
+        public ElementExecution.Builder withValue(final Value value) {
+            this.value = value;
             return this;
         }
 
         public ElementExecution build() {
             return new ElementExecution(
-                    result, range, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
+                    value, range, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
             );
         }
     }

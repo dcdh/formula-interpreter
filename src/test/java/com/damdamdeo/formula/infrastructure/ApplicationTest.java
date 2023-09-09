@@ -67,8 +67,8 @@ public class ApplicationTest {
                                      "start": 0,
                                      "end": 3
                                  },
-                                 "inputs": {
-                                 },
+                                 "inputs": [
+                                 ],
                                  "result": "true"
                              }
                          ]

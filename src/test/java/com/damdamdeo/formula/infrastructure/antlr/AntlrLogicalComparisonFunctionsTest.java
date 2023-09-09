@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -29,7 +28,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result())
+                assertThat(executionResultToAssert.result().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -80,22 +79,22 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
                         new ElementExecution(
                                 Value.of("true"),
                                 new Range(0, 24),
-                                Map.of(
-                                        new InputName("comparisonValue"), Value.of("true")),
+                                List.of(
+                                        new Input(new InputName("comparisonValue"), Value.of("true"), new Range(3, 8))),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("true"),
                                 new Range(3, 8),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))),
                         new ElementExecution(
                                 Value.of("true"),
                                 new Range(10, 15),
-                                Map.of(),
+                                List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]"))))

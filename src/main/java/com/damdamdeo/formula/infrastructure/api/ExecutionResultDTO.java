@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Schema(name = "ExecutionResult", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "result", "elementExecutions"})
+@Schema(name = "ExecutionResult", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "value", "elementExecutions"})
 public record ExecutionResultDTO(@Schema(required = true) ZonedDateTime executedAtStart,
                                  @Schema(required = true) ZonedDateTime executedAtEnd,
                                  @Schema(required = true) long processedInNanos,
@@ -18,7 +18,7 @@ public record ExecutionResultDTO(@Schema(required = true) ZonedDateTime executed
                 executionResult.executionProcessedIn().executedAtStart().at(),
                 executionResult.executionProcessedIn().executedAtEnd().at(),
                 executionResult.executionProcessedIn().in().toNanos(),
-                executionResult.result().value(),
+                executionResult.value(),
                 executionResult.elementExecutions().stream()
                         .map(ElementExecutionDTO::new)
                         .collect(Collectors.toList()));
