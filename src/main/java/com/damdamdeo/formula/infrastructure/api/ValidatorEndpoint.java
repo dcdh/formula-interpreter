@@ -61,9 +61,7 @@ public final class ValidatorEndpoint {
                             content = @Content(
                                     schema = @Schema(
                                             type = SchemaType.OBJECT,
-                                            implementation = SyntaxErrorDTO.class,
-                                            required = true,
-                                            requiredProperties = {"line", "charPositionInLine", "msg"}
+                                            implementation = SyntaxErrorDTO.class
                                     ),
                                     examples = {
                                             @ExampleObject(

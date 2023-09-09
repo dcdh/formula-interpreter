@@ -3,10 +3,12 @@ package com.damdamdeo.formula.infrastructure.api;
 import com.damdamdeo.formula.domain.ExecutionException;
 import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.domain.ValidationException;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.util.Objects;
 
-public record ErrorMessageDTO(String message) {
+@Schema(name = "ErrorMessage", required = true, requiredProperties = {"message"})
+public record ErrorMessageDTO(@Schema(required = true) String message) {
 
     private final static String TEMPLATE =
             //language=JSON

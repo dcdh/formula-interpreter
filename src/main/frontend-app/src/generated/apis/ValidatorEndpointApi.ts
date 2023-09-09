@@ -16,7 +16,7 @@ import type { AjaxResponse } from 'rxjs/ajax';
 import { BaseAPI, throwIfNullOrUndefined } from '../runtime';
 import type { OperationOpts } from '../runtime';
 import type {
-    Execute400Response,
+    ErrorMessage,
     Validate200Response,
 } from '../models';
 

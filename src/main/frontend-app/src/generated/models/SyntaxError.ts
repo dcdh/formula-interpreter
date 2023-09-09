@@ -13,12 +13,22 @@
 
 /**
  * @export
- * @interface Execute400Response
+ * @interface SyntaxError
  */
-export interface Execute400Response {
+export interface SyntaxError {
+    /**
+     * @type {number}
+     * @memberof SyntaxError
+     */
+    line: number;
+    /**
+     * @type {number}
+     * @memberof SyntaxError
+     */
+    charPositionInLine: number;
     /**
      * @type {string}
-     * @memberof Execute400Response
+     * @memberof SyntaxError
      */
-    message: string;
+    msg: string;
 }

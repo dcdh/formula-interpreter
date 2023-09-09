@@ -11,19 +11,30 @@
  * Do not edit the class manually.
  */
 
+import type {
+    DebugFeature,
+} from './';
+
 /**
  * @export
- * @interface PositionDTO
+ * @interface Execute
  */
-export interface PositionDTO {
+export interface Execute {
     /**
-     * @type {number}
-     * @memberof PositionDTO
+     * @type {string}
+     * @memberof Execute
      */
-    start: number;
+    formula: string;
     /**
-     * @type {number}
-     * @memberof PositionDTO
+     * @type {{ [key: string]: string; }}
+     * @memberof Execute
      */
-    end: number;
+    structuredData: { [key: string]: string; };
+    /**
+     * @type {DebugFeature}
+     * @memberof Execute
+     */
+    debugFeature: DebugFeature;
 }
+
+

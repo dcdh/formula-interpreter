@@ -20,9 +20,7 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
                             content = @Content(
                                     mediaType = "application/vnd.execution-syntax-error-v1+json",
                                     schema = @Schema(
-                                            implementation = ErrorMessageDTO.class,
-                                            required = true,
-                                            requiredProperties = {"message"}),
+                                            implementation = ErrorMessageDTO.class),
                                     examples = {
                                             @ExampleObject(
                                                     name = "Syntax in error",
@@ -40,9 +38,7 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
                             content = @Content(
                                     mediaType = "application/vnd.execution-unexpected-exception-v1+json",
                                     schema = @Schema(
-                                            implementation = ErrorMessageDTO.class,
-                                            required = true,
-                                            requiredProperties = {"message"}),
+                                            implementation = ErrorMessageDTO.class),
                                     examples = {
                                             @ExampleObject(
                                                     name = "Unexpected exception",

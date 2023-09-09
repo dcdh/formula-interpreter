@@ -23,9 +23,7 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
                                     @Content(
                                             mediaType = "application/vnd.autosuggestion-unavailable-v1+json",
                                             schema = @Schema(
-                                                    implementation = ErrorMessageDTO.class,
-                                                    required = true,
-                                                    requiredProperties = {"message"}),
+                                                    implementation = ErrorMessageDTO.class),
                                             examples = {
                                                     @ExampleObject(
                                                             name = "Syntax in error",
@@ -41,9 +39,7 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
                                     @Content(
                                             mediaType = "application/vnd.autosuggestion-execution-exception-v1+json",
                                             schema = @Schema(
-                                                    implementation = ErrorMessageDTO.class,
-                                                    required = true,
-                                                    requiredProperties = {"message"}),
+                                                    implementation = ErrorMessageDTO.class),
                                             examples = {
                                                     @ExampleObject(
                                                             name = "Syntax in error",
@@ -59,9 +55,7 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
                                     @Content(
                                             mediaType = "application/vnd.autosuggestion-unexpected-exception-v1+json",
                                             schema = @Schema(
-                                                    implementation = ErrorMessageDTO.class,
-                                                    required = true,
-                                                    requiredProperties = {"message"}),
+                                                    implementation = ErrorMessageDTO.class),
                                             examples = {
                                                     @ExampleObject(
                                                             name = "Syntax in error",
@@ -80,9 +74,7 @@ public final class SuggestionExceptionMapper implements ExceptionMapper<Suggesti
                             content = @Content(
                                     mediaType = "application/vnd.autosuggestion-execution-timed-out-v1+json",
                                     schema = @Schema(
-                                            implementation = ErrorMessageDTO.class,
-                                            required = true,
-                                            requiredProperties = {"message"}),
+                                            implementation = ErrorMessageDTO.class),
                                     examples = {
                                             @ExampleObject(
                                                     name = "Syntax in error",

@@ -19,9 +19,7 @@ public final class ValidationExceptionMapper implements ExceptionMapper<Validati
                             content = @Content(
                                     mediaType = "application/vnd.validation-unexpected-exception-v1+json",
                                     schema = @Schema(
-                                            implementation = ErrorMessageDTO.class,
-                                            required = true,
-                                            requiredProperties = {"message"}),
+                                            implementation = ErrorMessageDTO.class),
                                     examples = {
                                             @ExampleObject(
                                                     name = "Syntax in error",

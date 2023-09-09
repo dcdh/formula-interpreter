@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Schema(name = "ElementExecution", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "position", "inputs", "result"})
 public record ElementExecutionDTO(@Schema(required = true) ZonedDateTime executedAtStart,
                                   @Schema(required = true) ZonedDateTime executedAtEnd,
                                   @Schema(required = true) long processedInNanos,

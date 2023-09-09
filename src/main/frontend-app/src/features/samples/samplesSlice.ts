@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, store } from '../../app/store';
-import { DebugFeature, ElementExecutionDTO, ExecutionResultDTO, ExecutorEndpointApi } from "../../generated";
+import { DebugFeature, ElementExecution, ExecutionResult, ExecutorEndpointApi } from "../../generated";
 import { AjaxError } from 'rxjs/ajax';
 import { firstValueFrom } from 'rxjs';
 
@@ -62,8 +62,8 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
   const results: SampleState[] = await Promise.all(samples.map(async function (sample: SampleState) {
     const executor = new ExecutorEndpointApi();
     try {
-      const executionResult: ExecutionResultDTO = await firstValueFrom(executor.execute({
-        executeDTO: {
+      const executionResult: ExecutionResult = await firstValueFrom(executor.execute({
+        execute: {
           formula: formula,
           structuredData: {
             'Sales Person': sample.salesPerson,
@@ -81,7 +81,7 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
         executedAtStart:executionResult.executedAtStart,
         executedAtEnd: executionResult.executedAtEnd,
         processedInNanos: executionResult.processedInNanos,
-        elementExecutions: executionResult.elementExecutions.map((elementExecution: ElementExecutionDTO) => {
+        elementExecutions: executionResult.elementExecutions.map((elementExecution: ElementExecution) => {
           return {
             executedAtStart: elementExecution.executedAtStart,
             executedAtEnd: elementExecution.executedAtEnd,

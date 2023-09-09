@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Schema(name = "Execute", required = true, requiredProperties = {"formula", "structuredData", "debugFeature"})
 public record ExecuteDTO(@Schema(required = true) String formula,
                          @Schema(required = true) Map<String, String> structuredData,
                          @Schema(required = true) DebugFeature debugFeature) {

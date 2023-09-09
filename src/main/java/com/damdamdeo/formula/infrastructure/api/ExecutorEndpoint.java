@@ -31,8 +31,7 @@ public final class ExecutorEndpoint {
             required = true,
             content = @Content(
                     schema = @Schema(
-                            implementation = ExecuteDTO.class,
-                            required = true
+                            implementation = ExecuteDTO.class
                     ),
                     examples = {
                             @ExampleObject(
@@ -142,8 +141,7 @@ public final class ExecutorEndpoint {
                     responseCode = "200",
                     content = @Content(
                             schema = @Schema(
-                                    implementation = ExecutionResultDTO.class,
-                                    required = true
+                                    implementation = ExecutionResultDTO.class
                             ),
                             examples = @ExampleObject(
                                     name = "executed formula",

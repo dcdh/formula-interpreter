@@ -12,42 +12,37 @@
  */
 
 import type {
-    PositionDTO,
+    ElementExecution,
 } from './';
 
 /**
  * @export
- * @interface ElementExecutionDTO
+ * @interface ExecutionResult
  */
-export interface ElementExecutionDTO {
+export interface ExecutionResult {
     /**
      * @type {string}
-     * @memberof ElementExecutionDTO
+     * @memberof ExecutionResult
      */
     executedAtStart: string;
     /**
      * @type {string}
-     * @memberof ElementExecutionDTO
+     * @memberof ExecutionResult
      */
     executedAtEnd: string;
     /**
      * @type {number}
-     * @memberof ElementExecutionDTO
+     * @memberof ExecutionResult
      */
     processedInNanos: number;
     /**
-     * @type {PositionDTO}
-     * @memberof ElementExecutionDTO
-     */
-    position: PositionDTO;
-    /**
-     * @type {{ [key: string]: string; }}
-     * @memberof ElementExecutionDTO
-     */
-    inputs: { [key: string]: string; };
-    /**
      * @type {string}
-     * @memberof ElementExecutionDTO
+     * @memberof ExecutionResult
      */
     result: string;
+    /**
+     * @type {Array<ElementExecution>}
+     * @memberof ExecutionResult
+     */
+    elementExecutions: Array<ElementExecution>;
 }
