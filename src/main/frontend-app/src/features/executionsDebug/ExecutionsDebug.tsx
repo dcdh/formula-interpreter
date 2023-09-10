@@ -1,5 +1,6 @@
 import React from 'react';
 
+import './highlight.css';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import * as Core from '@patternfly/react-core';
 import * as Table from '@patternfly/react-table';
@@ -7,6 +8,7 @@ import * as Icon from '@patternfly/react-icons';
 import { selectFormula } from '../formula/formulaSlice';
 import { ElementExecutionState, InputState, selectSamples } from '../samples/samplesSlice';
 import { selectExecutionsDebug, selectExecutionsDebugSelected, selectSalesPerson } from './executionsDebugSlice';
+import HighlightWithinTextarea from 'react-highlight-within-textarea';
 
 export function ExecutionsDebug() {
   const formula = useAppSelector(selectFormula);
@@ -80,26 +82,28 @@ export function ExecutionsDebug() {
                   {executionsDebugSelected
                     .flatMap(executionsResult => executionsResult.elementExecutions)
                     .map((elementExecution: ElementExecutionState, index: number) => {
-                      const processedInMillis: number = elementExecution.processedInNanos / 1000000;
+                      const highlight = [
+                        {
+                          highlight: [elementExecution.range.start, elementExecution.range.end + 1],
+                          className: "formula"
+                        }
+                      ];
                       return (
                         <Table.Tr key={index}>
                           <Table.Td dataLabel={names.underline}>
-                            {
-                              formula.formula.substring(0, elementExecution.range.start)
-                            }
-                            <b>
-                              {
-                                formula.formula.substring(elementExecution.range.start, elementExecution.range.end + 1)
-                              }
-                            </b>
-                            {
-                              formula.formula.substring(elementExecution.range.end + 1, formula.formula.length)
-                            }
+                            <HighlightWithinTextarea
+                              value={formula.formula}
+                              highlight={highlight}
+                            />
                           </Table.Td>
                           <Table.Td dataLabel={names.inputs}>
                             <Core.List isPlain isBordered>
                               {elementExecution.inputs.map((input: InputState) => (
-                                <Core.ListItem key={input.name}>{input.name}: {input.value}</Core.ListItem>
+                                <Core.ListItem key={input.name}>
+                                  {
+                                    <span>{input.name}: {input.value} <b>{formula.formula.substring(input.range.start, input.range.end + 1)}</b></span>
+                                  }
+                                </Core.ListItem>
                               ))}
                             </Core.List>
                           </Table.Td>
