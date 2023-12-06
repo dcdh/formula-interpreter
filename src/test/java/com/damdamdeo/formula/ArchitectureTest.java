@@ -21,16 +21,16 @@ import java.util.stream.Stream;
 
 public class ArchitectureTest {
     @Test
-    public void shouldRespectHexagonalArchitecture() {
+    public void shouldRespectCleanArchitecture() {
         final JavaClasses classes = new ClassFileImporter()
                 .importPackages("com.damdamdeo.formula..");
-        final ArchRule hexagonalArchitectureRule = Architectures.layeredArchitecture()
+        final ArchRule cleanArchitectureRule = Architectures.layeredArchitecture()
                 .consideringOnlyDependenciesInLayers()
                 .layer("domain").definedBy("..domain..")
                 .layer("infrastructure").definedBy("..infrastructure..")
                 .whereLayer("domain").mayOnlyBeAccessedByLayers("infrastructure")
                 .whereLayer("infrastructure").mayNotBeAccessedByAnyLayer();
-        hexagonalArchitectureRule.check(classes);
+        cleanArchitectureRule.check(classes);
     }
 
     private static final List<String> ALLOWED_EXTERNAL_ANNOTATIONS = List.of("java.lang.FunctionalInterface");
