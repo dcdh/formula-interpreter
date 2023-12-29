@@ -33,7 +33,7 @@ public class ArchitectureTest {
         cleanArchitectureRule.check(classes);
     }
 
-    private static final List<String> ALLOWED_EXTERNAL_ANNOTATIONS = List.of("java.lang.FunctionalInterface");
+    private static final List<String> ALLOWED_EXTERNAL_ANNOTATIONS = List.of("java.lang.FunctionalInterface", "jdk.internal.vm.annotation.Stable");
 
     @Test
     public void shouldDomainDependsOnSpecificPackages() {
