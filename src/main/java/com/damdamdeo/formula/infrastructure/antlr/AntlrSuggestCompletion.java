@@ -11,8 +11,7 @@ import com.damdamdeo.formula.infrastructure.antlr.autosuggest.CasePreference;
 import com.damdamdeo.formula.infrastructure.antlr.autosuggest.LexerAndParserFactory;
 import com.damdamdeo.formula.infrastructure.antlr.autosuggest.ReflectionLexerAndParserFactory;
 import io.smallrye.mutiny.Uni;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.quarkus.logging.Log;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,8 +19,6 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class AntlrSuggestCompletion implements SuggestCompletion {
-    private static final Logger LOGGER = LogManager.getLogger(AntlrSuggestCompletion.class);
-
     @Override
     public Uni<SuggestionsCompletion> suggest(final SuggestedFormula suggestedFormula) {
         return Uni.createFrom().item(() -> {
@@ -39,13 +36,13 @@ public class AntlrSuggestCompletion implements SuggestCompletion {
                 try {
                     return future.get(5, TimeUnit.SECONDS);
                 } catch (final InterruptedException interruptedException) {
-                    LOGGER.error(interruptedException);
+                    Log.error(interruptedException);
                     throw new SuggestionException(new AntlrAutoSuggestUnavailableException(suggestedFormula, interruptedException));
                 } catch (final ExecutionException executionException) {
-                    LOGGER.error(executionException);
+                    Log.error(executionException);
                     throw new SuggestionException(new AntlrAutoSuggestionExecutionException(suggestedFormula, executionException.getCause()));
                 } catch (final TimeoutException timeoutException) {
-                    LOGGER.error(timeoutException);
+                    Log.error(timeoutException);
                     future.cancel(true);
                     throw new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(suggestedFormula, timeoutException));
                 } finally {
