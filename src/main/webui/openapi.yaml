@@ -1,0 +1,464 @@
+---
+openapi: 3.0.3
+info:
+  title: formula-interpreter API
+  version: 1.0-SNAPSHOT
+servers:
+- url: http://localhost:8080
+  description: Auto generated value
+- url: http://0.0.0.0:8080
+  description: Auto generated value
+paths:
+  /execute:
+    post:
+      tags:
+      - Executor Endpoint
+      operationId: execute
+      requestBody:
+        content:
+          application/vnd.formula-execute-v1+json:
+            schema:
+              $ref: "#/components/schemas/Execute"
+            examples:
+              Incomplete formula:
+                description: Should fail to execute
+                value:
+                  formula: IF
+                  structuredData:
+                    Sales Amount: "260"
+                    '% Commission': "10"
+                  debugFeature: ACTIVE
+              Compute commission amount by multiplying Sales Amount by Percent Commission:
+                description: Compute commission amount by multiplying Sales Amount
+                  by Percent Commission
+                value:
+                  formula: "MUL([@[Sales Amount]],DIV([@[% Commission]],100))"
+                  structuredData:
+                    Sales Amount: "260"
+                    '% Commission': "10"
+                  debugFeature: ACTIVE
+              Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two:
+                description: Compute commission amount by multiplying Sales Amount
+                  by Percent Commission if it is Joe multiply by two
+                value:
+                  formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[%\
+                    \ Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"
+                  structuredData:
+                    Sales Amount: "260"
+                    '% Commission': "10"
+                  debugFeature: ACTIVE
+              Fail on unknown Structured Reference:
+                description: "Should return #REF! on unknown Structured Reference"
+                value:
+                  formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount\
+                    \ BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[%\
+                    \ Commission]],100)))"
+                  structuredData:
+                    Sales Person: Joe
+                    Sales Amount: "260"
+                    '% Commission': "10"
+                  debugFeature: ACTIVE
+              Fail when dividing by zero:
+                description: "Should return #DIV/0! when dividing by zero"
+                value:
+                  formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[%\
+                    \ Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"
+                  structuredData:
+                    Sales Person: Joe
+                    Sales Amount: "260"
+                    '% Commission': "10"
+                  debugFeature: ACTIVE
+              Fail when doing an operation on not a number:
+                description: "Should return #NUM! when doing an operation on not a\
+                  \ number"
+                value:
+                  formula: "MUL([@[Sales Amount]],\"not a number\")"
+                  structuredData:
+                    Sales Amount: "260"
+                  debugFeature: ACTIVE
+              Check if it is a number:
+                description: Should return I am a number if the Structured Reference
+                  is a number
+                value:
+                  formula: "IF(ISNUM([@[Sales Amount]]),\"I am a number\", \"I am\
+                    \ not a number\")"
+                  structuredData:
+                    Sales Amount: "260"
+                  debugFeature: ACTIVE
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.formula-execution-v1+json:
+              schema:
+                $ref: "#/components/schemas/ExecutionResult"
+              examples:
+                executed formula:
+                  description: executed formula
+                  value:
+                    executedAtStart: 2023-08-28T23:54:43.955041713+02:00
+                    executedAtEnd: 2023-08-28T23:54:43.965929129+02:00
+                    processedInNanos: 10887416
+                    result: "26"
+                    elementExecutions:
+                    - executedAtStart: 2023-08-28T23:54:43.962445291+02:00
+                      executedAtEnd: 2023-08-28T23:54:43.965758021+02:00
+                      processedInNanos: 3312730
+                      range:
+                        start: 0
+                        end: 48
+                      inputs:
+                        left: "260"
+                        right: "0.1"
+                      result: "26"
+                    - executedAtStart: 2023-08-28T23:54:43.962602627+02:00
+                      executedAtEnd: 2023-08-28T23:54:43.963690954+02:00
+                      processedInNanos: 1088327
+                      range:
+                        start: 4
+                        end: 20
+                      inputs:
+                        structuredReference: Sales Amount
+                      result: "260"
+                    - executedAtStart: 2023-08-28T23:54:43.964600978+02:00
+                      executedAtEnd: 2023-08-28T23:54:43.965641273+02:00
+                      processedInNanos: 1040295
+                      range:
+                        start: 22
+                        end: 47
+                      inputs:
+                        left: "10"
+                        right: "100"
+                      result: "0.1"
+                    - executedAtStart: 2023-08-28T23:54:43.964623803+02:00
+                      executedAtEnd: 2023-08-28T23:54:43.964672892+02:00
+                      processedInNanos: 49089
+                      range:
+                        start: 26
+                        end: 42
+                      inputs:
+                        structuredReference: '% Commission'
+                      result: "10"
+                    - executedAtStart: 2023-08-28T23:54:43.964804017+02:00
+                      executedAtEnd: 2023-08-28T23:54:43.964843986+02:00
+                      processedInNanos: 39969
+                      range:
+                        start: 44
+                        end: 46
+                      inputs: {}
+                      result: "100"
+        "400":
+          description: Syntax exception while executing formula
+          content:
+            application/vnd.execution-syntax-error-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: Syntax error at line '0' at range '1' with message 'custom
+                      "msg"'
+        "500":
+          description: Unhandled exception while executing formula
+          content:
+            application/vnd.execution-unexpected-exception-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Unexpected exception:
+                  description: Unexpected exception
+                  value:
+                    message: unexpected "exception"
+  /suggestCompletion:
+    post:
+      tags:
+      - Suggest Completion Endpoint
+      operationId: suggestCompletion
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - suggestedFormula
+              type: object
+              properties:
+                suggestedFormula:
+                  description: Suggest tokens
+                  type: string
+                  example: IF
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.suggest-completion-v1+json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                List of suggested tokens:
+                  description: List of suggested tokens
+                  value:
+                  - (
+        "500":
+          description: AutoSuggestion service execution exception while processing
+            formula
+          content:
+            application/vnd.autosuggestion-unavailable-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: "AutoSuggestion service execution unavailable while processing\
+                      \ formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales\
+                      \ Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[%\
+                      \ Commission]],100)' - msg 'error'"
+            application/vnd.autosuggestion-execution-exception-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: "AutoSuggestion service execution exception while processing\
+                      \ formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales\
+                      \ Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[%\
+                      \ Commission]],100)' - msg 'error'"
+            application/vnd.autosuggestion-unexpected-exception-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: unexpected "exception"
+        "503":
+          description: AutoSuggestion service has timed out while executing formula
+          content:
+            application/vnd.autosuggestion-execution-timed-out-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: "AutoSuggestion service has timed out while executing\
+                      \ formula 'IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales\
+                      \ Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[%\
+                      \ Commission]],100)' - Infinite loop in Grammar - msg 'error'"
+  /validate:
+    post:
+      tags:
+      - Validator Endpoint
+      operationId: validate
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - formula
+              type: object
+              properties:
+                formula:
+                  description: Formula to validate
+                  type: string
+                  example: "MUL([@[Sales Amount]],DIV([@[% Commission]],100))"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.formula-validator-v1+json:
+              schema:
+                required:
+                - valid
+                - valid
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  line:
+                    format: int32
+                    type: integer
+                  charPositionInLine:
+                    format: int32
+                    type: integer
+                  msg:
+                    type: string
+              examples:
+                Valid formula validated:
+                  description: "MUL([@[Sales Amount]],DIV([@[% Commission]],100))"
+                  value:
+                    valid: true
+                Invalid formula validated:
+                  description: "MUL([@[Sales Amount]],DIV([@[% Commission]],100)"
+                  value:
+                    valid: false
+                    line: 1
+                    charPositionInLine: 48
+                    msg: missing ')' at '<EOF>'
+        "500":
+          description: Validation service execution exception while processing formula
+          content:
+            application/vnd.validation-unexpected-exception-v1+json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+              examples:
+                Syntax in error:
+                  description: Syntax in error
+                  value:
+                    message: unexpected "exception"
+components:
+  schemas:
+    DebugFeature:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      type: string
+    ElementExecution:
+      required:
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - range
+      - inputs
+      - value
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - range
+      - inputs
+      - result
+      type: object
+      properties:
+        executedAtStart:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        executedAtEnd:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedInNanos:
+          format: int64
+          type: integer
+        range:
+          $ref: "#/components/schemas/Range"
+        inputs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Input"
+        result:
+          type: string
+    ErrorMessage:
+      required:
+      - message
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+    Execute:
+      required:
+      - formula
+      - structuredData
+      - debugFeature
+      - formula
+      - structuredData
+      - debugFeature
+      type: object
+      properties:
+        formula:
+          type: string
+        structuredData:
+          type: object
+          additionalProperties:
+            type: string
+        debugFeature:
+          $ref: "#/components/schemas/DebugFeature"
+    ExecutionResult:
+      required:
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - value
+      - elementExecutions
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - result
+      - elementExecutions
+      type: object
+      properties:
+        executedAtStart:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        executedAtEnd:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedInNanos:
+          format: int64
+          type: integer
+        result:
+          type: string
+        elementExecutions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElementExecution"
+    Input:
+      required:
+      - name
+      - value
+      - range
+      - name
+      - value
+      - range
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        range:
+          $ref: "#/components/schemas/Range"
+    Range:
+      required:
+      - start
+      - end
+      - start
+      - end
+      type: object
+      properties:
+        start:
+          format: int32
+          type: integer
+        end:
+          format: int32
+          type: integer
+    Validation:
+      required:
+      - valid
+      - valid
+      type: object
+      properties:
+        valid:
+          type: boolean
+        line:
+          format: int32
+          type: integer
+        charPositionInLine:
+          format: int32
+          type: integer
+        msg:
+          type: string
+    ZonedDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50-04:00

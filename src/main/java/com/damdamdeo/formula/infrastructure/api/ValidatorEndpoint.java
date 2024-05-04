@@ -52,24 +52,33 @@ public final class ValidatorEndpoint {
             value = {
                     @APIResponse(
                             name = "success",
-                            responseCode = "204",
-                            description = "On success will return empty response"
-                    ),
-                    @APIResponse(
-                            name = "success",
                             responseCode = "200",
                             content = @Content(
                                     schema = @Schema(
                                             type = SchemaType.OBJECT,
-                                            implementation = SyntaxErrorDTO.class
+                                            implementation = ValidationDTO.class
                                     ),
                                     examples = {
+                                            @ExampleObject(
+                                                    name = "Valid formula validated",
+                                                    description = "MUL([@[Sales Amount]],DIV([@[% Commission]],100))",
+                                                    //language=JSON
+                                                    value = """
+                                                            {
+                                                              "valid": true,
+                                                              "line": null,
+                                                              "charPositionInLine": null,
+                                                              "msg": null
+                                                            }
+                                                            """
+                                            ),
                                             @ExampleObject(
                                                     name = "Invalid formula validated",
                                                     description = "MUL([@[Sales Amount]],DIV([@[% Commission]],100)",
                                                     //language=JSON
                                                     value = """
                                                             {
+                                                              "valid": false,
                                                               "line": 1,
                                                               "charPositionInLine": 48,
                                                               "msg": "missing ')' at '<EOF>'"
@@ -81,9 +90,10 @@ public final class ValidatorEndpoint {
                     )
             }
     )
-    public Uni<SyntaxErrorDTO> validate(@FormParam("formula") final String formula) throws ValidationException {
+    public Uni<ValidationDTO> validate(@FormParam("formula") final String formula) throws ValidationException {
         return validateUseCase.execute(new ValidateCommand(new Formula(formula)))
-                .map(antlrSyntaxError -> antlrSyntaxError.map(SyntaxErrorDTO::new).orElse(null));
+                .map(antlrSyntaxError -> antlrSyntaxError.map(ValidationDTO::new)
+                        .orElseGet(ValidationDTO::new));
     }
 
 }

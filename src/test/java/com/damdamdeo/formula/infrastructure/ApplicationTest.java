@@ -171,7 +171,8 @@ public class ApplicationTest {
                     .when()
                     .post("/validate")
                     .then()
-                    .statusCode(HttpStatus.SC_NO_CONTENT)
+                    .log().all()
+                    .statusCode(HttpStatus.SC_OK)
                     .contentType("application/vnd.formula-validator-v1+json");
         }
 
@@ -196,7 +197,8 @@ public class ApplicationTest {
                         .when()
                         .post("/validate")
                         .then()
-                        .statusCode(HttpStatus.SC_NO_CONTENT);
+                        .log().all()
+                        .statusCode(HttpStatus.SC_OK);
             }
 
             // Then

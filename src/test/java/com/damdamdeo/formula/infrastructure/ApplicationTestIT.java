@@ -63,7 +63,8 @@ public class ApplicationTestIT {
                 .when()
                 .post("/validate")
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .log().all()
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test

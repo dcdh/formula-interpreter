@@ -28,7 +28,7 @@ public class ValidatorEndpointTest {
     private ValidateUseCase<AntlrSyntaxError> validateUseCase;
 
     @Test
-    public void shouldValidate() {
+    public void shouldValidateBeValidReturnExpectedResponse() throws JSONException {
         // Given
         doReturn(
                 Uni.createFrom().item(Optional::empty)
@@ -36,19 +36,31 @@ public class ValidatorEndpointTest {
                 .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
-        given()
+        //language=JSON
+        final String expectedBody = """
+                {
+                    "valid": true,
+                    "line": null,
+                    "charPositionInLine": null,
+                    "msg": null
+                }
+                """;
+        final String actualBody = given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
                 .multiPart("formula", "true")
                 .when()
                 .post("/validate")
                 .then()
-                .statusCode(HttpStatus.SC_NO_CONTENT)
-                .contentType("application/vnd.formula-validator-v1+json");
+                .log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType("application/vnd.formula-validator-v1+json")
+                .extract().response().body().asString();
+        JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
     }
 
     @Test
-    public void shouldHandleSyntaxErrorException() throws JSONException {
+    public void shouldReturnSyntaxErrorException() throws JSONException {
         // Given
         doReturn(
                 Uni.createFrom().item(Optional.of(new AntlrSyntaxError(0, 1, "msg")))
@@ -59,6 +71,7 @@ public class ValidatorEndpointTest {
         //language=JSON
         final String expectedBody = """
                 {
+                    "valid": false,
                     "line": 0,
                     "charPositionInLine": 1,
                     "msg": "msg"
@@ -71,6 +84,7 @@ public class ValidatorEndpointTest {
                 .when()
                 .post("/validate")
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType("application/vnd.formula-validator-v1+json")
                 .extract().response().body().asString();
@@ -93,6 +107,7 @@ public class ValidatorEndpointTest {
                 .when()
                 .post("/validate")
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.validation-unexpected-exception-v1+json")
                 .body("message", is("unexpected \"exception\""));
