@@ -66,7 +66,7 @@ export const selectExecutionsDebugSelected = createSelector(
     (state: RootState) => state.executionsDebug.selectedSalesPerson
   ],
   (executionsStateBySalesPerson: Array<ExecutionsStateBySalesPerson>, selectedSalesPerson: string) => {
-    return executionsStateBySalesPerson.find(executions => executions.salesPerson === selectedSalesPerson)
+    return executionsStateBySalesPerson.find(executions => executions.salesPerson === selectedSalesPerson) || null
   });
 
 export default executionsDebugSlice.reducer;

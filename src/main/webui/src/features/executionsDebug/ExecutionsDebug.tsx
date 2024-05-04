@@ -25,12 +25,11 @@ export function ExecutionsDebug() {
     parserExecutionProcessedInMillis: 'Exact parser processed (in millis)'
   };
 
-  const result: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.result : null;
-  const exactProcessedInNanos: number | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.exactProcessedInNanos / 1000000 : null;
-  const executedAtStart: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtStart : null;
-  const executedAtEnd: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtEnd : null;
-  const parserExecutionProcessedInNanos: number | null = executionsDebugSelected != undefined && executionsDebugSelected.executionsResult.parserExecutionProcessedIn != undefined
-    ? executionsDebugSelected.executionsResult.parserExecutionProcessedIn.processedInNanos / 1000000 : null;
+  const result: string | null = executionsDebugSelected?.executionsResult.result || null;
+  const exactProcessedInNanos: number | null = executionsDebugSelected?.executionsResult.exactProcessedInNanos! / 1000000 || null;
+  const executedAtStart: string | null = executionsDebugSelected?.executionsResult.executedAtStart || null;
+  const executedAtEnd: string | null = executionsDebugSelected?.executionsResult.executedAtEnd || null;
+  const parserExecutionProcessedInNanos: number | null = executionsDebugSelected?.executionsResult?.parserExecutionProcessedIn?.processedInNanos! / 1000000 || null;
   return (
     <React.Fragment>
       <Core.Card>
@@ -77,7 +76,7 @@ export function ExecutionsDebug() {
                   <Core.DescriptionListTerm>{names.parserExecutionProcessedInMillis}</Core.DescriptionListTerm>
                   <Core.DescriptionListDescription>{parserExecutionProcessedInNanos !== null &&
                     `${parserExecutionProcessedInNanos} milliseconds`}</Core.DescriptionListDescription>
-                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos === null &&
+                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos === null && exactProcessedInNanos !== null &&
                     'Retreived from cache'}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
               </Core.DescriptionList>
