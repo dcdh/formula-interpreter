@@ -5,11 +5,13 @@
  * OpenAPI spec version: 1.0-SNAPSHOT
  */
 import type { ElementExecution } from "./elementExecution";
+import type { ParserExecutionProcessedIn } from "./parserExecutionProcessedIn";
 
 export interface ExecutionResult {
   elementExecutions: ElementExecution[];
+  exactProcessedInNanos: number;
   executedAtEnd: string;
   executedAtStart: string;
-  processedInNanos: number;
+  parserExecutionProcessedIn?: ParserExecutionProcessedIn;
   result: string;
 }

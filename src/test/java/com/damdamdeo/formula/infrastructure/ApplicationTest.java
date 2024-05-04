@@ -40,7 +40,9 @@ public class ApplicationTest {
                     .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                     .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
                     .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")));
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
             //language=JSON
             final String givenRequest = """
                     {
@@ -55,13 +57,18 @@ public class ApplicationTest {
             final String expectedBody = """
                     {
                          "executedAtStart": "2023-12-25T10:15:00+01:00",
-                         "executedAtEnd": "2023-12-25T10:15:03+01:00",
-                         "processedInNanos": 3000000000,
+                         "executedAtEnd": "2023-12-25T10:15:05+01:00",
+                         "exactProcessedInNanos": 2000000000,
                          "result": "true",
+                         "parserExecutionProcessedIn": {
+                             "executedAtStart": "2023-12-25T10:15:01+01:00",
+                             "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                             "processedInNanos": 1000000000
+                         },
                          "elementExecutions": [
                              {
-                                 "executedAtStart": "2023-12-25T10:15:01+01:00",
-                                 "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                                 "executedAtStart": "2023-12-25T10:15:03+01:00",
+                                 "executedAtEnd": "2023-12-25T10:15:04+01:00",
                                  "processedInNanos": 1000000000,
                                  "range": {
                                      "start": 0,

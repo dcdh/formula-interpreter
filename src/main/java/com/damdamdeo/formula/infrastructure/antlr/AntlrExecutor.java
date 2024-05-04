@@ -44,6 +44,7 @@ public final class AntlrExecutor implements Executor {
                                     final List<ElementExecution> elementExecutions = executionWrapper.executions();
                                     final ExecutedAtEnd executedAtEnd = executedAtProvider.now();
                                     return new ExecutionResult(result,
+                                            generatorResult.parserExecutionProcessedIn(),
                                             elementExecutions,
                                             new ExecutionProcessedIn(executedAtStart, executedAtEnd));
                                 })

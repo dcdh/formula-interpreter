@@ -19,7 +19,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @BeforeEach
     public void setup() {
         executedAtProvider = mock(ExecutedAtProvider.class);
-        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new DefaultAntlrParseTreeGenerator());
+        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new DefaultAntlrParseTreeGenerator(executedAtProvider));
     }
 
     @AfterEach
@@ -30,6 +30,9 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldFailOnUnrecognizedToken() {
         // Given
+        when(executedAtProvider.now())
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredData(), new NoOpExecutionWrapper());
@@ -48,6 +51,9 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
         // Given
+        when(executedAtProvider.now())
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
         final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData(), new NoOpExecutionWrapper());

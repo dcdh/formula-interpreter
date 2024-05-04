@@ -34,8 +34,8 @@ public class Application {
     @Produces
     @ApplicationScoped
     @DefaultGenerator
-    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer() {
-        return new DefaultAntlrParseTreeGenerator();
+    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer(final ExecutedAtProvider executedAtProvider) {
+        return new DefaultAntlrParseTreeGenerator(executedAtProvider);
     }
 
     @Produces

@@ -491,7 +491,7 @@
         }
       },
       "ExecutionResult" : {
-        "required" : [ "executedAtStart", "executedAtEnd", "processedInNanos", "value", "elementExecutions", "executedAtStart", "executedAtEnd", "processedInNanos", "result", "elementExecutions" ],
+        "required" : [ "executedAtStart", "executedAtEnd", "exactProcessedInNanos", "value", "result", "elementExecutions", "executedAtStart", "executedAtEnd", "exactProcessedInNanos", "result", "elementExecutions" ],
         "type" : "object",
         "properties" : {
           "executedAtStart" : {
@@ -506,12 +506,15 @@
               "$ref" : "#/components/schemas/ZonedDateTime"
             } ]
           },
-          "processedInNanos" : {
+          "exactProcessedInNanos" : {
             "format" : "int64",
             "type" : "integer"
           },
           "result" : {
             "type" : "string"
+          },
+          "parserExecutionProcessedIn" : {
+            "$ref" : "#/components/schemas/ParserExecutionProcessedIn"
           },
           "elementExecutions" : {
             "type" : "array",
@@ -533,6 +536,28 @@
           },
           "range" : {
             "$ref" : "#/components/schemas/Range"
+          }
+        }
+      },
+      "ParserExecutionProcessedIn" : {
+        "required" : [ "executedAtStart", "executedAtEnd", "processedInNanos", "executedAtStart", "executedAtEnd", "processedInNanos" ],
+        "type" : "object",
+        "properties" : {
+          "executedAtStart" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ZonedDateTime"
+            } ]
+          },
+          "executedAtEnd" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ZonedDateTime"
+            } ]
+          },
+          "processedInNanos" : {
+            "format" : "int64",
+            "type" : "integer"
           }
         }
       },

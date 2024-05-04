@@ -4,7 +4,6 @@ import './highlight.css';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import * as Core from '@patternfly/react-core';
 import * as Table from '@patternfly/react-table';
-import * as Icon from '@patternfly/react-icons';
 import { selectFormula } from '../formula/formulaSlice';
 import { ElementExecutionState, InputState, selectSamples } from '../samples/samplesSlice';
 import { selectExecutionsDebug, selectExecutionsDebugSelected, selectSalesPerson } from './executionsDebugSlice';
@@ -22,13 +21,16 @@ export function ExecutionsDebug() {
     inputs: 'Inputs',
     result: 'Result',
     underline: 'Underline',
-    processedInMillis: 'Processed (in millis)'
+    exactProcessedInMillis: 'Exact processed (in millis)',
+    parserExecutionProcessedInMillis: 'Exact parser processed (in millis)'
   };
 
   const result: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.result : null;
-  const processedInMillis: number | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.processedInNanos / 1000000 : null;
+  const exactProcessedInNanos: number | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.exactProcessedInNanos / 1000000 : null;
   const executedAtStart: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtStart : null;
   const executedAtEnd: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtEnd : null;
+  const parserExecutionProcessedInNanos: number | null = executionsDebugSelected != undefined && executionsDebugSelected.executionsResult.parserExecutionProcessedIn != undefined
+    ? executionsDebugSelected.executionsResult.parserExecutionProcessedIn.processedInNanos / 1000000 : null;
   return (
     <React.Fragment>
       <Core.Card>
@@ -62,9 +64,21 @@ export function ExecutionsDebug() {
                   <Core.DescriptionListDescription>{executedAtEnd}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
                 <Core.DescriptionListGroup>
-                  <Core.DescriptionListTerm>{names.processedInMillis}</Core.DescriptionListTerm>
-                  <Core.DescriptionListDescription>{processedInMillis !== null &&
-                    `${processedInMillis} milliseconds`}</Core.DescriptionListDescription>
+                  <Core.DescriptionListTermHelpText>
+                    <Core.Popover bodyContent={<>sum of parser processed and executions</>}>
+                      <Core.DescriptionListTermHelpTextButton>{names.exactProcessedInMillis}</Core.DescriptionListTermHelpTextButton>
+                    </Core.Popover>
+                  </Core.DescriptionListTermHelpText>
+                  <Core.DescriptionListDescription>{exactProcessedInNanos !== null &&
+                    `${exactProcessedInNanos} milliseconds`}</Core.DescriptionListDescription>
+                </Core.DescriptionListGroup>
+                <Core.Divider />
+                <Core.DescriptionListGroup>
+                  <Core.DescriptionListTerm>{names.parserExecutionProcessedInMillis}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos !== null &&
+                    `${parserExecutionProcessedInNanos} milliseconds`}</Core.DescriptionListDescription>
+                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos === null &&
+                    'Retreived from cache'}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
               </Core.DescriptionList>
             </Core.SidebarPanel>
@@ -75,7 +89,7 @@ export function ExecutionsDebug() {
                     <Table.Th width={40}>{names.underline}</Table.Th>
                     <Table.Th width={15}>{names.inputs}</Table.Th>
                     <Table.Th width={10}>{names.result}</Table.Th>
-                    <Table.Th width={15}>{names.processedInMillis}</Table.Th>
+                    <Table.Th width={15}>{names.exactProcessedInMillis}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -107,17 +121,8 @@ export function ExecutionsDebug() {
                             </Core.List>
                           </Table.Td>
                           <Table.Td dataLabel={names.result}>{elementExecution.result}</Table.Td>
-                          <Table.Td dataLabel={names.processedInMillis}>
-                            <Core.Tooltip aria="none" aria-live="polite" content={
-                              <React.Fragment>
-                                <Icon.OutlinedClockIcon /> {elementExecution.executedAtStart} <br></br>
-                                <Icon.OutlinedClockIcon /> {elementExecution.executedAtEnd}
-                              </React.Fragment>
-                            }>
-                              <React.Fragment>
-                                <Icon.OutlinedClockIcon /> {elementExecution.processedInNanos / 1000000} milliseconds
-                              </React.Fragment>
-                            </Core.Tooltip>
+                          <Table.Td dataLabel={names.exactProcessedInMillis}>
+                            {elementExecution.processedInNanos / 1000000} milliseconds
                           </Table.Td>
                         </Table.Tr>
                       )

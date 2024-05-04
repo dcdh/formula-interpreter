@@ -12,6 +12,7 @@ export * from "./execute";
 export * from "./executeStructuredData";
 export * from "./executionResult";
 export * from "./input";
+export * from "./parserExecutionProcessedIn";
 export * from "./range";
 export * from "./suggestCompletionBody";
 export * from "./syntaxError";

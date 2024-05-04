@@ -385,12 +385,13 @@ components:
       required:
       - executedAtStart
       - executedAtEnd
-      - processedInNanos
+      - exactProcessedInNanos
       - value
+      - result
       - elementExecutions
       - executedAtStart
       - executedAtEnd
-      - processedInNanos
+      - exactProcessedInNanos
       - result
       - elementExecutions
       type: object
@@ -403,11 +404,13 @@ components:
           type: string
           allOf:
           - $ref: "#/components/schemas/ZonedDateTime"
-        processedInNanos:
+        exactProcessedInNanos:
           format: int64
           type: integer
         result:
           type: string
+        parserExecutionProcessedIn:
+          $ref: "#/components/schemas/ParserExecutionProcessedIn"
         elementExecutions:
           type: array
           items:
@@ -428,6 +431,27 @@ components:
           type: string
         range:
           $ref: "#/components/schemas/Range"
+    ParserExecutionProcessedIn:
+      required:
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      type: object
+      properties:
+        executedAtStart:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        executedAtEnd:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedInNanos:
+          format: int64
+          type: integer
     Range:
       required:
       - start
