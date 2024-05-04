@@ -25,10 +25,10 @@ export function ExecutionsDebug() {
     processedInMillis: 'Processed (in millis)'
   };
 
-  const result: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].result : null;
-  const processedInMillis: number | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].processedInNanos / 1000000 : null;
-  const executedAtStart: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].executedAtStart : null;
-  const executedAtEnd: string | null = executionsDebugSelected.length > 0 ? executionsDebugSelected[0].executedAtEnd : null;
+  const result: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.result : null;
+  const processedInMillis: number | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.processedInNanos / 1000000 : null;
+  const executedAtStart: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtStart : null;
+  const executedAtEnd: string | null = executionsDebugSelected != undefined ? executionsDebugSelected.executionsResult.executedAtEnd : null;
   return (
     <React.Fragment>
       <Core.Card>
@@ -79,8 +79,7 @@ export function ExecutionsDebug() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {executionsDebugSelected
-                    .flatMap(executionsResult => executionsResult.elementExecutions)
+                  {executionsDebugSelected?.executionsResult.elementExecutions
                     .map((elementExecution: ElementExecutionState, index: number) => {
                       const highlight = [
                         {
@@ -116,8 +115,7 @@ export function ExecutionsDebug() {
                               </React.Fragment>
                             }>
                               <React.Fragment>
-                                <Icon.OutlinedClockIcon /> {processedInMillis !== null &&
-                                  `${processedInMillis} milliseconds`}
+                                <Icon.OutlinedClockIcon /> {elementExecution.processedInNanos / 1000000} milliseconds
                               </React.Fragment>
                             </Core.Tooltip>
                           </Table.Td>

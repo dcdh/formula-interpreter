@@ -3,19 +3,19 @@ import { RootState } from '../../app/store';
 import { executeFormulaOnSamples, ExecutionsResultState, markSamplesAsFormulaInError, markSamplesAsFormulaInvalid, SampleState } from '../samples/samplesSlice';
 import { createSelector } from 'redux-views';
 
-export interface ExecutionsState {
+export interface ExecutionsStateBySalesPerson {
   salesPerson: string;
   executionsResult: ExecutionsResultState;
 }
 
 export interface ExecutionsDebugState {
   selectedSalesPerson: string;
-  executions: Array<ExecutionsState>;
+  executionsBySalesPerson: Array<ExecutionsStateBySalesPerson>;
 }
 
 const initialExecutionsDebugState: ExecutionsDebugState = {
   selectedSalesPerson: 'Joe',
-  executions: []
+  executionsBySalesPerson: []
 }
 
 export const executionsDebugSlice = createSlice({
@@ -29,7 +29,7 @@ export const executionsDebugSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(executeFormulaOnSamples.rejected, (state) => {
-        state.executions = []
+        state.executionsBySalesPerson = []
       })
       .addCase(executeFormulaOnSamples.pending, () => {
         /**
@@ -38,7 +38,7 @@ export const executionsDebugSlice = createSlice({
          */
       })
       .addCase(executeFormulaOnSamples.fulfilled, (state, { payload }) => {
-        state.executions = payload.map((sample: SampleState) => {
+        state.executionsBySalesPerson = payload.map((sample: SampleState) => {
           return {
             salesPerson: sample.salesPerson,
             executionsResult: sample.executions!
@@ -46,10 +46,10 @@ export const executionsDebugSlice = createSlice({
         })
       })
       .addCase(markSamplesAsFormulaInError, (state) => {
-        state.executions = []
+        state.executionsBySalesPerson = []
       })
       .addCase(markSamplesAsFormulaInvalid, (state) => {
-        state.executions = []
+        state.executionsBySalesPerson = []
       })
   }
 });
@@ -62,12 +62,11 @@ export const selectExecutionsDebug = (state: RootState) => state.executionsDebug
 // need to use the memoization due to the flatMap changing the returned reference
 export const selectExecutionsDebugSelected = createSelector(
   [
-    (state: RootState) => state.executionsDebug.executions,
+    (state: RootState) => state.executionsDebug.executionsBySalesPerson,
     (state: RootState) => state.executionsDebug.selectedSalesPerson
   ],
-  (executions: Array<ExecutionsState>, selectedSalesPerson: string | null) => {
-    return executions.filter(executions => executions.salesPerson === selectedSalesPerson)
-      .flatMap(executions => executions.executionsResult);
+  (executionsStateBySalesPerson: Array<ExecutionsStateBySalesPerson>, selectedSalesPerson: string) => {
+    return executionsStateBySalesPerson.find(executions => executions.salesPerson === selectedSalesPerson)
   });
 
 export default executionsDebugSlice.reducer;
