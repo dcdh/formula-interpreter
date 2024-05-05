@@ -1,6 +1,8 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider;
+import com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -143,22 +145,22 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
     private static Stream<Arguments> provideComparisonsWithExpectedValues() {
         return Stream.of(
-                        NumericalComparisonFunctionTest.provideGreaterThan()
+                        NumericalComparisonFunctionTestProvider.provideGreaterThan()
                                 .map(greaterThan -> Arguments.of(greaterThan.get()[0], "GT", greaterThan.get()[1], greaterThan.get()[2])),
-                        NumericalComparisonFunctionTest.provideGreaterThanOrEqualTo()
+                        NumericalComparisonFunctionTestProvider.provideGreaterThanOrEqualTo()
                                 .map(greaterThanOrEqualTo -> Arguments.of(greaterThanOrEqualTo.get()[0], "GTE", greaterThanOrEqualTo.get()[1], greaterThanOrEqualTo.get()[2])),
-                        NumericalComparisonFunctionTest.provideLessThan()
+                        NumericalComparisonFunctionTestProvider.provideLessThan()
                                 .map(lessThan -> Arguments.of(lessThan.get()[0], "LT", lessThan.get()[1], lessThan.get()[2])),
-                        NumericalComparisonFunctionTest.provideLessThanOrEqualTo()
+                        NumericalComparisonFunctionTestProvider.provideLessThanOrEqualTo()
                                 .map(lessThanOrEqualTo -> Arguments.of(lessThanOrEqualTo.get()[0], "LTE", lessThanOrEqualTo.get()[1], lessThanOrEqualTo.get()[2])),
-                        NumericalComparisonFunctionTest.provideCommonResponses()
+                        NumericalComparisonFunctionTestProvider.provideCommonResponses()
                                 .flatMap(numericalCommonResponse -> Stream.of("GT", "GTE", "LT", "LTE")
                                         .map(function -> Arguments.of(numericalCommonResponse.get()[0], function, numericalCommonResponse.get()[1], numericalCommonResponse.get()[2]))),
-                        EqualityComparisonFunctionTest.provideEqual()
+                        EqualityComparisonFunctionTestProvider.provideEqual()
                                 .map(equal -> Arguments.of(equal.get()[0], "EQ", equal.get()[1], equal.get()[2])),
-                        EqualityComparisonFunctionTest.provideNotEqual()
+                        EqualityComparisonFunctionTestProvider.provideNotEqual()
                                 .map(notEqual -> Arguments.of(notEqual.get()[0], "NEQ", notEqual.get()[1], notEqual.get()[2])),
-                        EqualityComparisonFunctionTest.provideCommonResponses()
+                        EqualityComparisonFunctionTestProvider.provideCommonResponses()
                                 .flatMap(comparisonCommonResponse -> Stream.of("EQ", "NEQ")
                                         .map(function -> Arguments.of(comparisonCommonResponse.get()[0], function, comparisonCommonResponse.get()[1], comparisonCommonResponse.get()[2])))
                 )

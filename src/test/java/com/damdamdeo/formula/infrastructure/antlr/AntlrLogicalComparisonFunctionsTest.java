@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,13 +36,13 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
 
     private static Stream<Arguments> provideLogicalComparisonFunctions() {
         return Stream.of(
-                        LogicalComparisonFunctionTest.provideIf()
+                        LogicalComparisonFunctionTestProvider.provideIf()
                                 .map(ifF -> Arguments.of(String.format("""
                                         IF("%s",true,false)""", ((Value) ifF.get()[0]).value()), ifF.get()[1])),
-                        LogicalComparisonFunctionTest.provideIfError()
+                        LogicalComparisonFunctionTestProvider.provideIfError()
                                 .map(ifError -> Arguments.of(String.format("""
                                         IFERROR("%s",true,false)""", ((Value) ifError.get()[0]).value()), ifError.get()[1])),
-                        LogicalComparisonFunctionTest.provideIfNotAvailable()
+                        LogicalComparisonFunctionTestProvider.provideIfNotAvailable()
                                 .map(ifNotAvailable -> Arguments.of(String.format("""
                                         IFNA("%s",true,false)""", ((Value) ifNotAvailable.get()[0]).value()), ifNotAvailable.get()[1])),
                         Stream.of(Arguments.of("""

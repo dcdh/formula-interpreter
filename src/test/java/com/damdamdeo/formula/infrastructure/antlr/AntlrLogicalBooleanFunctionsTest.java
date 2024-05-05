@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -143,13 +144,13 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
     private static Stream<Arguments> provideLogicalFunctionsWithExpectedValues() {
         return Stream.of(
-                        LogicalBooleanFunctionTest.provideAnd()
+                        LogicalBooleanFunctionTestProvider.provideAnd()
                                 .map(and -> Arguments.of(and.get()[0], "AND", and.get()[1], and.get()[2])),
-                        LogicalBooleanFunctionTest.provideCommonResponses()
+                        LogicalBooleanFunctionTestProvider.provideCommonResponses()
                                 .map(and -> Arguments.of(and.get()[0], "AND", and.get()[1], and.get()[2])),
-                        LogicalBooleanFunctionTest.provideOr()
+                        LogicalBooleanFunctionTestProvider.provideOr()
                                 .map(or -> Arguments.of(or.get()[0], "OR", or.get()[1], or.get()[2])),
-                        LogicalBooleanFunctionTest.provideCommonResponses()
+                        LogicalBooleanFunctionTestProvider.provideCommonResponses()
                                 .map(or -> Arguments.of(or.get()[0], "OR", or.get()[1], or.get()[2]))
                 )
                 .flatMap(Function.identity());

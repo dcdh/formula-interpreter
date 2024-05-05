@@ -60,7 +60,7 @@ logical_when: arithmetic_functions
             | information_functions
             | argument
             ;
-
+// TODO rename into current_state_functions
 information_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')'
                      ;
 

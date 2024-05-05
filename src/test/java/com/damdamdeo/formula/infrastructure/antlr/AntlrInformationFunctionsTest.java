@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.provider.InformationFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,17 +59,17 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
 
     private static Stream<Arguments> provideValues() {
         return Stream.of(
-                        InformationFunctionTest.provideIsNotAvailable()
+                        InformationFunctionTestProvider.provideIsNotAvailable()
                                 .map(isNa -> Arguments.of("ISNA", isNa.get()[0], isNa.get()[1])),
-                        InformationFunctionTest.provideIsError()
+                        InformationFunctionTestProvider.provideIsError()
                                 .map(isError -> Arguments.of("ISERROR", isError.get()[0], isError.get()[1])),
-                        InformationFunctionTest.provideIsNumeric()
+                        InformationFunctionTestProvider.provideIsNumeric()
                                 .map(isNumeric -> Arguments.of("ISNUM", isNumeric.get()[0], isNumeric.get()[1])),
-                        InformationFunctionTest.provideIsText()
+                        InformationFunctionTestProvider.provideIsText()
                                 .map(isText -> Arguments.of("ISTEXT", isText.get()[0], isText.get()[1])),
-                        InformationFunctionTest.provideIsBlank()
+                        InformationFunctionTestProvider.provideIsBlank()
                                 .map(isBlank -> Arguments.of("ISBLANK", isBlank.get()[0], isBlank.get()[1])),
-                        InformationFunctionTest.provideIsLogical()
+                        InformationFunctionTestProvider.provideIsLogical()
                                 .map(isLogical -> Arguments.of("ISLOGICAL", isLogical.get()[0], isLogical.get()[1]))
                 )
                 .flatMap(Function.identity());
