@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,14 +19,16 @@ import static org.mockito.Mockito.when;
 public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                                            final String expectedValue) {
+    public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final Value leftValue,
+                                                                                            final String givenOperation,
+                                                                                            final Value rightValue,
+                                                                                            final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
-                        new StructuredDatum(new Reference("South Sales Amount"), "260")
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue),
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
@@ -35,19 +39,21 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final String givenOperation,
-                                                                              final String expectedValue) {
+    public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final Value leftValue,
+                                                                              final String givenOperation,
+                                                                              final Value rightValue,
+                                                                              final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s([@[North Sales Amount]],260)", givenOperation);
+        final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenOperation, rightValue.value());
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660")
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue)
                 )
         );
 
@@ -58,19 +64,21 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final String givenOperation,
-                                                                              final String expectedValue) {
+    public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final Value leftValue,
+                                                                              final String givenOperation,
+                                                                              final Value rightValue,
+                                                                              final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s(660,[@[South Sales Amount]])", givenOperation);
+        final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenOperation, leftValue.value());
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), "260")
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
@@ -81,16 +89,18 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndValueRight(final String givenOperation,
-                                                                final String expectedValue) {
+    public void shouldExecuteOperationForValueLeftAndValueRight(final Value leftValue,
+                                                                final String givenOperation,
+                                                                final Value rightValue,
+                                                                final Value expectedValue) {
         // Given
-        final String givenFormula = String.format("%s(660,260)", givenOperation);
+        final String givenFormula = String.format("%s(%s,%s)", givenOperation, leftValue.value(), rightValue.value());
         final StructuredData givenStructuredData = new StructuredData(List.of());
 
         // When
@@ -100,17 +110,22 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     private static Stream<Arguments> provideOperationsWithExpectedValues() {
         return Stream.of(
-                Arguments.of("ADD", "920"),
-                Arguments.of("SUB", "400"),
-                Arguments.of("DIV", "2.538462"),
-                Arguments.of("MUL", "171600")
-        );
+                        ArithmeticFunctionTestProvider.provideAddition()
+                                .map(addition -> Arguments.of(addition.get()[0], "ADD", addition.get()[1], addition.get()[2])),
+                        ArithmeticFunctionTestProvider.provideSubtraction()
+                                .map(addition -> Arguments.of(addition.get()[0], "SUB", addition.get()[1], addition.get()[2])),
+                        ArithmeticFunctionTestProvider.provideDivision()
+                                .map(addition -> Arguments.of(addition.get()[0], "DIV", addition.get()[1], addition.get()[2])),
+                        ArithmeticFunctionTestProvider.provideMultiplication()
+                                .map(addition -> Arguments.of(addition.get()[0], "MUL", addition.get()[1], addition.get()[2]))
+                )
+                .flatMap(Function.identity());
     }
 
     @Test

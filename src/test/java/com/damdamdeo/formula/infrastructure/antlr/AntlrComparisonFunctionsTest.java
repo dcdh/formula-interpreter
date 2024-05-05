@@ -29,8 +29,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenComparison);
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), leftValue.value()),
-                        new StructuredDatum(new Reference("South Sales Amount"), rightValue.value())
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue),
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
@@ -62,7 +62,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         }
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), leftValue.value())
+                        new StructuredDatum(new Reference("North Sales Amount"), leftValue)
                 )
         );
 
@@ -94,7 +94,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         }
         final StructuredData givenStructuredData = new StructuredData(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), rightValue.value())
+                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
                 )
         );
 

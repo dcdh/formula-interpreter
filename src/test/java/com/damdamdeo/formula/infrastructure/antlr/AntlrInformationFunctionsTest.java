@@ -43,7 +43,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
         // Given
         final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
         final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), givenValue.value())
+                new StructuredDatum(new Reference("% Commission"), givenValue)
         ));
 
         // When
