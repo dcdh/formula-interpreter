@@ -3,7 +3,7 @@ version: '3'
 services:
 
   formula-interpreter:
-    image: damien/formula-interpreter:1.0-SNAPSHOT
+    image: damdamdeo/formula-interpreter:1.0-SNAPSHOT
     ports:
       - 8080:8080
     environment:
