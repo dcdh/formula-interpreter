@@ -33,8 +33,8 @@ public class ExecutorEndpointTest {
                 Uni.createFrom().item(new ExecutionResult(
                         new Result(new Value("true"), new Range(0, 10)),
                         new ParserExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:14:58+01:00[Europe/Paris]")),
+                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))
                         ),
                         List.of(
                                 new ElementExecution(
@@ -72,14 +72,17 @@ public class ExecutorEndpointTest {
         //language=JSON
         final String expectedBody = """
                 {
-                     "executedAtStart": "2023-12-25T10:15:00+01:00",
-                     "executedAtEnd": "2023-12-25T10:15:02+01:00",
-                     "exactProcessedInNanos": 2000000000,
                      "result": "true",
+                     "exactProcessedInNanos": 3000000000,
                      "parserExecutionProcessedIn": {
-                         "executedAtStart": "2023-12-25T10:15:00+01:00",
-                         "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                         "executedAtStart": "2023-12-25T10:14:58+01:00",
+                         "executedAtEnd": "2023-12-25T10:14:59+01:00",
                          "processedInNanos": 1000000000
+                     },
+                     "executionProcessedIn": {
+                         "executedAtStart": "2023-12-25T10:15:00+01:00",
+                         "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                         "processedInNanos": 2000000000
                      },
                      "elementExecutions": [
                          {

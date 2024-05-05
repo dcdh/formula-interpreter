@@ -3,6 +3,7 @@ package com.damdamdeo.formula.domain;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public record ExecutionResult(Result result,
                               ParserExecutionProcessedIn parserExecutionProcessedIn,// can be null
@@ -19,11 +20,10 @@ public record ExecutionResult(Result result,
     }
 
     public long exactProcessedInNanos() {
-        final Long parserExecutionProcessedInInNanos = parserExecutionProcessedIn == null ? 0 : parserExecutionProcessedIn.in().toNanos();
-        return elementExecutions.stream()
-                .map(ElementExecution::executionProcessedIn)
-                .map(ExecutionProcessedIn::in)
+        return Stream.of(parserExecutionProcessedIn, executionProcessedIn)
+                .filter(Objects::nonNull)
+                .map(ProcessedIn::in)
                 .map(Duration::toNanos)
-                .reduce(parserExecutionProcessedInInNanos, Long::sum);
+                .reduce(0L, Long::sum);
     }
 }

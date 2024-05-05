@@ -16,20 +16,18 @@ export function ExecutionsDebug() {
   const executionsDebugSelected = useAppSelector(selectExecutionsDebugSelected);
   const dispatch = useAppDispatch();
   const names = {
-    executedAtStart: 'Executed At Start',
-    executedAtEnd: 'Executed At End',
     inputs: 'Inputs',
     result: 'Result',
     underline: 'Underline',
-    exactProcessedInMillis: 'Exact processed (in millis)',
-    parserExecutionProcessedInMillis: 'Exact parser processed (in millis)'
+    parserExecutionProcessed: 'Parser processed',
+    executionProcessed: 'Executions processed',
+    exactProcessed: 'Exact processed',
   };
 
   const result: string | null = executionsDebugSelected?.executionsResult.result || null;
-  const exactProcessedInNanos: number | null = executionsDebugSelected?.executionsResult.exactProcessedInNanos! / 1000000 || null;
-  const executedAtStart: string | null = executionsDebugSelected?.executionsResult.executedAtStart || null;
-  const executedAtEnd: string | null = executionsDebugSelected?.executionsResult.executedAtEnd || null;
-  const parserExecutionProcessedInNanos: number | null = executionsDebugSelected?.executionsResult?.parserExecutionProcessedIn?.processedInNanos! / 1000000 || null;
+  const parserExecutionProcessedInMillis: number | null = executionsDebugSelected?.executionsResult?.parserExecutionProcessedIn?.processedInNanos! / 1000000 || null;
+  const executionProcessedInMillis: number | null = executionsDebugSelected?.executionsResult?.executionProcessedIn?.processedInNanos! / 1000000 || null;
+  const exactProcessedInMillis: number | null = executionsDebugSelected?.executionsResult?.exactProcessedInNanos! / 1000000 || null;
   return (
     <React.Fragment>
       <Core.Card>
@@ -55,29 +53,25 @@ export function ExecutionsDebug() {
                   <Core.DescriptionListDescription>{result}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
                 <Core.DescriptionListGroup>
-                  <Core.DescriptionListTerm>{names.executedAtStart}</Core.DescriptionListTerm>
-                  <Core.DescriptionListDescription>{executedAtStart}</Core.DescriptionListDescription>
+                  <Core.DescriptionListTerm>{names.parserExecutionProcessed}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>
+                    {parserExecutionProcessedInMillis !== null && `${parserExecutionProcessedInMillis} milliseconds`}
+                    {parserExecutionProcessedInMillis === null && executionProcessedInMillis !== null && 'Retreived from cache'}
+                  </Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
                 <Core.DescriptionListGroup>
-                  <Core.DescriptionListTerm>{names.executedAtEnd}</Core.DescriptionListTerm>
-                  <Core.DescriptionListDescription>{executedAtEnd}</Core.DescriptionListDescription>
+                  <Core.DescriptionListTerm>{names.executionProcessed}</Core.DescriptionListTerm>
+                  <Core.DescriptionListDescription>{executionProcessedInMillis !== null &&
+                    `${executionProcessedInMillis} milliseconds`}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
                 <Core.DescriptionListGroup>
                   <Core.DescriptionListTermHelpText>
-                    <Core.Popover bodyContent={<>sum of parser processed and executions</>}>
-                      <Core.DescriptionListTermHelpTextButton>{names.exactProcessedInMillis}</Core.DescriptionListTermHelpTextButton>
+                    <Core.Popover bodyContent={<>sum of parser processed and execution</>}>
+                      <Core.DescriptionListTermHelpTextButton>{names.exactProcessed}</Core.DescriptionListTermHelpTextButton>
                     </Core.Popover>
                   </Core.DescriptionListTermHelpText>
-                  <Core.DescriptionListDescription>{exactProcessedInNanos !== null &&
-                    `${exactProcessedInNanos} milliseconds`}</Core.DescriptionListDescription>
-                </Core.DescriptionListGroup>
-                <Core.Divider />
-                <Core.DescriptionListGroup>
-                  <Core.DescriptionListTerm>{names.parserExecutionProcessedInMillis}</Core.DescriptionListTerm>
-                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos !== null &&
-                    `${parserExecutionProcessedInNanos} milliseconds`}</Core.DescriptionListDescription>
-                  <Core.DescriptionListDescription>{parserExecutionProcessedInNanos === null && exactProcessedInNanos !== null &&
-                    'Retreived from cache'}</Core.DescriptionListDescription>
+                  <Core.DescriptionListDescription>{exactProcessedInMillis !== null &&
+                    `${exactProcessedInMillis} milliseconds`}</Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
               </Core.DescriptionList>
             </Core.SidebarPanel>
@@ -88,7 +82,7 @@ export function ExecutionsDebug() {
                     <Table.Th width={40}>{names.underline}</Table.Th>
                     <Table.Th width={15}>{names.inputs}</Table.Th>
                     <Table.Th width={10}>{names.result}</Table.Th>
-                    <Table.Th width={15}>{names.exactProcessedInMillis}</Table.Th>
+                    <Table.Th width={15}>{names.exactProcessed}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -120,7 +114,7 @@ export function ExecutionsDebug() {
                             </Core.List>
                           </Table.Td>
                           <Table.Td dataLabel={names.result}>{elementExecution.result}</Table.Td>
-                          <Table.Td dataLabel={names.exactProcessedInMillis}>
+                          <Table.Td dataLabel={names.exactProcessed}>
                             {elementExecution.processedInNanos / 1000000} milliseconds
                           </Table.Td>
                         </Table.Tr>

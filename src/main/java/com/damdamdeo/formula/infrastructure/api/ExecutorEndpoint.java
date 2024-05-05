@@ -149,75 +149,127 @@ public final class ExecutorEndpoint {
                                     //language=JSON
                                     value = """
                                             {
-                                                "executedAtStart": "2023-08-28T23:54:43.955041713+02:00",
-                                                "executedAtEnd": "2023-08-28T23:54:43.965929129+02:00",
-                                                "processedInNanos": 10887416,
-                                                "result": "26",
-                                                "elementExecutions": [{
-                                                    "executedAtStart": "2023-08-28T23:54:43.962445291+02:00",
-                                                    "executedAtEnd": "2023-08-28T23:54:43.965758021+02:00",
-                                                    "processedInNanos": 3312730,
-                                                    "range": {
-                                                        "start": 0,
-                                                        "end": 48
-                                                    },
-                                                    "inputs": {
-                                                        "left": "260",
-                                                        "right": "0.1"
-                                                    },
-                                                    "result": "26"
-                                                },
+                                              "result": "26",
+                                              "exactProcessedInNanos": 28231378,
+                                              "parserExecutionProcessedIn": {
+                                                "executedAtStart": "2024-05-05T01:09:39.695736969+02:00",
+                                                "executedAtEnd": "2024-05-05T01:09:39.717878532+02:00",
+                                                "processedInNanos": 22141563
+                                              },
+                                              "executionProcessedIn": {
+                                                "executedAtStart": "2024-05-05T01:09:39.722660591+02:00",
+                                                "executedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
+                                                "processedInNanos": 6089815
+                                              },
+                                              "elementExecutions": [
                                                 {
-                                                    "executedAtStart": "2023-08-28T23:54:43.962602627+02:00",
-                                                    "executedAtEnd": "2023-08-28T23:54:43.963690954+02:00",
-                                                    "processedInNanos": 1088327,
-                                                    "range": {
+                                                  "executedAtStart": "2024-05-05T01:09:39.724292501+02:00",
+                                                  "executedAtEnd": "2024-05-05T01:09:39.728590951+02:00",
+                                                  "processedInNanos": 4298450,
+                                                  "range": {
+                                                    "start": 0,
+                                                    "end": 48
+                                                  },
+                                                  "inputs": [
+                                                    {
+                                                      "name": "left",
+                                                      "value": "260",
+                                                      "range": {
                                                         "start": 4,
                                                         "end": 20
+                                                      }
                                                     },
-                                                    "inputs": {
-                                                        "structuredReference": "Sales Amount"
-                                                    },
-                                                    "result": "260"
-                                                },
-                                                {
-                                                    "executedAtStart": "2023-08-28T23:54:43.964600978+02:00",
-                                                    "executedAtEnd": "2023-08-28T23:54:43.965641273+02:00",
-                                                    "processedInNanos": 1040295,
-                                                    "range": {
+                                                    {
+                                                      "name": "right",
+                                                      "value": "0.1",
+                                                      "range": {
                                                         "start": 22,
                                                         "end": 47
-                                                    },
-                                                    "inputs": {
-                                                        "left": "10",
-                                                        "right": "100"
-                                                    },
-                                                    "result": "0.1"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "result": "26"
                                                 },
                                                 {
-                                                    "executedAtStart": "2023-08-28T23:54:43.964623803+02:00",
-                                                    "executedAtEnd": "2023-08-28T23:54:43.964672892+02:00",
-                                                    "processedInNanos": 49089,
-                                                    "range": {
+                                                  "executedAtStart": "2024-05-05T01:09:39.724415205+02:00",
+                                                  "executedAtEnd": "2024-05-05T01:09:39.726876407+02:00",
+                                                  "processedInNanos": 2461202,
+                                                  "range": {
+                                                    "start": 4,
+                                                    "end": 20
+                                                  },
+                                                  "inputs": [
+                                                    {
+                                                      "name": "structuredReference",
+                                                      "value": "Sales Amount",
+                                                      "range": {
+                                                        "start": 7,
+                                                        "end": 18
+                                                      }
+                                                    }
+                                                  ],
+                                                  "result": "260"
+                                                },
+                                                {
+                                                  "executedAtStart": "2024-05-05T01:09:39.727326633+02:00",
+                                                  "executedAtEnd": "2024-05-05T01:09:39.728449028+02:00",
+                                                  "processedInNanos": 1122395,
+                                                  "range": {
+                                                    "start": 22,
+                                                    "end": 47
+                                                  },
+                                                  "inputs": [
+                                                    {
+                                                      "name": "left",
+                                                      "value": "10",
+                                                      "range": {
                                                         "start": 26,
                                                         "end": 42
+                                                      }
                                                     },
-                                                    "inputs": {
-                                                        "structuredReference": "% Commission"
-                                                    },
-                                                    "result": "10"
-                                                },
-                                                {
-                                                    "executedAtStart": "2023-08-28T23:54:43.964804017+02:00",
-                                                    "executedAtEnd": "2023-08-28T23:54:43.964843986+02:00",
-                                                    "processedInNanos": 39969,
-                                                    "range": {
+                                                    {
+                                                      "name": "right",
+                                                      "value": "100",
+                                                      "range": {
                                                         "start": 44,
                                                         "end": 46
-                                                    },
-                                                    "inputs": {},
-                                                    "result": "100"
-                                                }]
+                                                      }
+                                                    }
+                                                  ],
+                                                  "result": "0.1"
+                                                },
+                                                {
+                                                  "executedAtStart": "2024-05-05T01:09:39.727336957+02:00",
+                                                  "executedAtEnd": "2024-05-05T01:09:39.727368776+02:00",
+                                                  "processedInNanos": 31819,
+                                                  "range": {
+                                                    "start": 26,
+                                                    "end": 42
+                                                  },
+                                                  "inputs": [
+                                                    {
+                                                      "name": "structuredReference",
+                                                      "value": "% Commission",
+                                                      "range": {
+                                                        "start": 29,
+                                                        "end": 40
+                                                      }
+                                                    }
+                                                  ],
+                                                  "result": "10"
+                                                },
+                                                {
+                                                  "executedAtStart": "2024-05-05T01:09:39.727476161+02:00",
+                                                  "executedAtEnd": "2024-05-05T01:09:39.72750957+02:00",
+                                                  "processedInNanos": 33409,
+                                                  "range": {
+                                                    "start": 44,
+                                                    "end": 46
+                                                  },
+                                                  "inputs": [],
+                                                  "result": "100"
+                                                }
+                                              ]
                                             }
                                             """
                             )

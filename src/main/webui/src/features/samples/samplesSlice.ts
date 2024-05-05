@@ -15,9 +15,8 @@ export interface SampleState {
 };
 
 export interface ExecutionsResultState {
-  executedAtStart: string;
-  executedAtEnd: string;
   exactProcessedInNanos: number;
+  executionProcessedIn: ExecutionProcessedInState;
   parserExecutionProcessedIn? : ParserExecutionProcessedInState;
   result: string;
   elementExecutions: Array<ElementExecutionState>;
@@ -34,6 +33,10 @@ export interface ElementExecutionState {
   range: RangeState;
   inputs: Array<InputState>;
   result: string;
+};
+
+export interface ExecutionProcessedInState {
+  processedInNanos: number;
 };
 
 export interface ParserExecutionProcessedInState {
@@ -86,10 +89,9 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
       commissionAmount = executionResult.result!;
       executions = {
         result: executionResult.result,
-        executedAtStart: executionResult.executedAtStart,
-        executedAtEnd: executionResult.executedAtEnd,
-        exactProcessedInNanos: executionResult.exactProcessedInNanos,
         parserExecutionProcessedIn: executionResult.parserExecutionProcessedIn,
+        executionProcessedIn: executionResult.executionProcessedIn,
+        exactProcessedInNanos: executionResult.exactProcessedInNanos,
         elementExecutions: executionResult.elementExecutions.map((elementExecution: ElementExecution) => {
           return {
             executedAtStart: elementExecution.executedAtStart,

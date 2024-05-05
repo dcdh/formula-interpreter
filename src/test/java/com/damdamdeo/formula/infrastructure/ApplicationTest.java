@@ -56,14 +56,17 @@ public class ApplicationTest {
             //language=JSON
             final String expectedBody = """
                     {
-                         "executedAtStart": "2023-12-25T10:15:00+01:00",
-                         "executedAtEnd": "2023-12-25T10:15:05+01:00",
-                         "exactProcessedInNanos": 2000000000,
                          "result": "true",
+                         "exactProcessedInNanos": 4000000000,
                          "parserExecutionProcessedIn": {
-                             "executedAtStart": "2023-12-25T10:15:01+01:00",
-                             "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                             "executedAtStart": "2023-12-25T10:15:00+01:00",
+                             "executedAtEnd": "2023-12-25T10:15:01+01:00",
                              "processedInNanos": 1000000000
+                         },
+                         "executionProcessedIn": {
+                             "executedAtStart": "2023-12-25T10:15:02+01:00",
+                             "executedAtEnd": "2023-12-25T10:15:05+01:00",
+                             "processedInNanos": 3000000000
                          },
                          "elementExecutions": [
                              {
