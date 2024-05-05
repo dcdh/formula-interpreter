@@ -4,7 +4,6 @@ import com.damdamdeo.formula.domain.ExecutedAt;
 import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
 import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrParseTreeGenerator;
-import com.damdamdeo.formula.infrastructure.antlr.DefaultGenerator;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
@@ -191,7 +190,6 @@ public class ApplicationTest {
     @Nested
     public class Caching {
         @InjectSpy
-        @DefaultGenerator
         AntlrParseTreeGenerator antlrParseTreeGenerator;
 
         @Test
@@ -217,7 +215,7 @@ public class ApplicationTest {
         }
 
         @Test
-        public void shouldUseCacheWhenExecutingFormula() {
+        public void shouldNotUseCacheWhenExecutingFormula() {
             // Given
             //language=JSON
             final String givenRequest = """
@@ -245,7 +243,7 @@ public class ApplicationTest {
             }
 
             // Then
-            Mockito.verify(antlrParseTreeGenerator, times(1))
+            Mockito.verify(antlrParseTreeGenerator, times(3))
                     .generate(new Formula("MUL([@[Sales Amount]],DIV([@[% Commission]],100))"));
         }
     }

@@ -56,7 +56,6 @@ export function ExecutionsDebug() {
                   <Core.DescriptionListTerm>{names.parserExecutionProcessed}</Core.DescriptionListTerm>
                   <Core.DescriptionListDescription>
                     {parserExecutionProcessedInMillis !== null && `${parserExecutionProcessedInMillis} milliseconds`}
-                    {parserExecutionProcessedInMillis === null && executionProcessedInMillis !== null && 'Retreived from cache'}
                   </Core.DescriptionListDescription>
                 </Core.DescriptionListGroup>
                 <Core.DescriptionListGroup>

@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure;
 
-import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.ExecutedAt;
+import com.damdamdeo.formula.domain.NumericalContext;
 import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
 import com.damdamdeo.formula.domain.spi.Executor;
 import com.damdamdeo.formula.domain.spi.SuggestCompletion;
@@ -9,8 +10,6 @@ import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.*;
-import io.quarkus.cache.Cache;
-import io.quarkus.cache.CacheName;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
@@ -33,29 +32,20 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    @DefaultGenerator
     public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer(final ExecutedAtProvider executedAtProvider) {
         return new DefaultAntlrParseTreeGenerator(executedAtProvider);
     }
 
     @Produces
     @ApplicationScoped
-    @CachedGenerator
-    public AntlrParseTreeGenerator cachedAntlrParseTreeGeneratorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator,
-                                                                         @CacheName("formula") final Cache cache) {
-        return new CachedAntlrParseTreeGenerator(antlrParseTreeGenerator, cache);
-    }
-
-    @Produces
-    @ApplicationScoped
-    public Validator<AntlrSyntaxError> validatorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+    public Validator<AntlrSyntaxError> validatorProducer(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         return new AntlrValidator(antlrParseTreeGenerator);
     }
 
     @Produces
     @ApplicationScoped
     public Executor executorProducer(final ExecutedAtProvider executedAtProvider,
-                                     @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+                                     final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         return new AntlrExecutor(executedAtProvider, new NumericalContext(), antlrParseTreeGenerator);
     }
 
