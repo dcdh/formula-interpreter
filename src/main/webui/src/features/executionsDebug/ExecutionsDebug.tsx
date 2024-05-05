@@ -20,7 +20,7 @@ export function ExecutionsDebug() {
     result: 'Result',
     underline: 'Underline',
     parserExecutionProcessed: 'Parser processed',
-    executionProcessed: 'Executions processed',
+    executionProcessed: 'Execution processed',
     exactProcessed: 'Exact processed',
   };
 
