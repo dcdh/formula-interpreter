@@ -24,10 +24,10 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     @Test
     public void shouldLogExecutionForJoe() {
         // Given
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("Sales Person"), "Joe"),
-                new StructuredDatum(new Reference("Sales Amount"), "200"),
-                new StructuredDatum(new Reference("% Commission"), "0.10")
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("Sales Person"), "Joe"),
+                new StructuredReference(new Reference("Sales Amount"), "200"),
+                new StructuredReference(new Reference("% Commission"), "0.10")
         ));
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
@@ -54,7 +54,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:21+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then
@@ -140,10 +140,10 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     @Test
     public void shouldLogExecutionForRobert() {
         // Given
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("Sales Person"), "Robert"),
-                new StructuredDatum(new Reference("Sales Amount"), "200"),
-                new StructuredDatum(new Reference("% Commission"), "0.10")
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("Sales Person"), "Robert"),
+                new StructuredReference(new Reference("Sales Amount"), "200"),
+                new StructuredReference(new Reference("% Commission"), "0.10")
         ));
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
@@ -166,7 +166,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

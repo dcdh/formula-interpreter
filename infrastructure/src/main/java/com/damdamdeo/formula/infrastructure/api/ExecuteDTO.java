@@ -7,16 +7,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Schema(name = "Execute", required = true, requiredProperties = {"formula", "structuredData", "debugFeature"})
+@Schema(name = "Execute", required = true, requiredProperties = {"formula", "structuredReferences", "debugFeature"})
 public record ExecuteDTO(@Schema(required = true) String formula,
-                         @Schema(required = true) Map<String, String> structuredData,
+                         @Schema(required = true) Map<String, String> structuredReferences,
                          @Schema(required = true) DebugFeature debugFeature) {
 
     public ExecuteCommand toExecuteCommand() {
         return new ExecuteCommand(
                 new Formula(formula),
-                new StructuredData(structuredData.entrySet().stream()
-                        .map(structuredDatum -> new StructuredDatum(new Reference(structuredDatum.getKey()), new Value(structuredDatum.getValue())))
+                new StructuredReferences(structuredReferences.entrySet().stream()
+                        .map(structuredDatum -> new StructuredReference(new Reference(structuredDatum.getKey()), new Value(structuredDatum.getValue())))
                         .collect(Collectors.toList())),
                 debugFeature
         );

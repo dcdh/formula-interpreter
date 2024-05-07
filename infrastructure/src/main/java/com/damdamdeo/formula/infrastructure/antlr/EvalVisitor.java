@@ -12,15 +12,15 @@ import java.util.Objects;
 
 public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     private final ExecutionWrapper executionWrapper;
-    private final StructuredData structuredData;
+    private final StructuredReferences structuredReferences;
     private final NumericalContext numericalContext;
     private Result currentResult;
 
     public EvalVisitor(final ExecutionWrapper executionWrapper,
-                       final StructuredData structuredData,
+                       final StructuredReferences structuredReferences,
                        final NumericalContext numericalContext) {
         this.executionWrapper = Objects.requireNonNull(executionWrapper);
-        this.structuredData = Objects.requireNonNull(structuredData);
+        this.structuredReferences = Objects.requireNonNull(structuredReferences);
         this.numericalContext = Objects.requireNonNull(numericalContext);
         this.currentResult = new Result();
     }
@@ -214,7 +214,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
                     .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
                     .substring(3));
             try {
-                result = this.structuredData.getValueByReference(reference);
+                result = this.structuredReferences.getValueByReference(reference);
             } catch (final UnknownReferenceException unknownReferenceException) {
                 result = Value.ofUnknownRef();
             }

@@ -24,10 +24,10 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
         final String givenFormula = String.format("""
                 %s("%s")
                 """, givenFunction, givenValue.value());
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -42,12 +42,12 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
     public void shouldCheckUsingOnStructuredReference(final String givenFunction, final Value givenValue, final boolean expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), givenValue)
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("% Commission"), givenValue)
         ));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -79,7 +79,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "ISNUM(\"123456\")";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
@@ -91,7 +91,7 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

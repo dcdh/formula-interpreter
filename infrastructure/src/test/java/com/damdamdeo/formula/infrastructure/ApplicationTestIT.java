@@ -18,7 +18,7 @@ public class ApplicationTestIT {
         final String request = """
                 {
                     "formula":"true",
-                    "structuredData": {},
+                    "structuredReferences": {},
                     "debugFeature": "ACTIVE"
                 }
                 """;
@@ -74,7 +74,7 @@ public class ApplicationTestIT {
         final String request = """
                 {
                     "formula":"MUL([@[Sales Amount]],DIV([@[% Commission]],100))",
-                    "structuredData": {
+                    "structuredReferences": {
                         "Sales Amount": "260",
                         "% Commission": "10"
                     },

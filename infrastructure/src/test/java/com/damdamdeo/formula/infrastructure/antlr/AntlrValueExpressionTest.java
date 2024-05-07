@@ -25,7 +25,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
         // Given
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredData(),
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredReferences(),
                 new NoOpExecutionWrapper());
 
         // Then
@@ -39,7 +39,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "\"Hello World\"";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
@@ -49,7 +49,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

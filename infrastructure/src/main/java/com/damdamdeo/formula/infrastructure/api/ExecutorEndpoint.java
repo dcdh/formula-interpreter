@@ -41,7 +41,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "IF",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
@@ -55,7 +55,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "MUL([@[Sales Amount]],DIV([@[% Commission]],100))",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
@@ -69,7 +69,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
@@ -83,7 +83,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Person": "Joe",
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
@@ -98,7 +98,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "IF(EQ([@[Sales Person]],\\"Joe\\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Person": "Joe",
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
@@ -113,7 +113,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "MUL([@[Sales Amount]],\\"not a number\\")",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Amount": "260"
                                                 },
                                                 "debugFeature": "ACTIVE"
@@ -126,7 +126,7 @@ public final class ExecutorEndpoint {
                                     value = """
                                             {
                                                 "formula": "IF(ISNUM([@[Sales Amount]]),\\"I am a number\\", \\"I am not a number\\")",
-                                                "structuredData": {
+                                                "structuredReferences": {
                                                     "Sales Amount": "260"
                                                 },
                                                 "debugFeature": "ACTIVE"

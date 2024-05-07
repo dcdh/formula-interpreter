@@ -24,13 +24,13 @@ public final class AntlrExecutor implements Executor {
 
     @Override
     public Uni<ExecutionResult> execute(final Formula formula,
-                                        final StructuredData structuredData,
+                                        final StructuredReferences structuredReferences,
                                         final ExecutionWrapper executionWrapper) {
         return antlrParseTreeGenerator.generate(formula)
                 .chain(generatorResult ->
                         Uni.createFrom().item(() -> {
                             final ExecutedAtStart executedAtStart = executedAtProvider.now();
-                            final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredData, numericalContext);
+                            final EvalVisitor visitor = new EvalVisitor(executionWrapper, structuredReferences, numericalContext);
                             final Result result = visitor.visit(generatorResult.parseTree());
                             if (result == null) {
                                 throw new IllegalStateException("Should not be null - a response is expected");

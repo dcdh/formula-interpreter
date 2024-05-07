@@ -21,10 +21,10 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
     @MethodSource("provideLogicalComparisonFunctions")
     public void shouldComputeIf(final String givenIfFormula, final Value expectedValue) {
         // Given
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenIfFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenIfFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -59,7 +59,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "IF(\"true\",\"true\",\"false\")";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
@@ -73,7 +73,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

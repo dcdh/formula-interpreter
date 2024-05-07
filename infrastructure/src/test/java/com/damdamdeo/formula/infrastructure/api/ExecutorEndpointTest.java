@@ -52,16 +52,16 @@ public class ExecutorEndpointTest {
         )
                 .when(executeUseCase)
                 .execute(new ExecuteCommand(new Formula("true"),
-                        new StructuredData(
+                        new StructuredReferences(
                                 List.of(
-                                        new StructuredDatum(new Reference("ref"), new Value("val")))
+                                        new StructuredReference(new Reference("ref"), new Value("val")))
                         ),
                         DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
-                    "structuredData": {
+                    "structuredReferences": {
                         "ref": "val"
                     },
                     "debugFeature": "ACTIVE"
@@ -133,16 +133,16 @@ public class ExecutorEndpointTest {
                 .when(executeUseCase).execute(
                         new ExecuteCommand(
                                 new Formula("true"),
-                                new StructuredData(
+                                new StructuredReferences(
                                         List.of(
-                                                new StructuredDatum(new Reference("ref"), new Value("val")))
+                                                new StructuredReference(new Reference("ref"), new Value("val")))
                                 ),
                                 DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
-                    "structuredData": {
+                    "structuredReferences": {
                         "ref":"val"
                     },
                     "debugFeature": "ACTIVE"
@@ -171,16 +171,16 @@ public class ExecutorEndpointTest {
         )
                 .when(executeUseCase).execute(new ExecuteCommand(
                         new Formula("true"),
-                        new StructuredData(
+                        new StructuredReferences(
                                 List.of(
-                                        new StructuredDatum(new Reference("ref"), new Value("val")))
+                                        new StructuredReference(new Reference("ref"), new Value("val")))
                         ),
                         DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
                 {
                     "formula":"true",
-                    "structuredData": {
+                    "structuredReferences": {
                         "ref":"val"
                     },
                     "debugFeature": "ACTIVE"

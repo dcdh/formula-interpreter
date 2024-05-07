@@ -5,10 +5,10 @@
  * OpenAPI spec version: 1.0-SNAPSHOT
  */
 import type { DebugFeature } from "./debugFeature";
-import type { ExecuteStructuredData } from "./executeStructuredData";
+import type { ExecuteStructuredReferences } from "./executeStructuredReferences";
 
 export interface Execute {
   debugFeature: DebugFeature;
   formula: string;
-  structuredData: ExecuteStructuredData;
+  structuredReferences: ExecuteStructuredReferences;
 }

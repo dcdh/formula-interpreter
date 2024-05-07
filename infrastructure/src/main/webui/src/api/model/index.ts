@@ -10,6 +10,7 @@ export * from "./elementExecution";
 export * from "./errorMessage";
 export * from "./execute";
 export * from "./executeStructuredData";
+export * from "./executeStructuredReferences";
 export * from "./executionProcessedIn";
 export * from "./executionResult";
 export * from "./input";

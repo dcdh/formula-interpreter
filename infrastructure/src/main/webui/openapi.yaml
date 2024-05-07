@@ -24,7 +24,7 @@ paths:
                 description: Should fail to execute
                 value:
                   formula: IF
-                  structuredData:
+                  structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
                   debugFeature: ACTIVE
@@ -33,7 +33,7 @@ paths:
                   by Percent Commission
                 value:
                   formula: "MUL([@[Sales Amount]],DIV([@[% Commission]],100))"
-                  structuredData:
+                  structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
                   debugFeature: ACTIVE
@@ -43,7 +43,7 @@ paths:
                 value:
                   formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[%\
                     \ Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"
-                  structuredData:
+                  structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
                   debugFeature: ACTIVE
@@ -53,7 +53,7 @@ paths:
                   formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount\
                     \ BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[%\
                     \ Commission]],100)))"
-                  structuredData:
+                  structuredReferences:
                     Sales Person: Joe
                     Sales Amount: "260"
                     '% Commission': "10"
@@ -63,7 +63,7 @@ paths:
                 value:
                   formula: "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[%\
                     \ Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))"
-                  structuredData:
+                  structuredReferences:
                     Sales Person: Joe
                     Sales Amount: "260"
                     '% Commission': "10"
@@ -73,7 +73,7 @@ paths:
                   \ number"
                 value:
                   formula: "MUL([@[Sales Amount]],\"not a number\")"
-                  structuredData:
+                  structuredReferences:
                     Sales Amount: "260"
                   debugFeature: ACTIVE
               Check if it is a number:
@@ -82,7 +82,7 @@ paths:
                 value:
                   formula: "IF(ISNUM([@[Sales Amount]]),\"I am a number\", \"I am\
                     \ not a number\")"
-                  structuredData:
+                  structuredReferences:
                     Sales Amount: "260"
                   debugFeature: ACTIVE
         required: true
@@ -396,16 +396,16 @@ components:
     Execute:
       required:
       - formula
-      - structuredData
+      - structuredReferences
       - debugFeature
       - formula
-      - structuredData
+      - structuredReferences
       - debugFeature
       type: object
       properties:
         formula:
           type: string
-        structuredData:
+        structuredReferences:
           type: object
           additionalProperties:
             type: string

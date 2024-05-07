@@ -75,7 +75,7 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
   return await Promise.all(samples.map(async function (sample: SampleState) {
     return await execute({
       formula: formula,
-      structuredData: {
+      structuredReferences: {
         'Sales Person': sample.salesPerson,
         'Region': sample.region,
         'Sales Amount': sample.salesAmount.toString(),

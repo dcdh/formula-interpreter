@@ -23,6 +23,6 @@ public final class ExecuteUseCase implements UseCase<ExecutionResult, ExecuteCom
             case ACTIVE -> new LoggingExecutionWrapper(executedAtProvider);
             case INACTIVE -> new NoOpExecutionWrapper();
         };
-        return executor.execute(command.formula(), command.structuredData(), executionWrapper);
+        return executor.execute(command.formula(), command.structuredReferences(), executionWrapper);
     }
 }

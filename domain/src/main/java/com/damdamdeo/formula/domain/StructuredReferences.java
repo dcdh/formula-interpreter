@@ -4,13 +4,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record StructuredData(List<StructuredDatum> structuredData) {
+public record StructuredReferences(List<StructuredReference> structuredData) {
 
-    public StructuredData() {
+    public StructuredReferences() {
         this(Collections.emptyList());
     }
 
-    public StructuredData(final List<StructuredDatum> structuredData) {
+    public StructuredReferences(final List<StructuredReference> structuredData) {
         this.structuredData = Objects.requireNonNull(structuredData);
     }
 
@@ -18,7 +18,7 @@ public record StructuredData(List<StructuredDatum> structuredData) {
         return structuredData.stream()
                 .filter(structuredDatum -> structuredDatum.reference().equals(reference))
                 .findFirst()
-                .map(StructuredDatum::value)
+                .map(StructuredReference::value)
                 .orElseThrow(() -> new UnknownReferenceException(reference));
     }
 

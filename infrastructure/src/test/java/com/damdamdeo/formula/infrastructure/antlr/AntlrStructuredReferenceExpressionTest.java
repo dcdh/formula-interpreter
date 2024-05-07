@@ -15,12 +15,12 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnStructuredReferenceValue() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), "10%")
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("% Commission"), "10%")
         ));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -34,10 +34,10 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnUnknownReferenceWhenStructureReferenceDoesNotExists() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredData givenStructuredData = new StructuredData();
+        final StructuredReferences givenStructuredReferences = new StructuredReferences();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -51,12 +51,12 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnNotAvailableWhenStructureReferenceValueIsNull() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), (String) null)
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("% Commission"), (String) null)
         ));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -70,8 +70,8 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredData givenStructuredData = new StructuredData(List.of(
-                new StructuredDatum(new Reference("% Commission"), "10%")
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+                new StructuredReference(new Reference("% Commission"), "10%")
         ));
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
@@ -82,7 +82,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

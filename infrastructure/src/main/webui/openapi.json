@@ -27,7 +27,7 @@
                   "description" : "Should fail to execute",
                   "value" : {
                     "formula" : "IF",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
@@ -38,7 +38,7 @@
                   "description" : "Compute commission amount by multiplying Sales Amount by Percent Commission",
                   "value" : {
                     "formula" : "MUL([@[Sales Amount]],DIV([@[% Commission]],100))",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
@@ -49,7 +49,7 @@
                   "description" : "Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two",
                   "value" : {
                     "formula" : "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
@@ -60,7 +60,7 @@
                   "description" : "Should return #REF! on unknown Structured Reference",
                   "value" : {
                     "formula" : "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount BOOM]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Person" : "Joe",
                       "Sales Amount" : "260",
                       "% Commission" : "10"
@@ -72,7 +72,7 @@
                   "description" : "Should return #DIV/0! when dividing by zero",
                   "value" : {
                     "formula" : "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],0)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)))",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Person" : "Joe",
                       "Sales Amount" : "260",
                       "% Commission" : "10"
@@ -84,7 +84,7 @@
                   "description" : "Should return #NUM! when doing an operation on not a number",
                   "value" : {
                     "formula" : "MUL([@[Sales Amount]],\"not a number\")",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Amount" : "260"
                     },
                     "debugFeature" : "ACTIVE"
@@ -94,7 +94,7 @@
                   "description" : "Should return I am a number if the Structured Reference is a number",
                   "value" : {
                     "formula" : "IF(ISNUM([@[Sales Amount]]),\"I am a number\", \"I am not a number\")",
-                    "structuredData" : {
+                    "structuredReferences" : {
                       "Sales Amount" : "260"
                     },
                     "debugFeature" : "ACTIVE"
@@ -513,13 +513,13 @@
         }
       },
       "Execute" : {
-        "required" : [ "formula", "structuredData", "debugFeature", "formula", "structuredData", "debugFeature" ],
+        "required" : [ "formula", "structuredReferences", "debugFeature", "formula", "structuredReferences", "debugFeature" ],
         "type" : "object",
         "properties" : {
           "formula" : {
             "type" : "string"
           },
-          "structuredData" : {
+          "structuredReferences" : {
             "type" : "object",
             "additionalProperties" : {
               "type" : "string"

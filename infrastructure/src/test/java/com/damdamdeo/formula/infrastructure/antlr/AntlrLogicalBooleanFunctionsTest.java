@@ -26,15 +26,15 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), leftValue),
-                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
+                        new StructuredReference(new Reference("North Sales Amount"), leftValue),
+                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -59,14 +59,14 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s([@[North Sales Amount]],%s)""", givenLogicalFunction, rightValue.value());
         }
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), leftValue)
+                        new StructuredReference(new Reference("North Sales Amount"), leftValue)
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -91,14 +91,14 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s(%s,[@[South Sales Amount]])""", givenLogicalFunction, leftValue.value());
         }
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("South Sales Amount"), rightValue)
+                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -129,10 +129,10 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s(%s,%s)""", givenLogicalFunction, leftValue.value(), rightValue.value());
         }
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -161,14 +161,14 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660")
+                        new StructuredReference(new Reference("North Sales Amount"), "660")
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -183,16 +183,16 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), (String) null),
-                        new StructuredDatum(new Reference("South Sales Amount"), "260")
+                        new StructuredReference(new Reference("North Sales Amount"), (String) null),
+                        new StructuredReference(new Reference("South Sales Amount"), "260")
 
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -207,15 +207,15 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660"),
-                        new StructuredDatum(new Reference("South Sales Amount"), (String) null)
+                        new StructuredReference(new Reference("North Sales Amount"), "660"),
+                        new StructuredReference(new Reference("South Sales Amount"), (String) null)
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -235,14 +235,14 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     @MethodSource("provideLogicalFunctionsUsingComparisonsFunction")
     public void shouldUseComparisonsFunctions(final String givenFormula) {
         // Given
-        final StructuredData givenStructuredData = new StructuredData(
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(
                 List.of(
-                        new StructuredDatum(new Reference("North Sales Amount"), "660")
+                        new StructuredReference(new Reference("North Sales Amount"), "660")
                 )
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new NoOpExecutionWrapper());
 
         // Then
@@ -268,7 +268,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "AND(0,0)";
-        final StructuredData givenStructuredData = new StructuredData(List.of());
+        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
         when(executedAtProvider.now())
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
@@ -282,7 +282,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredData,
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
                 new LoggingExecutionWrapper(executedAtProvider));
 
         // Then

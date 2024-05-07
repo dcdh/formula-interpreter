@@ -35,7 +35,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredData(), new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredReferences(), new NoOpExecutionWrapper());
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -56,7 +56,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredData(), new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredReferences(), new NoOpExecutionWrapper());
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -76,7 +76,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenExecutionWrapper);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredReferences(), givenExecutionWrapper);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -91,7 +91,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredData(), givenExecutionWrapper);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredReferences(), givenExecutionWrapper);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
