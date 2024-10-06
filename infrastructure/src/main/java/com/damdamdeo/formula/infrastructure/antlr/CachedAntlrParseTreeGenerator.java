@@ -5,9 +5,10 @@ import io.quarkus.cache.Cache;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class CachedAntlrParseTreeGenerator implements AntlrParseTreeGenerator {
+    private static final String PUT_IN_CACHE = "putInCache";
+
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
     private final Cache cache;
 
@@ -19,16 +20,18 @@ public final class CachedAntlrParseTreeGenerator implements AntlrParseTreeGenera
 
     @Override
     public Uni<GeneratorResult> generate(Formula formula) {
-        final AtomicBoolean putInCache = new AtomicBoolean(false);
-        return cache.getAsync(formula, (__) -> {
-                    putInCache.set(true);
-                    return antlrParseTreeGenerator.generate(formula);
-                })
-                .map(generatorResult -> new GeneratorResult(
-                        generatorResult.formula(),
-                        generatorResult.parseTree(),
-                        generatorResult.antlrSyntaxErrorListener(),
-                        Boolean.TRUE.equals(putInCache.get()) ? generatorResult.parserExecutionProcessedIn() : null // In this case I consider that retrieving from cache takes zero time
-                ));
+        return Uni.createFrom().context(context -> {
+            context.put(PUT_IN_CACHE, false);
+            return cache.getAsync(formula, (__) -> {
+                        context.put(PUT_IN_CACHE, true);
+                        return antlrParseTreeGenerator.generate(formula);
+                    })
+                    .map(generatorResult -> new GeneratorResult(
+                            generatorResult.formula(),
+                            generatorResult.parseTree(),
+                            generatorResult.antlrSyntaxErrorListener(),
+                            Boolean.TRUE.equals(context.get(PUT_IN_CACHE)) ? generatorResult.parserExecutionProcessedIn() : null // In this case I consider that retrieving from cache takes zero time
+                    ));
+        });
     }
 }
