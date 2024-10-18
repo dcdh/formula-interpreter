@@ -20,8 +20,8 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
         ));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -37,8 +37,8 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
         final StructuredReferences givenStructuredReferences = new StructuredReferences();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -56,8 +56,8 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
         ));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -73,17 +73,17 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
                 new StructuredReference(new Reference("% Commission"), "10%")
         ));
-        when(executedAtProvider.now())
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
+        when(evaluatedAtProvider.now())
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -93,9 +93,9 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
                                 new Range(0, 16),
                                 List.of(
                                         new Input(new InputName("structuredReference"), new Reference("% Commission"), new Range(3, 14))),
-                                new ExecutionProcessedIn(
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]"))))
+                                new EvaluationProcessedIn(
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]"))))
                 )
         );
     }

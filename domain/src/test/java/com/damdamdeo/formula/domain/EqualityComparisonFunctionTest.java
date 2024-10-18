@@ -18,7 +18,7 @@ public class EqualityComparisonFunctionTest {
         final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofEqual();
 
         // When
-        final Value result = equalityComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = equalityComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -36,7 +36,7 @@ public class EqualityComparisonFunctionTest {
         final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofNotEqual();
 
         // When
-        final Value result = equalityComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = equalityComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);

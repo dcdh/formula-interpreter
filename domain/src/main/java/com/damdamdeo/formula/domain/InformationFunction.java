@@ -3,6 +3,7 @@ package com.damdamdeo.formula.domain;
 import java.util.Objects;
 import java.util.function.Function;
 
+// TODO rename to StateFunction
 public final class InformationFunction {
     private final Function<Value, Boolean> functionToExecute;
 
@@ -10,7 +11,7 @@ public final class InformationFunction {
         this.functionToExecute = Objects.requireNonNull(functionToExecute);
     }
 
-    public boolean execute(final Value argument) {
+    public boolean evaluate(final Value argument) {
         return this.functionToExecute.apply(argument);
     }
 

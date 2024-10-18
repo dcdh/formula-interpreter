@@ -1,8 +1,8 @@
 package com.damdamdeo.formula.infrastructure.api;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.usecase.ExecuteCommand;
-import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
+import com.damdamdeo.formula.domain.usecase.EvaluateCommand;
+import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxError;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import io.quarkus.test.InjectMock;
@@ -22,19 +22,19 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
 
 @QuarkusTest
-public class ExecutorEndpointTest {
+public class ParserEndpointTest {
 
     @InjectMock
-    private ExecuteUseCase executeUseCase;
+    private EvaluateUseCase evaluateUseCase;
     @Test
-    public void shouldExecute() throws JSONException {
+    public void shouldProcess() throws JSONException {
         // Given
         doReturn(
-                Uni.createFrom().item(new ExecutionResult(
+                Uni.createFrom().item(new EvaluationResult(
                         new Result(new Value("true"), new Range(0, 10)),
-                        new ParserExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:14:58+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))
+                        new ParserEvaluationProcessedIn(
+                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:58+01:00[Europe/Paris]")),
+                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))
                         ),
                         List.of(
                                 new IntermediateResult(
@@ -42,16 +42,16 @@ public class ExecutorEndpointTest {
                                         new Range(4, 5),
                                         List.of(
                                                 new Input(new InputName("reference"), new Value("ref"), new Range(2, 3))),
-                                        new ExecutionProcessedIn(
-                                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
+                                        new EvaluationProcessedIn(
+                                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
                         ),
-                        new ExecutionProcessedIn(
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
-                                new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))))
+                        new EvaluationProcessedIn(
+                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
+                                new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))))
         )
-                .when(executeUseCase)
-                .execute(new ExecuteCommand(new Formula("true"),
+                .when(evaluateUseCase)
+                .execute(new EvaluateCommand(new Formula("true"),
                         new StructuredReferences(
                                 List.of(
                                         new StructuredReference(new Reference("ref"), new Value("val")))
@@ -74,20 +74,20 @@ public class ExecutorEndpointTest {
                 {
                      "result": "true",
                      "exactProcessedInNanos": 3000000000,
-                     "parserExecutionProcessedIn": {
-                         "executedAtStart": "2023-12-25T10:14:58+01:00",
-                         "executedAtEnd": "2023-12-25T10:14:59+01:00",
+                     "parserEvaluationProcessedIn": {
+                         "evaluatedAtStart": "2023-12-25T10:14:58+01:00",
+                         "evaluatedAtEnd": "2023-12-25T10:14:59+01:00",
                          "processedInNanos": 1000000000
                      },
-                     "executionProcessedIn": {
-                         "executedAtStart": "2023-12-25T10:15:00+01:00",
-                         "executedAtEnd": "2023-12-25T10:15:02+01:00",
+                     "evaluationProcessedIn": {
+                         "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
+                         "evaluatedAtEnd": "2023-12-25T10:15:02+01:00",
                          "processedInNanos": 2000000000
                      },
                      "intermediateResults": [
                          {
-                             "executedAtStart": "2023-12-25T10:15:00+01:00",
-                             "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                             "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
+                             "evaluatedAtEnd": "2023-12-25T10:15:01+01:00",
                              "processedInNanos": 1000000000,
                              "range": {
                                  "start": 4,
@@ -109,15 +109,15 @@ public class ExecutorEndpointTest {
                 }
                 """;
         final String actualBody = given()
-                .contentType("application/vnd.formula-execute-v1+json")
-                .accept("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluate-v1+json")
+                .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
                 .when()
-                .post("/execute")
+                .post("/evaluate")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
-                .contentType("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluated-v1+json")
                 .extract().response().body().asString();
         JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
     }
@@ -127,11 +127,11 @@ public class ExecutorEndpointTest {
         // Given
         doReturn(
                 Uni.createFrom().failure(
-                        new ExecutionException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\"")))
+                        new EvaluationException(new AntlrSyntaxErrorException(new Formula("true"), new AntlrSyntaxError(0, 1, "custom \"msg\"")))
                 )
         )
-                .when(executeUseCase).execute(
-                        new ExecuteCommand(
+                .when(evaluateUseCase).execute(
+                        new EvaluateCommand(
                                 new Formula("true"),
                                 new StructuredReferences(
                                         List.of(
@@ -151,15 +151,15 @@ public class ExecutorEndpointTest {
 
         // When && Then
         given()
-                .contentType("application/vnd.formula-execute-v1+json")
-                .accept("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluate-v1+json")
+                .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
                 .when()
-                .post("/execute")
+                .post("/evaluate")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .contentType("application/vnd.execution-syntax-error-v1+json")
+                .contentType("application/vnd.evaluation-syntax-error-v1+json")
                 .body("message", is("Syntax error at line '0' at range '1' with message 'custom \"msg\"'"));
     }
 
@@ -167,9 +167,9 @@ public class ExecutorEndpointTest {
     public void shouldHandleException() {
         // Given
         doReturn(
-                Uni.createFrom().failure(new ExecutionException(new Exception("unexpected \"exception\"")))
+                Uni.createFrom().failure(new EvaluationException(new Exception("unexpected \"exception\"")))
         )
-                .when(executeUseCase).execute(new ExecuteCommand(
+                .when(evaluateUseCase).execute(new EvaluateCommand(
                         new Formula("true"),
                         new StructuredReferences(
                                 List.of(
@@ -189,15 +189,15 @@ public class ExecutorEndpointTest {
 
         // When && Then
         given()
-                .contentType("application/vnd.formula-execute-v1+json")
-                .accept("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluate-v1+json")
+                .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
                 .when()
-                .post("/execute")
+                .post("/evaluate")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .contentType("application/vnd.execution-unexpected-exception-v1+json")
+                .contentType("application/vnd.evaluation-unexpected-exception-v1+json")
                 .body("message", is("unexpected \"exception\""));
     }
 }

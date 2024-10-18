@@ -25,7 +25,7 @@ public final class ArithmeticFunction {
         return new ArithmeticFunction(Function.MUL);
     }
 
-    public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+    public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(numericalContext);
@@ -38,36 +38,36 @@ public final class ArithmeticFunction {
         } else if (right.isNumeric() && right.isZero()) {
             return Value.ofDividedByZero();
         } else {
-            return function.execute(left, right, numericalContext);
+            return function.evaluate(left, right, numericalContext);
         }
     }
 
     private enum Function {
         ADD {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.add(right, numericalContext);
             }
         },
         SUB {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.subtract(right, numericalContext);
             }
         },
         DIV {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.divide(right, numericalContext);
             }
         },
         MUL {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.multiply(right, numericalContext);
             }
         };
 
-        public abstract Value execute(Value left, Value right, NumericalContext numericalContext);
+        public abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
     }
 }

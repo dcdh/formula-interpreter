@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 public class ApplicationTestIT {
 
     @Test
-    public void shouldExecute() {
+    public void shouldEvaluate() {
         // Given
         //language=JSON
         final String request = """
@@ -25,11 +25,11 @@ public class ApplicationTestIT {
 
         // When && Then
         given()
-                .contentType("application/vnd.formula-execute-v1+json")
-                .accept("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluate-v1+json")
+                .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
                 .when()
-                .post("/execute")
+                .post("/evaluate")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK);
@@ -84,11 +84,11 @@ public class ApplicationTestIT {
 
         // When && Then
         given()
-                .contentType("application/vnd.formula-execute-v1+json")
-                .accept("application/vnd.formula-execution-v1+json")
+                .contentType("application/vnd.formula-evaluate-v1+json")
+                .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
                 .when()
-                .post("/execute")
+                .post("/evaluate")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)

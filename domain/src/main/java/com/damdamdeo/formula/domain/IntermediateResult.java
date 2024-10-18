@@ -6,18 +6,18 @@ import java.util.Objects;
 public record IntermediateResult(Value value,
                                  Range range,
                                  List<Input> inputs,
-                                 ExecutionProcessedIn executionProcessedIn) {
+                                 EvaluationProcessedIn evaluationProcessedIn) {
     public IntermediateResult {
         Objects.requireNonNull(value);
         Objects.requireNonNull(range);
         Objects.requireNonNull(inputs);
-        Objects.requireNonNull(executionProcessedIn);
+        Objects.requireNonNull(evaluationProcessedIn);
     }
 
     public static final class Builder {
 
-        ExecutedAtStart executedAtStart;
-        ExecutedAtEnd executedAtEnd;
+        EvaluatedAtStart evaluatedAtStart;
+        EvaluatedAtEnd evaluatedAtEnd;
         Range range;
         List<Input> inputs;
         Value value;
@@ -31,13 +31,13 @@ public record IntermediateResult(Value value,
             return this;
         }
 
-        public IntermediateResult.Builder withExecutedAtStart(final ExecutedAtStart executedAtStart) {
-            this.executedAtStart = executedAtStart;
+        public IntermediateResult.Builder withEvaluatedAtStart(final EvaluatedAtStart evaluatedAtStart) {
+            this.evaluatedAtStart = evaluatedAtStart;
             return this;
         }
 
-        public IntermediateResult.Builder withExecutedAtEnd(final ExecutedAtEnd executedAtEnd) {
-            this.executedAtEnd = executedAtEnd;
+        public IntermediateResult.Builder withEvaluatedAtEnd(final EvaluatedAtEnd evaluatedAtEnd) {
+            this.evaluatedAtEnd = evaluatedAtEnd;
             return this;
         }
 
@@ -53,7 +53,7 @@ public record IntermediateResult(Value value,
 
         public IntermediateResult build() {
             return new IntermediateResult(
-                    value, range, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
+                    value, range, inputs, new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd)
             );
         }
     }

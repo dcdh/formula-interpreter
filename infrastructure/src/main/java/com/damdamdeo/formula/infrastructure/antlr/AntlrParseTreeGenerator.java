@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.Formula;
-import com.damdamdeo.formula.domain.ParserExecutionProcessedIn;
+import com.damdamdeo.formula.domain.ParserEvaluationProcessedIn;
 import io.smallrye.mutiny.Uni;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -13,7 +13,7 @@ public interface AntlrParseTreeGenerator {
     record GeneratorResult(Formula formula,
                            ParseTree parseTree,
                            AntlrSyntaxErrorListener antlrSyntaxErrorListener,
-                           ParserExecutionProcessedIn parserExecutionProcessedIn) {
+                           ParserEvaluationProcessedIn parserEvaluationProcessedIn) {
 
         public GeneratorResult {
             Objects.requireNonNull(formula);

@@ -12,11 +12,11 @@ class ProcessedTest {
     @Test
     public void shouldProcessedInOneExecution() {
         // Given
-        final ExecutedAtStart givenExecutedAtStart = new ExecutedAt(ZonedDateTime.parse("2023-08-27T16:00:18.538583565+02:00"));
-        final ExecutedAtEnd givenExecutedAtEnd = new ExecutedAt(ZonedDateTime.parse("2023-08-27T16:00:18.546082832+02:00"));
+        final EvaluatedAtStart givenEvaluatedAtStart = new EvaluatedAt(ZonedDateTime.parse("2023-08-27T16:00:18.538583565+02:00"));
+        final EvaluatedAtEnd givenEvaluatedAtEnd = new EvaluatedAt(ZonedDateTime.parse("2023-08-27T16:00:18.546082832+02:00"));
 
         // When
-        final Duration in = new ExecutionProcessedIn(givenExecutedAtStart, givenExecutedAtEnd).in();
+        final Duration in = new EvaluationProcessedIn(givenEvaluatedAtStart, givenEvaluatedAtEnd).in();
 
         // Then
         assertThat(in).hasNanos(7_499_267L);

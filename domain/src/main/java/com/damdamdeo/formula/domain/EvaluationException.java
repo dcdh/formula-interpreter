@@ -1,8 +1,8 @@
 package com.damdamdeo.formula.domain;
 
-public final class ExecutionException extends RuntimeException {
+public final class EvaluationException extends RuntimeException {
 
-    public ExecutionException(final Throwable cause) {
+    public EvaluationException(final Throwable cause) {
         super(cause);
     }
 

@@ -20,7 +20,7 @@ public class LogicalComparisonFunctionTest {
         final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIf(givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.execute(givenComparison);
+        final Value result = logicalComparisonFunction.evaluate(givenComparison);
 
         // Then
         assertThat(result).isEqualTo(expectedResult);
@@ -36,7 +36,7 @@ public class LogicalComparisonFunctionTest {
         final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfError(givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.execute(givenComparison);
+        final Value result = logicalComparisonFunction.evaluate(givenComparison);
 
         // Then
         assertThat(result).isEqualTo(expectedResult);
@@ -52,7 +52,7 @@ public class LogicalComparisonFunctionTest {
         final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfNotAvailable(givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.execute(givenComparison);
+        final Value result = logicalComparisonFunction.evaluate(givenComparison);
 
         // Then
         assertThat(result).isEqualTo(expectedResult);

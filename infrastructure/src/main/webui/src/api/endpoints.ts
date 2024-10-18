@@ -15,7 +15,7 @@ import { customInstance } from "./mutator/custom-instance";
 
 export const execute = (execute: Execute) => {
   return customInstance<ExecutionResult>({
-    url: `/execute`,
+    url: `/evaluate`,
     method: "POST",
     headers: { "Content-Type": "application/vnd.formula-execute-v1+json" },
     data: execute,

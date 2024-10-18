@@ -9,7 +9,7 @@ public final class LogicalBooleanFunction {
         this.function = Objects.requireNonNull(function);
     }
 
-    public Value execute(final Value left, final Value right) {
+    public Value evaluate(final Value left, final Value right) {
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         if (left.isError()) {
@@ -19,7 +19,7 @@ public final class LogicalBooleanFunction {
         } else if (!left.isLogical() || !right.isLogical()) {
             return Value.ofLogicalValueExpected();
         } else {
-            return function.execute(left, right);
+            return function.evaluate(left, right);
         }
     }
 
@@ -35,17 +35,17 @@ public final class LogicalBooleanFunction {
 
         OR {
             @Override
-            public Value execute(final Value left, final Value right) {
+            public Value evaluate(final Value left, final Value right) {
                 return left.or(right);
             }
         },
         AND {
             @Override
-            public Value execute(final Value left, final Value right) {
+            public Value evaluate(final Value left, final Value right) {
                 return left.and(right);
             }
         };
 
-        public abstract Value execute(Value left, Value right);
+        public abstract Value evaluate(Value left, Value right);
     }
 }

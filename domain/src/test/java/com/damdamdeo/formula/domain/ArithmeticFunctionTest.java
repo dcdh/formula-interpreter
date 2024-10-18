@@ -18,7 +18,7 @@ class ArithmeticFunctionTest {
         final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofAddition();
 
         // When
-        final Value result = arithmeticFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -36,7 +36,7 @@ class ArithmeticFunctionTest {
         final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofSubtraction();
 
         // When
-        final Value result = arithmeticFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -54,7 +54,7 @@ class ArithmeticFunctionTest {
         final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofDivision();
 
         // When
-        final Value result = arithmeticFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -72,7 +72,7 @@ class ArithmeticFunctionTest {
         final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofMultiplication();
 
         // When
-        final Value result = arithmeticFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);

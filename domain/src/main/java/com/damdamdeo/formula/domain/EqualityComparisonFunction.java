@@ -10,7 +10,7 @@ public final class EqualityComparisonFunction implements ComparisonFunction {
     }
 
     @Override
-    public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+    public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(numericalContext);
@@ -19,7 +19,7 @@ public final class EqualityComparisonFunction implements ComparisonFunction {
         } else if (right.isError()) {
             return right;
         } else {
-            return function.execute(left, right, numericalContext);
+            return function.evaluate(left, right, numericalContext);
         }
     }
 
@@ -34,18 +34,18 @@ public final class EqualityComparisonFunction implements ComparisonFunction {
     private enum Function {
         EQ {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.equalTo(right, numericalContext);
             }
         },
 
         NEQ {
             @Override
-            public Value execute(final Value left, final Value right, final NumericalContext numericalContext) {
+            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.notEqualTo(right, numericalContext);
             }
         };
 
-        public abstract Value execute(Value left, Value right, NumericalContext numericalContext);
+        public abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
     }
 }

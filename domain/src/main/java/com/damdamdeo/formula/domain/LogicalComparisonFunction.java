@@ -17,8 +17,8 @@ public final class LogicalComparisonFunction {
         this.onFalse = Objects.requireNonNull(onFalse);
     }
 
-    public Value execute(final Value comparison) {
-        return this.function.execute(comparison, onTrue, onFalse);
+    public Value evaluate(final Value comparison) {
+        return this.function.evaluate(comparison, onTrue, onFalse);
     }
 
     public static LogicalComparisonFunction ofIf(final ValueProvider onTrue,
@@ -39,9 +39,9 @@ public final class LogicalComparisonFunction {
     private enum Function {
         IF {
             @Override
-            public Value execute(final Value comparison,
-                                 final ValueProvider onTrue,
-                                 final ValueProvider onFalse) {
+            public Value evaluate(final Value comparison,
+                                  final ValueProvider onTrue,
+                                  final ValueProvider onFalse) {
                 if (comparison.isError()) {
                     return comparison;
                 } else if (!comparison.isLogical()) {
@@ -57,9 +57,9 @@ public final class LogicalComparisonFunction {
         },
         IF_ERROR {
             @Override
-            public Value execute(final Value comparison,
-                                 final ValueProvider onTrue,
-                                 final ValueProvider onFalse) {
+            public Value evaluate(final Value comparison,
+                                  final ValueProvider onTrue,
+                                  final ValueProvider onFalse) {
                 if (comparison.isError()) {
                     return onTrue.provide();
                 } else {
@@ -69,9 +69,9 @@ public final class LogicalComparisonFunction {
         },
         IF_NOT_AVAILABLE {
             @Override
-            public Value execute(final Value comparison,
-                                 final ValueProvider onTrue,
-                                 final ValueProvider onFalse) {
+            public Value evaluate(final Value comparison,
+                                  final ValueProvider onTrue,
+                                  final ValueProvider onFalse) {
                 if (comparison.isNotAvailable()) {
                     return onTrue.provide();
                 } else {
@@ -80,7 +80,7 @@ public final class LogicalComparisonFunction {
             }
         };
 
-        public abstract Value execute(Value comparison, ValueProvider onTrue, ValueProvider onFalse);
+        public abstract Value evaluate(Value comparison, ValueProvider onTrue, ValueProvider onFalse);
     }
 
 }

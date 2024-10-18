@@ -12,19 +12,19 @@
     "description" : "Auto generated value"
   } ],
   "paths" : {
-    "/execute" : {
+    "/evaluate" : {
       "post" : {
-        "tags" : [ "Executor Endpoint" ],
-        "operationId" : "execute",
+        "tags" : [ "Evaluate Endpoint" ],
+        "operationId" : "evaluate",
         "requestBody" : {
           "content" : {
-            "application/vnd.formula-execute-v1+json" : {
+            "application/vnd.formula-evaluate-v1+json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Execute"
+                "$ref" : "#/components/schemas/Evaluate"
               },
               "examples" : {
                 "Incomplete formula" : {
-                  "description" : "Should fail to execute",
+                  "description" : "Should fail to evaluate",
                   "value" : {
                     "formula" : "IF",
                     "structuredReferences" : {
@@ -109,29 +109,29 @@
           "200" : {
             "description" : "OK",
             "content" : {
-              "application/vnd.formula-execution-v1+json" : {
+              "application/vnd.formula-evaluated-v1+json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ExecutionResult"
+                  "$ref" : "#/components/schemas/EvaluationResult"
                 },
                 "examples" : {
-                  "executed formula" : {
-                    "description" : "executed formula",
+                  "evaluated formula" : {
+                    "description" : "evaluated formula",
                     "value" : {
                       "result" : "26",
                       "exactProcessedInNanos" : 28231378,
-                      "parserExecutionProcessedIn" : {
-                        "executedAtStart" : "2024-05-05T01:09:39.695736969+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.717878532+02:00",
+                      "parserEvaluationProcessedIn" : {
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.695736969+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.717878532+02:00",
                         "processedInNanos" : 22141563
                       },
-                      "executionProcessedIn" : {
-                        "executedAtStart" : "2024-05-05T01:09:39.722660591+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.728750406+02:00",
+                      "evaluationProcessedIn" : {
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.722660591+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.728750406+02:00",
                         "processedInNanos" : 6089815
                       },
                       "intermediateResults" : [ {
-                        "executedAtStart" : "2024-05-05T01:09:39.724292501+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.728590951+02:00",
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.724292501+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.728590951+02:00",
                         "processedInNanos" : 4298450,
                         "range" : {
                           "start" : 0,
@@ -154,8 +154,8 @@
                         } ],
                         "result" : "26"
                       }, {
-                        "executedAtStart" : "2024-05-05T01:09:39.724415205+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.726876407+02:00",
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.724415205+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.726876407+02:00",
                         "processedInNanos" : 2461202,
                         "range" : {
                           "start" : 4,
@@ -171,8 +171,8 @@
                         } ],
                         "result" : "260"
                       }, {
-                        "executedAtStart" : "2024-05-05T01:09:39.727326633+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.728449028+02:00",
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.727326633+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.728449028+02:00",
                         "processedInNanos" : 1122395,
                         "range" : {
                           "start" : 22,
@@ -195,8 +195,8 @@
                         } ],
                         "result" : "0.1"
                       }, {
-                        "executedAtStart" : "2024-05-05T01:09:39.727336957+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.727368776+02:00",
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.727336957+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.727368776+02:00",
                         "processedInNanos" : 31819,
                         "range" : {
                           "start" : 26,
@@ -212,8 +212,8 @@
                         } ],
                         "result" : "10"
                       }, {
-                        "executedAtStart" : "2024-05-05T01:09:39.727476161+02:00",
-                        "executedAtEnd" : "2024-05-05T01:09:39.72750957+02:00",
+                        "evaluatedAtStart" : "2024-05-05T01:09:39.727476161+02:00",
+                        "evaluatedAtEnd" : "2024-05-05T01:09:39.72750957+02:00",
                         "processedInNanos" : 33409,
                         "range" : {
                           "start" : 44,
@@ -229,9 +229,9 @@
             }
           },
           "400" : {
-            "description" : "Syntax exception while executing formula",
+            "description" : "Syntax exception while evaluating formula",
             "content" : {
-              "application/vnd.execution-syntax-error-v1+json" : {
+              "application/vnd.evaluation-syntax-error-v1+json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/ErrorMessage"
                 },
@@ -247,9 +247,9 @@
             }
           },
           "500" : {
-            "description" : "Unhandled exception while executing formula",
+            "description" : "Unhandled exception while evaluating formula",
             "content" : {
-              "application/vnd.execution-unexpected-exception-v1+json" : {
+              "application/vnd.evaluation-unexpected-exception-v1+json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/ErrorMessage"
                 },
@@ -478,7 +478,7 @@
           }
         }
       },
-      "Execute" : {
+      "Evaluate" : {
         "required" : [ "formula", "structuredReferences", "debugFeature", "formula", "structuredReferences", "debugFeature" ],
         "type" : "object",
         "properties" : {
@@ -496,17 +496,17 @@
           }
         }
       },
-      "ExecutionProcessedIn" : {
-        "required" : [ "executedAtStart", "executedAtEnd", "processedInNanos", "executedAtStart", "executedAtEnd", "processedInNanos" ],
+      "EvaluationProcessedInDTO" : {
+        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
         "type" : "object",
         "properties" : {
-          "executedAtStart" : {
+          "evaluatedAtStart" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"
             } ]
           },
-          "executedAtEnd" : {
+          "evaluatedAtEnd" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"
@@ -518,8 +518,8 @@
           }
         }
       },
-      "ExecutionResult" : {
-        "required" : [ "result", "exactProcessedInNanos", "executionProcessedIn", "intermediateResults", "result", "exactProcessedInNanos", "executionProcessedIn", "intermediateResults" ],
+      "EvaluationResult" : {
+        "required" : [ "result", "exactProcessedInNanos", "evaluationProcessedIn", "intermediateResults", "result", "exactProcessedInNanos", "evaluationProcessedIn", "intermediateResults" ],
         "type" : "object",
         "properties" : {
           "result" : {
@@ -529,11 +529,11 @@
             "format" : "int64",
             "type" : "integer"
           },
-          "parserExecutionProcessedIn" : {
-            "$ref" : "#/components/schemas/ParserExecutionProcessedIn"
+          "parserEvaluationProcessedIn" : {
+            "$ref" : "#/components/schemas/ParserEvaluationProcessedIn"
           },
-          "executionProcessedIn" : {
-            "$ref" : "#/components/schemas/ExecutionProcessedIn"
+          "evaluationProcessedIn" : {
+            "$ref" : "#/components/schemas/EvaluationProcessedInDTO"
           },
           "intermediateResults" : {
             "type" : "array",
@@ -559,16 +559,16 @@
         }
       },
       "IntermediateResult" : {
-        "required" : [ "executedAtStart", "executedAtEnd", "processedInNanos", "range", "inputs", "value", "executedAtStart", "executedAtEnd", "processedInNanos", "range", "inputs", "result" ],
+        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "range", "inputs", "value", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "range", "inputs", "result" ],
         "type" : "object",
         "properties" : {
-          "executedAtStart" : {
+          "evaluatedAtStart" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"
             } ]
           },
-          "executedAtEnd" : {
+          "evaluatedAtEnd" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"
@@ -592,17 +592,17 @@
           }
         }
       },
-      "ParserExecutionProcessedIn" : {
-        "required" : [ "executedAtStart", "executedAtEnd", "processedInNanos", "executedAtStart", "executedAtEnd", "processedInNanos" ],
+      "ParserEvaluationProcessedIn" : {
+        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
         "type" : "object",
         "properties" : {
-          "executedAtStart" : {
+          "evaluatedAtStart" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"
             } ]
           },
-          "executedAtEnd" : {
+          "evaluatedAtEnd" : {
             "type" : "string",
             "allOf" : [ {
               "$ref" : "#/components/schemas/ZonedDateTime"

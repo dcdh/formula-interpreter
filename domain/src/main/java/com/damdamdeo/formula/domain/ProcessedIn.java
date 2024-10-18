@@ -3,13 +3,13 @@ package com.damdamdeo.formula.domain;
 import java.time.Duration;
 
 public interface ProcessedIn {
-    ExecutedAtStart executedAtStart();
+    EvaluatedAtStart evaluatedAtStart();
 
-    ExecutedAtEnd executedAtEnd();
+    EvaluatedAtEnd evaluatedAtEnd();
 
-    public default Duration in() {
+    default Duration in() {
         return Duration.between(
-                executedAtStart().at(),
-                executedAtEnd().at());
+                evaluatedAtStart().at(),
+                evaluatedAtEnd().at());
     }
 }

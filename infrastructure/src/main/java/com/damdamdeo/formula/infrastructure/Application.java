@@ -1,11 +1,11 @@
 package com.damdamdeo.formula.infrastructure;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
-import com.damdamdeo.formula.domain.spi.Executor;
+import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
+import com.damdamdeo.formula.domain.spi.Parser;
 import com.damdamdeo.formula.domain.spi.SuggestCompletion;
 import com.damdamdeo.formula.domain.spi.Validator;
-import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
+import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
 import com.damdamdeo.formula.infrastructure.antlr.*;
@@ -18,24 +18,24 @@ import java.time.ZonedDateTime;
 
 public class Application {
 
-    private static final class ZonedDateTimeExecutedAtProvider implements ExecutedAtProvider {
+    private static final class ZonedDateTimeEvaluatedAtProvider implements EvaluatedAtProvider {
         @Override
-        public ExecutedAt now() {
-            return new ExecutedAt(ZonedDateTime.now());
+        public EvaluatedAt now() {
+            return new EvaluatedAt(ZonedDateTime.now());
         }
     }
 
     @Produces
     @ApplicationScoped
-    public ExecutedAtProvider executedAddProviderProducer() {
-        return new ZonedDateTimeExecutedAtProvider();
+    public EvaluatedAtProvider evaluatedAddProviderProducer() {
+        return new ZonedDateTimeEvaluatedAtProvider();
     }
 
     @Produces
     @ApplicationScoped
     @DefaultGenerator
-    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer(final ExecutedAtProvider executedAtProvider) {
-        return new DefaultAntlrParseTreeGenerator(executedAtProvider);
+    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer(final EvaluatedAtProvider evaluatedAtProvider) {
+        return new DefaultAntlrParseTreeGenerator(evaluatedAtProvider);
     }
 
     @Produces
@@ -54,16 +54,16 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public Executor executorProducer(final ExecutedAtProvider executedAtProvider,
-                                     @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
-        return new AntlrExecutor(executedAtProvider, antlrParseTreeGenerator);
+    public Parser parserProducer(final EvaluatedAtProvider evaluatedAtProvider,
+                                 @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+        return new AntlrParser(evaluatedAtProvider, antlrParseTreeGenerator);
     }
 
     @Produces
     @ApplicationScoped
-    public ExecuteUseCase executeUseCaseProducer(final Executor executor,
-                                                 final ExecutedAtProvider executedAtProvider) {
-        return new ExecuteUseCase(executor, executedAtProvider, new NumericalContext());
+    public EvaluateUseCase evaluateUseCaseProducer(final Parser parser,
+                                                   final EvaluatedAtProvider evaluatedAtProvider) {
+        return new EvaluateUseCase(parser, evaluatedAtProvider, new NumericalContext());
     }
 
     @Produces

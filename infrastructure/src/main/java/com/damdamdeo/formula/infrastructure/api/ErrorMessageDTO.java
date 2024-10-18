@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.infrastructure.api;
 
-import com.damdamdeo.formula.domain.ExecutionException;
+import com.damdamdeo.formula.domain.EvaluationException;
 import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.domain.ValidationException;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -18,8 +18,8 @@ public record ErrorMessageDTO(@Schema(required = true) String message) {
                     }
                     """;
 
-    public ErrorMessageDTO(final ExecutionException executionException) {
-        this(executionException.getMessage());
+    public ErrorMessageDTO(final EvaluationException evaluationException) {
+        this(evaluationException.getMessage());
     }
 
     public ErrorMessageDTO(final ValidationException validationException) {

@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure;
 
-import com.damdamdeo.formula.domain.ExecutedAt;
-import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
+import com.damdamdeo.formula.domain.EvaluatedAt;
+import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrParseTreeGenerator;
 import com.damdamdeo.formula.infrastructure.antlr.DefaultGenerator;
@@ -29,20 +29,20 @@ public class ApplicationTest {
 
     // only happy path here
     @Nested
-    public class Execution {
+    public class Evaluation {
         @InjectMock
-        private ExecutedAtProvider executedAtProvider;
+        private EvaluatedAtProvider evaluatedAtProvider;
 
         @Test
-        public void shouldExecute() throws JSONException {
+        public void shouldEvaluate() throws JSONException {
             // Given
-            when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                    .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
+            when(evaluatedAtProvider.now())
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
             //language=JSON
             final String givenRequest = """
                     {
@@ -58,20 +58,20 @@ public class ApplicationTest {
                     {
                          "result": "true",
                          "exactProcessedInNanos": 4000000000,
-                         "parserExecutionProcessedIn": {
-                             "executedAtStart": "2023-12-25T10:15:00+01:00",
-                             "executedAtEnd": "2023-12-25T10:15:01+01:00",
+                         "parserEvaluationProcessedIn": {
+                             "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
+                             "evaluatedAtEnd": "2023-12-25T10:15:01+01:00",
                              "processedInNanos": 1000000000
                          },
-                         "executionProcessedIn": {
-                             "executedAtStart": "2023-12-25T10:15:02+01:00",
-                             "executedAtEnd": "2023-12-25T10:15:05+01:00",
+                         "evaluationProcessedIn": {
+                             "evaluatedAtStart": "2023-12-25T10:15:02+01:00",
+                             "evaluatedAtEnd": "2023-12-25T10:15:05+01:00",
                              "processedInNanos": 3000000000
                          },
                          "intermediateResults": [
                              {
-                                 "executedAtStart": "2023-12-25T10:15:03+01:00",
-                                 "executedAtEnd": "2023-12-25T10:15:04+01:00",
+                                 "evaluatedAtStart": "2023-12-25T10:15:03+01:00",
+                                 "evaluatedAtEnd": "2023-12-25T10:15:04+01:00",
                                  "processedInNanos": 1000000000,
                                  "range": {
                                      "start": 0,
@@ -85,24 +85,24 @@ public class ApplicationTest {
                     }
                     """;
             final String actualBody = given()
-                    .contentType("application/vnd.formula-execute-v1+json")
-                    .accept("application/vnd.formula-execution-v1+json")
+                    .contentType("application/vnd.formula-evaluate-v1+json")
+                    .accept("application/vnd.formula-evaluated-v1+json")
                     .body(givenRequest)
                     .when()
-                    .post("/execute")
+                    .post("/evaluate")
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.SC_OK)
-                    .contentType("application/vnd.formula-execution-v1+json")
+                    .contentType("application/vnd.formula-evaluated-v1+json")
                     .extract().response().body().asString();
             JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
         }
 
         @Test
-        public void shouldExecutionsBeInExpectedOrders() {
+        public void shouldEvaluationsBeInExpectedOrders() {
             // Given
-            when(executedAtProvider.now())
-                    .thenReturn(new ExecutedAt(ZonedDateTime.now()));
+            when(evaluatedAtProvider.now())
+                    .thenReturn(new EvaluatedAt(ZonedDateTime.now()));
 
             //language=JSON
             final String givenRequest = """
@@ -118,11 +118,11 @@ public class ApplicationTest {
 
             // When && Then
             given()
-                    .contentType("application/vnd.formula-execute-v1+json")
-                    .accept("application/vnd.formula-execution-v1+json")
+                    .contentType("application/vnd.formula-evaluate-v1+json")
+                    .accept("application/vnd.formula-evaluated-v1+json")
                     .body(givenRequest)
                     .when()
-                    .post("/execute")
+                    .post("/evaluate")
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.SC_OK)
@@ -234,11 +234,11 @@ public class ApplicationTest {
             // When
             for (int execution = 0; execution < 3; execution++) {
                 given()
-                        .contentType("application/vnd.formula-execute-v1+json")
-                        .accept("application/vnd.formula-execution-v1+json")
+                        .contentType("application/vnd.formula-evaluate-v1+json")
+                        .accept("application/vnd.formula-evaluated-v1+json")
                         .body(givenRequest)
                         .when()
-                        .post("/execute")
+                        .post("/evaluate")
                         .then()
                         .log().all()
                         .statusCode(HttpStatus.SC_OK);

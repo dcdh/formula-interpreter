@@ -30,7 +30,7 @@ public final class CachedAntlrParseTreeGenerator implements AntlrParseTreeGenera
                             generatorResult.formula(),
                             generatorResult.parseTree(),
                             generatorResult.antlrSyntaxErrorListener(),
-                            Boolean.TRUE.equals(context.get(PUT_IN_CACHE)) ? generatorResult.parserExecutionProcessedIn() : null // In this case I consider that retrieving from cache takes zero time
+                            Boolean.TRUE.equals(context.get(PUT_IN_CACHE)) ? generatorResult.parserEvaluationProcessedIn() : null // In this case I consider that retrieving from cache takes zero time
                     ));
         });
     }

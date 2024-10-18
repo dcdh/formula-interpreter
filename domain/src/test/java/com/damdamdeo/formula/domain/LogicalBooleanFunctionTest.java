@@ -18,7 +18,7 @@ public class LogicalBooleanFunctionTest {
         final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofOr();
 
         // When
-        final Value result = logicalBooleanFunction.execute(givenLeftValue, givenRightValue);
+        final Value result = logicalBooleanFunction.evaluate(givenLeftValue, givenRightValue);
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -36,7 +36,7 @@ public class LogicalBooleanFunctionTest {
         final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofAnd();
 
         // When
-        final Value result = logicalBooleanFunction.execute(givenLeftValue, givenRightValue);
+        final Value result = logicalBooleanFunction.evaluate(givenLeftValue, givenRightValue);
 
         // Then
         assertThat(result).isEqualTo(expectedValue);

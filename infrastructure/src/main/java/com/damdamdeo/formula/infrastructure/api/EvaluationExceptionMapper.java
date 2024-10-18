@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.infrastructure.api;
 
-import com.damdamdeo.formula.domain.ExecutionException;
+import com.damdamdeo.formula.domain.EvaluationException;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrSyntaxErrorException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -12,13 +12,13 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 @Provider
-public final class ExecutionExceptionMapper implements ExceptionMapper<ExecutionException> {
+public final class EvaluationExceptionMapper implements ExceptionMapper<EvaluationException> {
     @Override
     @APIResponses(
             value = {
-                    @APIResponse(responseCode = "400", description = "Syntax exception while executing formula",
+                    @APIResponse(responseCode = "400", description = "Syntax exception while evaluating formula",
                             content = @Content(
-                                    mediaType = "application/vnd.execution-syntax-error-v1+json",
+                                    mediaType = "application/vnd.evaluation-syntax-error-v1+json",
                                     schema = @Schema(
                                             implementation = ErrorMessageDTO.class),
                                     examples = {
@@ -34,9 +34,9 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
                                     }
                             )
                     ),
-                    @APIResponse(responseCode = "500", description = "Unhandled exception while executing formula",
+                    @APIResponse(responseCode = "500", description = "Unhandled exception while evaluating formula",
                             content = @Content(
-                                    mediaType = "application/vnd.execution-unexpected-exception-v1+json",
+                                    mediaType = "application/vnd.evaluation-unexpected-exception-v1+json",
                                     schema = @Schema(
                                             implementation = ErrorMessageDTO.class),
                                     examples = {
@@ -54,16 +54,16 @@ public final class ExecutionExceptionMapper implements ExceptionMapper<Execution
                     )
             }
     )
-    public Response toResponse(final ExecutionException exception) {
+    public Response toResponse(final EvaluationException exception) {
         final String body = new ErrorMessageDTO(exception).toJson();
         if (exception.getCause() instanceof AntlrSyntaxErrorException) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .type("application/vnd.execution-syntax-error-v1+json")
+                    .type("application/vnd.evaluation-syntax-error-v1+json")
                     .entity(body)
                     .build();
         } else {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .type("application/vnd.execution-unexpected-exception-v1+json")
+                    .type("application/vnd.evaluation-unexpected-exception-v1+json")
                     .entity(body)
                     .build();
         }

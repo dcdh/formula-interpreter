@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.api;
 
-import com.damdamdeo.formula.domain.ExecutionException;
-import com.damdamdeo.formula.domain.usecase.ExecuteUseCase;
+import com.damdamdeo.formula.domain.EvaluationException;
+import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -16,27 +16,27 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import java.util.Objects;
 
-@Path("/execute")
-public final class ExecutorEndpoint {
-    private final ExecuteUseCase executeUseCase;
+@Path("/evaluate")
+public final class EvaluateEndpoint {
+    private final EvaluateUseCase evaluateUseCase;
 
-    public ExecutorEndpoint(final ExecuteUseCase executeUseCase) {
-        this.executeUseCase = Objects.requireNonNull(executeUseCase);
+    public EvaluateEndpoint(final EvaluateUseCase evaluateUseCase) {
+        this.evaluateUseCase = Objects.requireNonNull(evaluateUseCase);
     }
 
     @POST
-    @Consumes("application/vnd.formula-execute-v1+json")
-    @Produces("application/vnd.formula-execution-v1+json")
+    @Consumes("application/vnd.formula-evaluate-v1+json")
+    @Produces("application/vnd.formula-evaluated-v1+json")
     @RequestBody(
             required = true,
             content = @Content(
                     schema = @Schema(
-                            implementation = ExecuteDTO.class
+                            implementation = EvaluateDTO.class
                     ),
                     examples = {
                             @ExampleObject(
                                     name = "Incomplete formula",
-                                    description = "Should fail to execute",
+                                    description = "Should fail to evaluate",
                                     //language=JSON
                                     value = """
                                             {
@@ -141,30 +141,30 @@ public final class ExecutorEndpoint {
                     responseCode = "200",
                     content = @Content(
                             schema = @Schema(
-                                    implementation = ExecutionResultDTO.class
+                                    implementation = EvaluationResultDTO.class
                             ),
                             examples = @ExampleObject(
-                                    name = "executed formula",
-                                    description = "executed formula",
+                                    name = "evaluated formula",
+                                    description = "evaluated formula",
                                     //language=JSON
                                     value = """
                                             {
                                               "result": "26",
                                               "exactProcessedInNanos": 28231378,
-                                              "parserExecutionProcessedIn": {
-                                                "executedAtStart": "2024-05-05T01:09:39.695736969+02:00",
-                                                "executedAtEnd": "2024-05-05T01:09:39.717878532+02:00",
+                                              "parserEvaluationProcessedIn": {
+                                                "evaluatedAtStart": "2024-05-05T01:09:39.695736969+02:00",
+                                                "evaluatedAtEnd": "2024-05-05T01:09:39.717878532+02:00",
                                                 "processedInNanos": 22141563
                                               },
-                                              "executionProcessedIn": {
-                                                "executedAtStart": "2024-05-05T01:09:39.722660591+02:00",
-                                                "executedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
+                                              "evaluationProcessedIn": {
+                                                "evaluatedAtStart": "2024-05-05T01:09:39.722660591+02:00",
+                                                "evaluatedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
                                                 "processedInNanos": 6089815
                                               },
                                               "intermediateResults": [
                                                 {
-                                                  "executedAtStart": "2024-05-05T01:09:39.724292501+02:00",
-                                                  "executedAtEnd": "2024-05-05T01:09:39.728590951+02:00",
+                                                  "evaluatedAtStart": "2024-05-05T01:09:39.724292501+02:00",
+                                                  "evaluatedAtEnd": "2024-05-05T01:09:39.728590951+02:00",
                                                   "processedInNanos": 4298450,
                                                   "range": {
                                                     "start": 0,
@@ -191,8 +191,8 @@ public final class ExecutorEndpoint {
                                                   "result": "26"
                                                 },
                                                 {
-                                                  "executedAtStart": "2024-05-05T01:09:39.724415205+02:00",
-                                                  "executedAtEnd": "2024-05-05T01:09:39.726876407+02:00",
+                                                  "evaluatedAtStart": "2024-05-05T01:09:39.724415205+02:00",
+                                                  "evaluatedAtEnd": "2024-05-05T01:09:39.726876407+02:00",
                                                   "processedInNanos": 2461202,
                                                   "range": {
                                                     "start": 4,
@@ -211,8 +211,8 @@ public final class ExecutorEndpoint {
                                                   "result": "260"
                                                 },
                                                 {
-                                                  "executedAtStart": "2024-05-05T01:09:39.727326633+02:00",
-                                                  "executedAtEnd": "2024-05-05T01:09:39.728449028+02:00",
+                                                  "evaluatedAtStart": "2024-05-05T01:09:39.727326633+02:00",
+                                                  "evaluatedAtEnd": "2024-05-05T01:09:39.728449028+02:00",
                                                   "processedInNanos": 1122395,
                                                   "range": {
                                                     "start": 22,
@@ -239,8 +239,8 @@ public final class ExecutorEndpoint {
                                                   "result": "0.1"
                                                 },
                                                 {
-                                                  "executedAtStart": "2024-05-05T01:09:39.727336957+02:00",
-                                                  "executedAtEnd": "2024-05-05T01:09:39.727368776+02:00",
+                                                  "evaluatedAtStart": "2024-05-05T01:09:39.727336957+02:00",
+                                                  "evaluatedAtEnd": "2024-05-05T01:09:39.727368776+02:00",
                                                   "processedInNanos": 31819,
                                                   "range": {
                                                     "start": 26,
@@ -259,8 +259,8 @@ public final class ExecutorEndpoint {
                                                   "result": "10"
                                                 },
                                                 {
-                                                  "executedAtStart": "2024-05-05T01:09:39.727476161+02:00",
-                                                  "executedAtEnd": "2024-05-05T01:09:39.72750957+02:00",
+                                                  "evaluatedAtStart": "2024-05-05T01:09:39.727476161+02:00",
+                                                  "evaluatedAtEnd": "2024-05-05T01:09:39.72750957+02:00",
                                                   "processedInNanos": 33409,
                                                   "range": {
                                                     "start": 44,
@@ -276,9 +276,9 @@ public final class ExecutorEndpoint {
                     )
             )
     )
-    public Uni<ExecutionResultDTO> execute(final ExecuteDTO execute) throws ExecutionException {
-        return executeUseCase.execute(execute.toExecuteCommand())
-                .map(ExecutionResultDTO::new);
+    public Uni<EvaluationResultDTO> evaluate(final EvaluateDTO evaluateDTO) throws EvaluationException {
+        return evaluateUseCase.execute(evaluateDTO.toEvaluateCommand())
+                .map(EvaluationResultDTO::new);
     }
 
 }

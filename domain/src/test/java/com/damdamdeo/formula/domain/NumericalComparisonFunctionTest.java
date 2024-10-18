@@ -18,7 +18,7 @@ public class NumericalComparisonFunctionTest {
         final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThan();
 
         // When
-        final Value result = numericalComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -36,7 +36,7 @@ public class NumericalComparisonFunctionTest {
         final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThanOrEqualTo();
 
         // When
-        final Value result = numericalComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -54,7 +54,7 @@ public class NumericalComparisonFunctionTest {
         final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThan();
 
         // When
-        final Value result = numericalComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);
@@ -72,7 +72,7 @@ public class NumericalComparisonFunctionTest {
         final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThanOrEqualTo();
 
         // When
-        final Value result = numericalComparisonFunction.execute(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
 
         // Then
         assertThat(result).isEqualTo(expectedValue);

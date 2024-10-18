@@ -16,7 +16,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsNotAvailable();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);
@@ -32,7 +32,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsError();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);
@@ -48,7 +48,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsNumeric();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);
@@ -64,7 +64,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsText();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);
@@ -80,7 +80,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsBlank();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);
@@ -96,7 +96,7 @@ public class InformationFunctionTest {
         final InformationFunction informationFunction = InformationFunction.ofIsLogical();
 
         // When
-        final boolean result = informationFunction.execute(givenArgument);
+        final boolean result = informationFunction.evaluate(givenArgument);
 
         // Then
         assertThat(result).isEqualTo(expectedArgument);

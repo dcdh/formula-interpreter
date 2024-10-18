@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.ExecutedAtProvider;
+import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,36 +12,36 @@ import java.time.ZonedDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class AntlrExecutorTest extends AbstractFunctionTest {
-    private AntlrExecutor antlrExecutor;
-    private ExecutedAtProvider executedAtProvider;
+public class AntlrParserTest extends AbstractFunctionTest {
+    private AntlrParser antlrExecutor;
+    private EvaluatedAtProvider evaluatedAtProvider;
 
     @BeforeEach
     public void setup() {
-        executedAtProvider = mock(ExecutedAtProvider.class);
-        antlrExecutor = new AntlrExecutor(executedAtProvider, new DefaultAntlrParseTreeGenerator(executedAtProvider));
+        evaluatedAtProvider = mock(EvaluatedAtProvider.class);
+        antlrExecutor = new AntlrParser(evaluatedAtProvider, new DefaultAntlrParseTreeGenerator(evaluatedAtProvider));
     }
 
     @AfterEach
     public void tearDown() {
-        reset(executedAtProvider);
+        reset(evaluatedAtProvider);
     }
 
     @Test
     public void shouldFailOnUnrecognizedToken() {
         // Given
-        when(executedAtProvider.now())
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
+        when(evaluatedAtProvider.now())
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), new StructuredReferences()));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\""),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), new StructuredReferences()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
                 assertThat(throwableToAssert)
-                        .isInstanceOf(ExecutionException.class)
+                        .isInstanceOf(EvaluationException.class)
                         .cause()
                         .isInstanceOf(AntlrSyntaxErrorException.class)
                         .hasFieldOrPropertyWithValue("syntaxError",
@@ -52,18 +52,18 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
         // Given
-        when(executedAtProvider.now())
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
+        when(evaluatedAtProvider.now())
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), new StructuredReferences()));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"Hello\"\n\"World\""),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), new StructuredReferences()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
                 assertThat(throwableToAssert)
-                        .isInstanceOf(ExecutionException.class)
+                        .isInstanceOf(EvaluationException.class)
                         .cause()
                         .isInstanceOf(AntlrSyntaxErrorException.class)
                         .hasFieldOrPropertyWithValue("syntaxError",
@@ -74,12 +74,12 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldLogWhenDebugFeatureIsActive() {
         // Given
-        final PartExecutionCallback givenPartExecutionCallback = new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider),
+        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider),
                 new NumericalContext(), new StructuredReferences());
-        doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
+        doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), givenPartExecutionCallback);
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"true\""), givenPartEvaluationCallback);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -90,12 +90,12 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldNotLogWhenDebugFeatureIsInactive() {
         // Given
-        final PartExecutionCallback givenPartExecutionCallback = new PartExecutionCallback(new NoOpPartExecutionCallbackListener(),
+        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(),
                 new NumericalContext(), new StructuredReferences());
-        doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
+        doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), givenPartExecutionCallback);
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"true\""), givenPartEvaluationCallback);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->

@@ -7,9 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Schema(name = "IntermediateResult", required = true, requiredProperties = {"executedAtStart", "executedAtEnd", "processedInNanos", "range", "inputs", "value"})
-public record IntermediateResultDTO(@Schema(required = true) ZonedDateTime executedAtStart,
-                                    @Schema(required = true) ZonedDateTime executedAtEnd,
+@Schema(name = "IntermediateResult", required = true, requiredProperties = {"evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "range", "inputs", "value"})
+public record IntermediateResultDTO(@Schema(required = true) ZonedDateTime evaluatedAtStart,
+                                    @Schema(required = true) ZonedDateTime evaluatedAtEnd,
                                     @Schema(required = true) long processedInNanos,
                                     @Schema(required = true) RangeDTO range,
                                     @Schema(required = true) List<InputDTO> inputs,
@@ -17,9 +17,9 @@ public record IntermediateResultDTO(@Schema(required = true) ZonedDateTime execu
 
     public IntermediateResultDTO(final IntermediateResult intermediateResult) {
         this(
-                intermediateResult.executionProcessedIn().executedAtStart().at(),
-                intermediateResult.executionProcessedIn().executedAtEnd().at(),
-                intermediateResult.executionProcessedIn().in().toNanos(),
+                intermediateResult.evaluationProcessedIn().evaluatedAtStart().at(),
+                intermediateResult.evaluationProcessedIn().evaluatedAtEnd().at(),
+                intermediateResult.evaluationProcessedIn().in().toNanos(),
                 new RangeDTO(intermediateResult.range()),
                 intermediateResult.inputs().stream()
                         .map(InputDTO::new).collect(Collectors.toList()),

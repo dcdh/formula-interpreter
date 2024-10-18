@@ -9,25 +9,24 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.Objects;
 
-// TODO rename to AntlrEvalVisitor
-public final class EvalVisitor extends FormulaBaseVisitor<Result> {
-    private final PartExecutionCallback partExecutionCallback;
+public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
+    private final PartEvaluationCallback partEvaluationCallback;
 
-    public EvalVisitor(final PartExecutionCallback partExecutionCallback) {
-        this.partExecutionCallback = Objects.requireNonNull(partExecutionCallback);
-        partExecutionCallback.storeCurrentResult(new Result());
+    public AntlrEvalVisitor(final PartEvaluationCallback partEvaluationCallback) {
+        this.partEvaluationCallback = Objects.requireNonNull(partEvaluationCallback);
+        partEvaluationCallback.storeCurrentResult(new Result());
     }
 
     @Override
     public Result visitChildren(final RuleNode node) {
         final Result value = super.visitChildren(node);
-        this.partExecutionCallback.storeCurrentResult(value);
+        this.partEvaluationCallback.storeCurrentResult(value);
         return value;
     }
 
     @Override
     protected Result defaultResult() {
-        return this.partExecutionCallback.getCurrentResult();
+        return this.partEvaluationCallback.getCurrentResult();
     }
 
     final class AntlrValueProvider implements ValueProvider {
@@ -53,7 +52,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
-        return partExecutionCallback.executeArithmeticFunctions(
+        return partEvaluationCallback.evaluateArithmeticFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.ADD -> ArithmeticFunction.ofAddition();
                     case FormulaParser.SUB -> ArithmeticFunction.ofSubtraction();
@@ -71,7 +70,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
-        return partExecutionCallback.executeComparisonFunctions(
+        return partEvaluationCallback.evaluateComparisonFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.EQ -> EqualityComparisonFunction.ofEqual();
                     case FormulaParser.NEQ -> EqualityComparisonFunction.ofNotEqual();
@@ -91,7 +90,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
-        return partExecutionCallback.executeLogicalBooleanFunctions(
+        return partEvaluationCallback.evaluateLogicalBooleanFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.AND -> LogicalBooleanFunction.ofAnd();
                     case FormulaParser.OR -> LogicalBooleanFunction.ofOr();
@@ -107,7 +106,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
-        return partExecutionCallback.executeLogicalComparisonFunctions(
+        return partEvaluationCallback.evaluateLogicalComparisonFunctions(
                 () -> {
                     final AntlrValueProvider onTrue = new AntlrValueProvider(ctx.whenTrue);
                     final AntlrValueProvider onFalse = new AntlrValueProvider(ctx.whenFalse);
@@ -127,7 +126,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitInformation_functions(final FormulaParser.Information_functionsContext ctx) {
-        return partExecutionCallback.executeInformationFunction(
+        return partEvaluationCallback.evaluateInformationFunction(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.ISNA -> InformationFunction.ofIsNotAvailable();
                     case FormulaParser.ISERROR -> InformationFunction.ofIsError();
@@ -146,7 +145,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return partExecutionCallback.executeArgumentStructuredReference(
+        return partEvaluationCallback.evaluateArgumentStructuredReference(
                 () -> new Reference(ctx.STRUCTURED_REFERENCE().getText()
                         .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
                         .substring(3)),
@@ -158,7 +157,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
-        return partExecutionCallback.executeArgument(
+        return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.VALUE().getText()),
                 () -> new Range(
                         ctx.getStart().getStartIndex(),
@@ -168,7 +167,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
 
     @Override
     public Result visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return partExecutionCallback.executeArgument(
+        return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.NUMERIC().getText()),
                 () -> new Range(
                         ctx.getStart().getStartIndex(),
@@ -179,7 +178,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return partExecutionCallback.executeArgument(
+        return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),
                 () -> new Range(
                         ctx.getStart().getStartIndex(),
@@ -190,7 +189,7 @@ public final class EvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return partExecutionCallback.executeArgument(
+        return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),
                 () -> new Range(
                         ctx.getStart().getStartIndex(),

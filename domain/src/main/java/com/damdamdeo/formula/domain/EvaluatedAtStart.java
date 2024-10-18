@@ -2,6 +2,6 @@ package com.damdamdeo.formula.domain;
 
 import java.time.ZonedDateTime;
 
-public interface ExecutedAtStart {
+public interface EvaluatedAtStart {
     ZonedDateTime at();
 }

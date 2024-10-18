@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public record ExecutionResult(Result result,
-                              ParserExecutionProcessedIn parserExecutionProcessedIn,// can be null
-                              List<IntermediateResult> intermediateResults,
-                              ExecutionProcessedIn executionProcessedIn) {
-    public ExecutionResult {
+public record EvaluationResult(Result result,
+                               ParserEvaluationProcessedIn parserEvaluationProcessedIn,// can be null
+                               List<IntermediateResult> intermediateResults,
+                               EvaluationProcessedIn evaluationProcessedIn) {
+    public EvaluationResult {
         Objects.requireNonNull(result);
         Objects.requireNonNull(intermediateResults);
-        Objects.requireNonNull(executionProcessedIn);
+        Objects.requireNonNull(evaluationProcessedIn);
     }
 
     public String value() {
@@ -20,7 +20,7 @@ public record ExecutionResult(Result result,
     }
 
     public long exactProcessedInNanos() {
-        return Stream.of(parserExecutionProcessedIn, executionProcessedIn)
+        return Stream.of(parserEvaluationProcessedIn, evaluationProcessedIn)
                 .filter(Objects::nonNull)
                 .map(ProcessedIn::in)
                 .map(Duration::toNanos)

@@ -129,10 +129,10 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
       status = 'failed';
       if (error instanceof AjaxError) {
         switch (error.xhr.getResponseHeader('content-type')) {
-          case 'application/vnd.execution-syntax-error-v1+json':
+          case 'application/vnd.evaluation-syntax-error-v1+json':
             // TODO
             break;
-          case 'application/vnd.execution-unexpected-exception-v1+json':
+          case 'application/vnd.evaluation-unexpected-exception-v1+json':
             // TODO
             break;
           default:

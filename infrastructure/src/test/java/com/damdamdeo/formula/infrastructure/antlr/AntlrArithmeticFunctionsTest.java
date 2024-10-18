@@ -19,10 +19,10 @@ import static org.mockito.Mockito.when;
 public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndStructuredReferenceRight(final Value leftValue,
-                                                                                            final String givenOperation,
-                                                                                            final Value rightValue,
-                                                                                            final Value expectedValue) {
+    public void shouldEvaluateOperationForStructuredReferenceLeftAndStructuredReferenceRight(final Value leftValue,
+                                                                                             final String givenOperation,
+                                                                                             final Value rightValue,
+                                                                                             final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final StructuredReferences givenStructuredReferences = new StructuredReferences(
@@ -33,8 +33,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -45,10 +45,10 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForStructuredReferenceLeftAndValueRight(final Value leftValue,
-                                                                              final String givenOperation,
-                                                                              final Value rightValue,
-                                                                              final Value expectedValue) {
+    public void shouldEvaluateOperationForStructuredReferenceLeftAndValueRight(final Value leftValue,
+                                                                               final String givenOperation,
+                                                                               final Value rightValue,
+                                                                               final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenOperation, rightValue.value());
         final StructuredReferences givenStructuredReferences = new StructuredReferences(
@@ -58,8 +58,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -70,10 +70,10 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndStructuredReferenceRight(final Value leftValue,
-                                                                              final String givenOperation,
-                                                                              final Value rightValue,
-                                                                              final Value expectedValue) {
+    public void shouldEvaluateOperationForValueLeftAndStructuredReferenceRight(final Value leftValue,
+                                                                               final String givenOperation,
+                                                                               final Value rightValue,
+                                                                               final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenOperation, leftValue.value());
         final StructuredReferences givenStructuredReferences = new StructuredReferences(
@@ -83,8 +83,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -95,17 +95,17 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
-    public void shouldExecuteOperationForValueLeftAndValueRight(final Value leftValue,
-                                                                final String givenOperation,
-                                                                final Value rightValue,
-                                                                final Value expectedValue) {
+    public void shouldEvaluateOperationForValueLeftAndValueRight(final Value leftValue,
+                                                                 final String givenOperation,
+                                                                 final Value rightValue,
+                                                                 final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,%s)", givenOperation, leftValue.value(), rightValue.value());
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -135,8 +135,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -157,8 +157,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -180,8 +180,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -203,8 +203,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -226,8 +226,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -252,8 +252,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -267,21 +267,21 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         // Given
         final String givenFormula = "DIV(10,0)";
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
-        when(executedAtProvider.now())
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
-                .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
+        when(evaluatedAtProvider.now())
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
+                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
-                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
+        final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
+                new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -293,23 +293,23 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                         new Input(new InputName("left"), Value.of("10"), new Range(4, 5)),
                                         new Input(new InputName("right"), Value.of("0"), new Range(7, 7))
                                 ),
-                                new ExecutionProcessedIn(
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
+                                new EvaluationProcessedIn(
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("10"),
                                 new Range(4, 5),
                                 List.of(),
-                                new ExecutionProcessedIn(
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))),
+                                new EvaluationProcessedIn(
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("0"),
                                 new Range(7, 7),
                                 List.of(),
-                                new ExecutionProcessedIn(
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")),
-                                        new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]"))))
+                                new EvaluationProcessedIn(
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")),
+                                        new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]"))))
                 )
         );
     }
