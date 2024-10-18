@@ -7,11 +7,11 @@ import java.util.stream.Stream;
 
 public record ExecutionResult(Result result,
                               ParserExecutionProcessedIn parserExecutionProcessedIn,// can be null
-                              List<ElementExecution> elementExecutions,
+                              List<IntermediateResult> intermediateResults,
                               ExecutionProcessedIn executionProcessedIn) {
     public ExecutionResult {
         Objects.requireNonNull(result);
-        Objects.requireNonNull(elementExecutions);
+        Objects.requireNonNull(intermediateResults);
         Objects.requireNonNull(executionProcessedIn);
     }
 

@@ -19,7 +19,7 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @BeforeEach
     public void setup() {
         executedAtProvider = mock(ExecutedAtProvider.class);
-        antlrExecutor = new AntlrExecutor(executedAtProvider, new NumericalContext(), new DefaultAntlrParseTreeGenerator(executedAtProvider));
+        antlrExecutor = new AntlrExecutor(executedAtProvider, new DefaultAntlrParseTreeGenerator(executedAtProvider));
     }
 
     @AfterEach
@@ -35,7 +35,8 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""), new StructuredReferences(), new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\""),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), new StructuredReferences()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -56,7 +57,8 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""), new StructuredReferences(), new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"Hello\"\n\"World\""),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), new StructuredReferences()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -72,30 +74,32 @@ public class AntlrExecutorTest extends AbstractFunctionTest {
     @Test
     public void shouldLogWhenDebugFeatureIsActive() {
         // Given
-        final ExecutionWrapper givenExecutionWrapper = new LoggingExecutionWrapper(executedAtProvider);
+        final PartExecutionCallback givenPartExecutionCallback = new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider),
+                new NumericalContext(), new StructuredReferences());
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredReferences(), givenExecutionWrapper);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), givenPartExecutionCallback);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).isNotEmpty()
+                assertThat(executionResultToAssert.intermediateResults()).isNotEmpty()
         );
     }
 
     @Test
     public void shouldNotLogWhenDebugFeatureIsInactive() {
         // Given
-        final ExecutionWrapper givenExecutionWrapper = new NoOpExecutionWrapper();
+        final PartExecutionCallback givenPartExecutionCallback = new PartExecutionCallback(new NoOpPartExecutionCallbackListener(),
+                new NumericalContext(), new StructuredReferences());
         doReturn(new ExecutedAt(ZonedDateTime.now())).when(executedAtProvider).now();
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), new StructuredReferences(), givenExecutionWrapper);
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(new Formula("\"true\""), givenPartExecutionCallback);
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).isEmpty()
+                assertThat(executionResultToAssert.intermediateResults()).isEmpty()
         );
     }
 }

@@ -68,7 +68,7 @@ public class ApplicationTest {
                              "executedAtEnd": "2023-12-25T10:15:05+01:00",
                              "processedInNanos": 3000000000
                          },
-                         "elementExecutions": [
+                         "intermediateResults": [
                              {
                                  "executedAtStart": "2023-12-25T10:15:03+01:00",
                                  "executedAtEnd": "2023-12-25T10:15:04+01:00",
@@ -126,16 +126,16 @@ public class ApplicationTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("elementExecutions[0].range.start", is(0))
-                    .body("elementExecutions[0].range.end", is(48))
-                    .body("elementExecutions[1].range.start", is(4))
-                    .body("elementExecutions[1].range.end", is(20))
-                    .body("elementExecutions[2].range.start", is(22))
-                    .body("elementExecutions[2].range.end", is(47))
-                    .body("elementExecutions[3].range.start", is(26))
-                    .body("elementExecutions[3].range.end", is(42))
-                    .body("elementExecutions[4].range.start", is(44))
-                    .body("elementExecutions[4].range.end", is(46));
+                    .body("intermediateResults[0].range.start", is(0))
+                    .body("intermediateResults[0].range.end", is(48))
+                    .body("intermediateResults[1].range.start", is(4))
+                    .body("intermediateResults[1].range.end", is(20))
+                    .body("intermediateResults[2].range.start", is(22))
+                    .body("intermediateResults[2].range.end", is(47))
+                    .body("intermediateResults[3].range.start", is(26))
+                    .body("intermediateResults[3].range.end", is(42))
+                    .body("intermediateResults[4].range.start", is(44))
+                    .body("intermediateResults[4].range.end", is(46));
         }
     }
 

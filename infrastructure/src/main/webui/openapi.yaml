@@ -107,7 +107,7 @@ paths:
                       executedAtStart: 2024-05-05T01:09:39.722660591+02:00
                       executedAtEnd: 2024-05-05T01:09:39.728750406+02:00
                       processedInNanos: 6089815
-                    elementExecutions:
+                    intermediateResults:
                     - executedAtStart: 2024-05-05T01:09:39.724292501+02:00
                       executedAtEnd: 2024-05-05T01:09:39.728590951+02:00
                       processedInNanos: 4298450
@@ -350,41 +350,6 @@ components:
       - ACTIVE
       - INACTIVE
       type: string
-    ElementExecution:
-      required:
-      - executedAtStart
-      - executedAtEnd
-      - processedInNanos
-      - range
-      - inputs
-      - value
-      - executedAtStart
-      - executedAtEnd
-      - processedInNanos
-      - range
-      - inputs
-      - result
-      type: object
-      properties:
-        executedAtStart:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
-        executedAtEnd:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
-        processedInNanos:
-          format: int64
-          type: integer
-        range:
-          $ref: "#/components/schemas/Range"
-        inputs:
-          type: array
-          items:
-            $ref: "#/components/schemas/Input"
-        result:
-          type: string
     ErrorMessage:
       required:
       - message
@@ -437,11 +402,11 @@ components:
       - result
       - exactProcessedInNanos
       - executionProcessedIn
-      - elementExecutions
+      - intermediateResults
       - result
       - exactProcessedInNanos
       - executionProcessedIn
-      - elementExecutions
+      - intermediateResults
       type: object
       properties:
         result:
@@ -453,10 +418,10 @@ components:
           $ref: "#/components/schemas/ParserExecutionProcessedIn"
         executionProcessedIn:
           $ref: "#/components/schemas/ExecutionProcessedIn"
-        elementExecutions:
+        intermediateResults:
           type: array
           items:
-            $ref: "#/components/schemas/ElementExecution"
+            $ref: "#/components/schemas/IntermediateResult"
     Input:
       required:
       - name
@@ -473,6 +438,41 @@ components:
           type: string
         range:
           $ref: "#/components/schemas/Range"
+    IntermediateResult:
+      required:
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - range
+      - inputs
+      - value
+      - executedAtStart
+      - executedAtEnd
+      - processedInNanos
+      - range
+      - inputs
+      - result
+      type: object
+      properties:
+        executedAtStart:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        executedAtEnd:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedInNanos:
+          format: int64
+          type: integer
+        range:
+          $ref: "#/components/schemas/Range"
+        inputs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Input"
+        result:
+          type: string
     ParserExecutionProcessedIn:
       required:
       - executedAtStart

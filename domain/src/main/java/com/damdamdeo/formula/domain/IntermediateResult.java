@@ -3,11 +3,11 @@ package com.damdamdeo.formula.domain;
 import java.util.List;
 import java.util.Objects;
 
-public record ElementExecution(Value value,
-                               Range range,
-                               List<Input> inputs,
-                               ExecutionProcessedIn executionProcessedIn) {
-    public ElementExecution {
+public record IntermediateResult(Value value,
+                                 Range range,
+                                 List<Input> inputs,
+                                 ExecutionProcessedIn executionProcessedIn) {
+    public IntermediateResult {
         Objects.requireNonNull(value);
         Objects.requireNonNull(range);
         Objects.requireNonNull(inputs);
@@ -22,37 +22,37 @@ public record ElementExecution(Value value,
         List<Input> inputs;
         Value value;
 
-        public static ElementExecution.Builder newBuilder() {
-            return new ElementExecution.Builder();
+        public static IntermediateResult.Builder newBuilder() {
+            return new IntermediateResult.Builder();
         }
 
-        public ElementExecution.Builder withPosition(final Range range) {
+        public IntermediateResult.Builder withPosition(final Range range) {
             this.range = range;
             return this;
         }
 
-        public ElementExecution.Builder withExecutedAtStart(final ExecutedAtStart executedAtStart) {
+        public IntermediateResult.Builder withExecutedAtStart(final ExecutedAtStart executedAtStart) {
             this.executedAtStart = executedAtStart;
             return this;
         }
 
-        public ElementExecution.Builder withExecutedAtEnd(final ExecutedAtEnd executedAtEnd) {
+        public IntermediateResult.Builder withExecutedAtEnd(final ExecutedAtEnd executedAtEnd) {
             this.executedAtEnd = executedAtEnd;
             return this;
         }
 
-        public ElementExecution.Builder withInputs(final List<Input> inputs) {
+        public IntermediateResult.Builder withInputs(final List<Input> inputs) {
             this.inputs = inputs;
             return this;
         }
 
-        public ElementExecution.Builder withValue(final Value value) {
+        public IntermediateResult.Builder withValue(final Value value) {
             this.value = value;
             return this;
         }
 
-        public ElementExecution build() {
-            return new ElementExecution(
+        public IntermediateResult build() {
+            return new IntermediateResult(
                     value, range, inputs, new ExecutionProcessedIn(executedAtStart, executedAtEnd)
             );
         }

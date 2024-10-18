@@ -35,8 +35,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -67,8 +67,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -99,8 +99,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -133,8 +133,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -179,8 +179,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -202,8 +202,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -225,8 +225,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -262,8 +262,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -283,8 +283,8 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -316,13 +316,13 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new LoggingExecutionWrapper(executedAtProvider));
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new ElementExecution(
+                assertThat(executionResultToAssert.intermediateResults()).containsExactly(
+                        new IntermediateResult(
                                 Value.of("true"),
                                 new Range(0, 10),
                                 List.of(
@@ -331,14 +331,14 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("660"),
                                 new Range(3, 5),
                                 List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("260"),
                                 new Range(7, 9),
                                 List.of(),

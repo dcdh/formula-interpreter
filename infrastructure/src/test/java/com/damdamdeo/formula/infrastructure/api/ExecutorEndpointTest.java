@@ -37,7 +37,7 @@ public class ExecutorEndpointTest {
                                 new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))
                         ),
                         List.of(
-                                new ElementExecution(
+                                new IntermediateResult(
                                         Value.of("10"),
                                         new Range(4, 5),
                                         List.of(
@@ -84,7 +84,7 @@ public class ExecutorEndpointTest {
                          "executedAtEnd": "2023-12-25T10:15:02+01:00",
                          "processedInNanos": 2000000000
                      },
-                     "elementExecutions": [
+                     "intermediateResults": [
                          {
                              "executedAtStart": "2023-12-25T10:15:00+01:00",
                              "executedAtEnd": "2023-12-25T10:15:01+01:00",

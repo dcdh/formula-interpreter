@@ -6,20 +6,20 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Schema(name = "ExecutionResult", required = true, requiredProperties = {"result", "exactProcessedInNanos", "executionProcessedIn", "elementExecutions"})
+@Schema(name = "ExecutionResult", required = true, requiredProperties = {"result", "exactProcessedInNanos", "executionProcessedIn", "intermediateResults"})
 public record ExecutionResultDTO(@Schema(required = true) String result,
                                  @Schema(required = true) long exactProcessedInNanos,
                                  @Schema ParserExecutionProcessedInDTO parserExecutionProcessedIn,
                                  @Schema(required = true) ExecutionProcessedInDTO executionProcessedIn,
-                                 @Schema(required = true) List<ElementExecutionDTO> elementExecutions) {
+                                 @Schema(required = true) List<IntermediateResultDTO> intermediateResults) {
     public ExecutionResultDTO(final ExecutionResult executionResult) {
         this(
                 executionResult.value(),
                 executionResult.exactProcessedInNanos(),
                 executionResult.parserExecutionProcessedIn() != null ? new ParserExecutionProcessedInDTO(executionResult.parserExecutionProcessedIn()) : null,
                 new ExecutionProcessedInDTO(executionResult.executionProcessedIn()),
-                executionResult.elementExecutions().stream()
-                        .map(ElementExecutionDTO::new)
+                executionResult.intermediateResults().stream()
+                        .map(IntermediateResultDTO::new)
                         .collect(Collectors.toList()));
     }
 }

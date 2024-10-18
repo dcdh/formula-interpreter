@@ -56,14 +56,14 @@ public class Application {
     @ApplicationScoped
     public Executor executorProducer(final ExecutedAtProvider executedAtProvider,
                                      @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
-        return new AntlrExecutor(executedAtProvider, new NumericalContext(), antlrParseTreeGenerator);
+        return new AntlrExecutor(executedAtProvider, antlrParseTreeGenerator);
     }
 
     @Produces
     @ApplicationScoped
     public ExecuteUseCase executeUseCaseProducer(final Executor executor,
                                                  final ExecutedAtProvider executedAtProvider) {
-        return new ExecuteUseCase(executor, executedAtProvider);
+        return new ExecuteUseCase(executor, executedAtProvider, new NumericalContext());
     }
 
     @Produces

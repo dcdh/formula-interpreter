@@ -54,13 +54,13 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:21+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new LoggingExecutionWrapper(executedAtProvider));
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new ElementExecution(
+                assertThat(executionResultToAssert.intermediateResults()).containsExactly(
+                        new IntermediateResult(
                                 Value.of("40"),
                                 new Range(0, 119),
                                 List.of(
@@ -68,7 +68,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:20+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("true"),
                                 new Range(3, 29),
                                 List.of(
@@ -77,7 +77,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("Joe"),
                                 new Range(6, 22),
                                 List.of(
@@ -85,14 +85,14 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("Joe"),
                                 new Range(24, 28),
                                 List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("40"),
                                 new Range(31, 77),
                                 List.of(
@@ -101,7 +101,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:19+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("20"),
                                 new Range(35, 74),
                                 List.of(
@@ -110,7 +110,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("200"),
                                 new Range(39, 55),
                                 List.of(
@@ -118,7 +118,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("0.10"),
                                 new Range(57, 73),
                                 List.of(
@@ -126,7 +126,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("2"),
                                 new Range(76, 76),
                                 List.of(),
@@ -166,13 +166,13 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new LoggingExecutionWrapper(executedAtProvider));
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new ElementExecution(
+                assertThat(executionResultToAssert.intermediateResults()).containsExactly(
+                        new IntermediateResult(
                                 Value.of("20"),
                                 new Range(0, 119),
                                 List.of(
@@ -180,7 +180,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("false"),
                                 new Range(3, 29),
                                 List.of(
@@ -189,7 +189,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("Robert"),
                                 new Range(6, 22),
                                 List.of(
@@ -197,14 +197,14 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("Joe"),
                                 new Range(24, 28),
                                 List.of(),
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("20"),
                                 new Range(79, 118),
                                 List.of(
@@ -213,7 +213,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("200"),
                                 new Range(83, 99),
                                 List.of(
@@ -221,7 +221,7 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                                 new ExecutionProcessedIn(
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")),
                                         new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")))),
-                        new ElementExecution(
+                        new IntermediateResult(
                                 Value.of("0.10"),
                                 new Range(101, 117),
                                 List.of(

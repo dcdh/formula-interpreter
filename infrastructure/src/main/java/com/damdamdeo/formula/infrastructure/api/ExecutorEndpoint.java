@@ -161,7 +161,7 @@ public final class ExecutorEndpoint {
                                                 "executedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
                                                 "processedInNanos": 6089815
                                               },
-                                              "elementExecutions": [
+                                              "intermediateResults": [
                                                 {
                                                   "executedAtStart": "2024-05-05T01:09:39.724292501+02:00",
                                                   "executedAtEnd": "2024-05-05T01:09:39.728590951+02:00",

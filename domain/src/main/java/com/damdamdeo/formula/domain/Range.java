@@ -7,4 +7,10 @@ public record Range(Integer start, Integer end) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
     }
+
+    public Range of(final Integer plusStart, final Integer plusEnd) {
+        Objects.requireNonNull(plusStart);
+        Objects.requireNonNull(plusEnd);
+        return new Range(start + plusStart, end + plusEnd);
+    }
 }

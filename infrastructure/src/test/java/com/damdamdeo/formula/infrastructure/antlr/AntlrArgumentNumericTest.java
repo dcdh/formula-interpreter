@@ -34,8 +34,8 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
         // Given
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), new StructuredReferences(),
-                new NoOpExecutionWrapper());
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new NoOpPartExecutionCallbackListener(), new NumericalContext(), new StructuredReferences()));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -58,13 +58,13 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
                 .thenReturn(new ExecutedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
 
         // When
-        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula), givenStructuredReferences,
-                new LoggingExecutionWrapper(executedAtProvider));
+        final Uni<ExecutionResult> executionResult = antlrExecutor.execute(formula4Test(givenFormula),
+                new PartExecutionCallback(new LoggingPartExecutionCallbackListener(executedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.elementExecutions()).containsExactly(
-                        new ElementExecution(
+                assertThat(executionResultToAssert.intermediateResults()).containsExactly(
+                        new IntermediateResult(
                                 Value.of("0.00"),
                                 new Range(0, 3),
                                 List.of(),

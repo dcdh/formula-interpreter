@@ -4,14 +4,14 @@
  * infrastructure API
  * OpenAPI spec version: 1.0-SNAPSHOT
  */
-import type { ElementExecution } from "./elementExecution";
 import type { ExecutionProcessedIn } from "./executionProcessedIn";
+import type { IntermediateResult } from "./intermediateResult";
 import type { ParserExecutionProcessedIn } from "./parserExecutionProcessedIn";
 
 export interface ExecutionResult {
-  elementExecutions: ElementExecution[];
   exactProcessedInNanos: number;
   executionProcessedIn: ExecutionProcessedIn;
+  intermediateResults: IntermediateResult[];
   parserExecutionProcessedIn?: ParserExecutionProcessedIn;
   result: string;
 }
