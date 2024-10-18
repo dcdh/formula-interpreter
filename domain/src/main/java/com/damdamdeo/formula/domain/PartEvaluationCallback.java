@@ -2,12 +2,11 @@ package com.damdamdeo.formula.domain;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public final class PartEvaluationCallback {
     private final PartEvaluationCallbackListener partEvaluationCallbackListener;
-    private final AtomicInteger currentEvaluationId;
+    private PartEvaluationId currentPartEvaluationId;
     private final NumericalContext numericalContext;
     private final StructuredReferences structuredReferences;
     private Result currentResult = new Result();
@@ -16,7 +15,7 @@ public final class PartEvaluationCallback {
                                   final NumericalContext numericalContext,
                                   final StructuredReferences structuredReferences) {
         this.partEvaluationCallbackListener = Objects.requireNonNull(partEvaluationCallbackListener);
-        this.currentEvaluationId = new AtomicInteger(-1);
+        this.currentPartEvaluationId = new PartEvaluationId(-1);
         this.numericalContext = Objects.requireNonNull(numericalContext);
         this.structuredReferences = Objects.requireNonNull(structuredReferences);
     }
@@ -188,7 +187,8 @@ public final class PartEvaluationCallback {
 
     private Result evaluate(final Supplier<Result> supplier) {
         Objects.requireNonNull(supplier);
-        final PartEvaluationId partEvaluationId = new PartEvaluationId(currentEvaluationId);
+        currentPartEvaluationId = currentPartEvaluationId.increment();
+        final PartEvaluationId partEvaluationId = currentPartEvaluationId;
         this.partEvaluationCallbackListener.onBeforePartEvaluation(partEvaluationId);
         final Result result = supplier.get();
         this.partEvaluationCallbackListener.onAfterPartEvaluation(partEvaluationId, result);

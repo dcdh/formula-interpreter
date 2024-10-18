@@ -1,13 +1,16 @@
 package com.damdamdeo.formula.domain;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 
 public record PartEvaluationId(Integer id) implements Comparable<PartEvaluationId> {
-    public PartEvaluationId(final AtomicInteger currentPartEvaluationId) {
-        this(currentPartEvaluationId.addAndGet(1));
+    public PartEvaluationId {
+        Objects.requireNonNull(id);
     }
 
-    // TODO add an increment synchronized method
+    public PartEvaluationId increment() {
+        return new PartEvaluationId(id + 1);
+    }
+
     @Override
     public int compareTo(final PartEvaluationId partEvaluationId) {
         return id.compareTo(partEvaluationId.id());
