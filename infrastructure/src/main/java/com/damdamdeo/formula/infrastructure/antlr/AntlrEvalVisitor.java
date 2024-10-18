@@ -125,15 +125,15 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitInformation_functions(final FormulaParser.Information_functionsContext ctx) {
-        return partEvaluationCallback.evaluateInformationFunction(
+    public Result visitState_functions(final FormulaParser.State_functionsContext ctx) {
+        return partEvaluationCallback.evaluateStateFunction(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.ISNA -> InformationFunction.ofIsNotAvailable();
-                    case FormulaParser.ISERROR -> InformationFunction.ofIsError();
-                    case FormulaParser.ISNUM -> InformationFunction.ofIsNumeric();
-                    case FormulaParser.ISTEXT -> InformationFunction.ofIsText();
-                    case FormulaParser.ISBLANK -> InformationFunction.ofIsBlank();
-                    case FormulaParser.ISLOGICAL -> InformationFunction.ofIsLogical();
+                    case FormulaParser.ISNA -> StateFunction.ofIsNotAvailable();
+                    case FormulaParser.ISERROR -> StateFunction.ofIsError();
+                    case FormulaParser.ISNUM -> StateFunction.ofIsNumeric();
+                    case FormulaParser.ISTEXT -> StateFunction.ofIsText();
+                    case FormulaParser.ISBLANK -> StateFunction.ofIsBlank();
+                    case FormulaParser.ISLOGICAL -> StateFunction.ofIsLogical();
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.value),

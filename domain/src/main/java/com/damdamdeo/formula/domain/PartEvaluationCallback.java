@@ -133,21 +133,21 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Result evaluateInformationFunction(final Supplier<InformationFunction> informationFunction,
-                                              final Supplier<Result> information,
-                                              final Supplier<Range> range) {
-        Objects.requireNonNull(informationFunction);
-        Objects.requireNonNull(information);
+    public Result evaluateStateFunction(final Supplier<StateFunction> stateFunction,
+                                        final Supplier<Result> state,
+                                        final Supplier<Range> range) {
+        Objects.requireNonNull(stateFunction);
+        Objects.requireNonNull(state);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result informationResult = information.get();
-            final Value value = informationFunction.get().evaluate(informationResult.value()) ? Value.ofTrue() : Value.ofFalse();
+            final Result stateResult = state.get();
+            final Value value = stateFunction.get().evaluate(stateResult.value()) ? Value.ofTrue() : Value.ofFalse();
             return new Result(value,
                     List.of(
                             new Input(
                                     InputName.ofValue(),
-                                    informationResult.value(),
-                                    informationResult.range())
+                                    stateResult.value(),
+                                    stateResult.range())
                     ),
                     range.get()
             );

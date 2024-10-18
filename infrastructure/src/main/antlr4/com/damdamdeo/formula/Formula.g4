@@ -6,7 +6,7 @@ expr: arithmetic_functions
     | comparison_functions
     | logical_boolean_functions
     | logical_comparison_functions
-    | information_functions
+    | state_functions
     | argument
     ;
 
@@ -40,7 +40,7 @@ boolean_operand: argument
                | comparison_functions
                | logical_boolean_functions
                | logical_comparison_functions
-               | information_functions
+               | state_functions
                ;
 
 logical_comparison_functions: function=(IF | IFERROR | IFNA)'('comparison=logical_comparison','whenTrue=logical_when','whenFalse=logical_when')'
@@ -50,19 +50,19 @@ logical_comparison: argument
                   | comparison_functions
                   | logical_boolean_functions
                   | logical_comparison_functions
-                  | information_functions
+                  | state_functions
                   ;
 
 logical_when: arithmetic_functions
             | comparison_functions
             | logical_boolean_functions
             | logical_comparison_functions
-            | information_functions
+            | state_functions
             | argument
             ;
 
-information_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')'
-                     ;
+state_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')'
+               ;
 
 ADD: 'ADD' ;
 SUB: 'SUB' ;

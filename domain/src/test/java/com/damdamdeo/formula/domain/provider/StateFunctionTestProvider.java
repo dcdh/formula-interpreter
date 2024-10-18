@@ -5,7 +5,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
-public class InformationFunctionTestProvider {
+public class StateFunctionTestProvider {
 
     public static Stream<Arguments> provideIsNotAvailable() {
         return Stream.of(

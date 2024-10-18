@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.provider.InformationFunctionTestProvider;
+import com.damdamdeo.formula.domain.provider.StateFunctionTestProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
+public class AntlrStateFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
     @MethodSource("provideValues")
     public void shouldCheck(final String givenFunction, final Value givenValue, final boolean expectedValue) {
@@ -59,17 +59,17 @@ public class AntlrInformationFunctionsTest extends AbstractFunctionTest {
 
     private static Stream<Arguments> provideValues() {
         return Stream.of(
-                        InformationFunctionTestProvider.provideIsNotAvailable()
+                        StateFunctionTestProvider.provideIsNotAvailable()
                                 .map(isNa -> Arguments.of("ISNA", isNa.get()[0], isNa.get()[1])),
-                        InformationFunctionTestProvider.provideIsError()
+                        StateFunctionTestProvider.provideIsError()
                                 .map(isError -> Arguments.of("ISERROR", isError.get()[0], isError.get()[1])),
-                        InformationFunctionTestProvider.provideIsNumeric()
+                        StateFunctionTestProvider.provideIsNumeric()
                                 .map(isNumeric -> Arguments.of("ISNUM", isNumeric.get()[0], isNumeric.get()[1])),
-                        InformationFunctionTestProvider.provideIsText()
+                        StateFunctionTestProvider.provideIsText()
                                 .map(isText -> Arguments.of("ISTEXT", isText.get()[0], isText.get()[1])),
-                        InformationFunctionTestProvider.provideIsBlank()
+                        StateFunctionTestProvider.provideIsBlank()
                                 .map(isBlank -> Arguments.of("ISBLANK", isBlank.get()[0], isBlank.get()[1])),
-                        InformationFunctionTestProvider.provideIsLogical()
+                        StateFunctionTestProvider.provideIsLogical()
                                 .map(isLogical -> Arguments.of("ISLOGICAL", isLogical.get()[0], isLogical.get()[1]))
                 )
                 .flatMap(Function.identity());
