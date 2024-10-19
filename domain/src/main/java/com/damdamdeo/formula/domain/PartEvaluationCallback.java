@@ -11,7 +11,7 @@ public final class PartEvaluationCallback {
     private PartEvaluationId currentPartEvaluationId;
     private final NumericalContext numericalContext;
     private final List<StructuredReference> structuredData;
-    private Result currentResult = new Result();
+    private Evaluated currentEvaluated = new Evaluated();
 
     public PartEvaluationCallback(final PartEvaluationCallbackListener partEvaluationCallbackListener,
                                   final NumericalContext numericalContext,
@@ -22,183 +22,176 @@ public final class PartEvaluationCallback {
         this.structuredData = Objects.requireNonNull(structuredData);
     }
 
-    public void storeCurrentEvaluation(final Result currentResult) {
-        this.currentResult = Objects.requireNonNull(currentResult);
+    public void storeCurrentEvaluation(final Evaluated currentEvaluated) {
+        this.currentEvaluated = Objects.requireNonNull(currentEvaluated);
     }
 
-    public Result getCurrentEvaluation() {
-        return currentResult;
+    public Evaluated getCurrentEvaluated() {
+        return currentEvaluated;
     }
 
-    public Result evaluateArithmeticFunctions(final Supplier<ArithmeticFunction.Function> arithmeticFunction,
-                                              final Supplier<Result> left,
-                                              final Supplier<Result> right,
-                                              final Supplier<Range> range) {
+    public Evaluated evaluateArithmeticFunctions(final Supplier<ArithmeticFunction.Function> arithmeticFunction,
+                                                 final Supplier<Evaluated> left,
+                                                 final Supplier<Evaluated> right,
+                                                 final Supplier<Range> range) {
         Objects.requireNonNull(arithmeticFunction);
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result leftResult = left.get();
-            final Result rightResult = right.get();
-            final Value value = ArithmeticFunction.of(arithmeticFunction.get(), leftResult.value(), rightResult.value()).evaluate(numericalContext);
-            return new Result(value,
-                    List.of(
+            final Evaluated leftEvaluated = left.get();
+            final Evaluated rightEvaluated = right.get();
+            final Value value = ArithmeticFunction.of(arithmeticFunction.get(), leftEvaluated.value(), rightEvaluated.value()).evaluate(numericalContext);
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
-                                    leftResult.value(),
-                                    leftResult.range()),
+                                    leftEvaluated.value(),
+                                    leftEvaluated.range()),
                             new Input(
                                     InputName.ofRight(),
-                                    rightResult.value(),
-                                    rightResult.range())
-                    ),
-                    range.get()
+                                    rightEvaluated.value(),
+                                    rightEvaluated.range())
+                    )
             );
         });
     }
 
-    public Result evaluateComparisonFunctions(final Supplier<ComparisonFunction.ComparisonType> comparisonFunction,
-                                              final Supplier<Result> left,
-                                              final Supplier<Result> right,
-                                              final Supplier<Range> range) {
+    public Evaluated evaluateComparisonFunctions(final Supplier<ComparisonFunction.ComparisonType> comparisonFunction,
+                                                 final Supplier<Evaluated> left,
+                                                 final Supplier<Evaluated> right,
+                                                 final Supplier<Range> range) {
         Objects.requireNonNull(comparisonFunction);
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result leftResult = left.get();
-            final Result rightResult = right.get();
-            final Value value = ComparisonFunction.of(comparisonFunction.get(), leftResult.value(), rightResult.value())
+            final Evaluated leftEvaluated = left.get();
+            final Evaluated rightEvaluated = right.get();
+            final Value value = ComparisonFunction.of(comparisonFunction.get(), leftEvaluated.value(), rightEvaluated.value())
                     .evaluate(numericalContext);
-            return new Result(value,
-                    List.of(
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
-                                    leftResult.value(),
-                                    leftResult.range()),
+                                    leftEvaluated.value(),
+                                    leftEvaluated.range()),
                             new Input(
                                     InputName.ofRight(),
-                                    rightResult.value(),
-                                    rightResult.range())
-                    ),
-                    range.get()
+                                    rightEvaluated.value(),
+                                    rightEvaluated.range())
+                    )
             );
         });
     }
 
-    public Result evaluateLogicalBooleanFunctions(final Supplier<LogicalBooleanFunction.Function> logicalBooleanFunction,
-                                                  final Supplier<Result> left,
-                                                  final Supplier<Result> right,
-                                                  final Supplier<Range> range) {
+    public Evaluated evaluateLogicalBooleanFunctions(final Supplier<LogicalBooleanFunction.Function> logicalBooleanFunction,
+                                                     final Supplier<Evaluated> left,
+                                                     final Supplier<Evaluated> right,
+                                                     final Supplier<Range> range) {
         Objects.requireNonNull(logicalBooleanFunction);
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result leftResult = left.get();
-            final Result rightResult = right.get();
-            final Value value = LogicalBooleanFunction.of(logicalBooleanFunction.get(), leftResult.value(), rightResult.value()).evaluate(numericalContext);
-            return new Result(value,
-                    List.of(
+            final Evaluated leftEvaluated = left.get();
+            final Evaluated rightEvaluated = right.get();
+            final Value value = LogicalBooleanFunction.of(logicalBooleanFunction.get(), leftEvaluated.value(), rightEvaluated.value()).evaluate(numericalContext);
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
-                                    leftResult.value(),
-                                    leftResult.range()),
+                                    leftEvaluated.value(),
+                                    leftEvaluated.range()),
                             new Input(
                                     InputName.ofRight(),
-                                    rightResult.value(),
-                                    rightResult.range())
-                    ),
-                    range.get()
+                                    rightEvaluated.value(),
+                                    rightEvaluated.range())
+                    )
             );
         });
     }
 
-    public Result evaluateLogicalComparisonFunctions(final Supplier<LogicalComparisonFunction.Function> logicalComparisonFunction,
-                                                     final Supplier<Result> comparison,
-                                                     final Supplier<ValueProvider> onTrue,
-                                                     final Supplier<ValueProvider> onFalse,
-                                                     final Supplier<Range> range) {
+    public Evaluated evaluateLogicalComparisonFunctions(final Supplier<LogicalComparisonFunction.Function> logicalComparisonFunction,
+                                                        final Supplier<Evaluated> comparison,
+                                                        final Supplier<ValueProvider> onTrue,
+                                                        final Supplier<ValueProvider> onFalse,
+                                                        final Supplier<Range> range) {
         Objects.requireNonNull(logicalComparisonFunction);
         Objects.requireNonNull(comparison);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result comparisonResult = comparison.get();
-            final Value value = LogicalComparisonFunction.of(logicalComparisonFunction.get(), comparisonResult.value(),
+            final Evaluated comparisonEvaluated = comparison.get();
+            final Value value = LogicalComparisonFunction.of(logicalComparisonFunction.get(), comparisonEvaluated.value(),
                             onTrue.get(),
                             onFalse.get())
                     .evaluate(numericalContext);
-            return new Result(value,
-                    List.of(
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofComparisonValue(),
-                                    comparisonResult.value(),
-                                    comparisonResult.range())
-                    ),
-                    range.get()
+                                    comparisonEvaluated.value(),
+                                    comparisonEvaluated.range())
+                    )
             );
         });
     }
 
-    public Result evaluateStateFunction(final Supplier<StateFunction.Function> stateFunction,
-                                        final Supplier<Result> state,
-                                        final Supplier<Range> range) {
+    public Evaluated evaluateStateFunction(final Supplier<StateFunction.Function> stateFunction,
+                                           final Supplier<Evaluated> state,
+                                           final Supplier<Range> range) {
         Objects.requireNonNull(stateFunction);
         Objects.requireNonNull(state);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Result stateResult = state.get();
-            final Value value = StateFunction.of(stateFunction.get(), stateResult.value()).evaluate(numericalContext);
-            return new Result(value,
-                    List.of(
+            final Evaluated stateEvaluated = state.get();
+            final Value value = StateFunction.of(stateFunction.get(), stateEvaluated.value()).evaluate(numericalContext);
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofValue(),
-                                    stateResult.value(),
-                                    stateResult.range())
-                    ),
-                    range.get()
+                                    stateEvaluated.value(),
+                                    stateEvaluated.range())
+                    )
             );
         });
     }
 
-    public Result evaluateArgumentStructuredReference(final Supplier<Reference> reference,
-                                                      final Supplier<Range> range) {
+    public Evaluated evaluateArgumentStructuredReference(final Supplier<Reference> reference,
+                                                         final Supplier<Range> range) {
         Objects.requireNonNull(reference);
         Objects.requireNonNull(range);
         return evaluate(() -> {
             final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredData, reference.get());
             final Value value = structuredReferencesFunction.evaluate(numericalContext);
-            final Range rangeReference = range.get();
-            return new Result(value,
-                    List.of(
+            return new Evaluated(value, range.get(),
+                    () -> List.of(
                             new Input(
                                     InputName.ofStructuredReference(),
                                     structuredReferencesFunction.reference(),
-                                    rangeReference.of(+3, -2)
-                            )),
-                    rangeReference);
+                                    range.get().of(+3, -2)
+                            )));
         });
     }
 
-    public Result evaluateArgument(final Supplier<Value> value,
-                                   final Supplier<Range> range) {
+    public Evaluated evaluateArgument(final Supplier<Value> value,
+                                      final Supplier<Range> range) {
         Objects.requireNonNull(value);
         Objects.requireNonNull(range);
-        return evaluate(() -> new Result(value.get(), range.get()));
+        return evaluate(
+                () -> new Evaluated(value.get(), range.get()));
     }
 
-    private Result evaluate(final Supplier<Result> supplier) {
-        Objects.requireNonNull(supplier);
+    private Evaluated evaluate(final Supplier<Evaluated> evaluated) {
+        Objects.requireNonNull(evaluated);
         currentPartEvaluationId = currentPartEvaluationId.increment();
         final PartEvaluationId partEvaluationId = currentPartEvaluationId;
         this.partEvaluationCallbackListener.onBeforePartEvaluation(partEvaluationId);
-        final Result result = supplier.get();
-        this.partEvaluationCallbackListener.onAfterPartEvaluation(partEvaluationId, result);
-        return result;
+        final Evaluated evaluatedResult = evaluated.get();
+        this.partEvaluationCallbackListener.onAfterPartEvaluation(partEvaluationId, evaluatedResult);
+        return evaluatedResult;
     }
 
-    // TODO should not return it here
     public List<IntermediateResult> intermediateResults() {
         return this.partEvaluationCallbackListener.intermediateResults();
     }

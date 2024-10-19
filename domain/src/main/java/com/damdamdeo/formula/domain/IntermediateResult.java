@@ -26,7 +26,7 @@ public record IntermediateResult(Value value,
             return new IntermediateResult.Builder();
         }
 
-        public IntermediateResult.Builder withPosition(final Range range) {
+        public IntermediateResult.Builder withRange(final Range range) {
             this.range = range;
             return this;
         }

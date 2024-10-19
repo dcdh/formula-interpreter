@@ -24,14 +24,14 @@ public final class DebugPartEvaluationCallbackListener implements PartEvaluation
     }
 
     @Override
-    public void onAfterPartEvaluation(final PartEvaluationId partEvaluationId, final Result result) {
+    public void onAfterPartEvaluation(final PartEvaluationId partEvaluationId, final Evaluated evaluated) {
         intermediateResultsByExecutionId.put(partEvaluationId,
                 IntermediateResult.Builder.newBuilder()
+                        .withValue(evaluated.value())
+                        .withInputs(evaluated.inputs().get())
+                        .withRange(evaluated.range())
                         .withEvaluatedAtStart(evaluatedAtStartsByExecutionId.get(partEvaluationId))
                         .withEvaluatedAtEnd(evaluatedAtProvider.now())
-                        .withPosition(result.range())
-                        .withInputs(result.inputs())
-                        .withValue(result.value())
                         .build());
     }
 

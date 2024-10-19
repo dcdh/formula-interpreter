@@ -32,7 +32,7 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -52,7 +52,7 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }

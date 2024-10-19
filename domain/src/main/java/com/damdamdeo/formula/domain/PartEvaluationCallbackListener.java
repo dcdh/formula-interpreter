@@ -6,7 +6,7 @@ public interface PartEvaluationCallbackListener {
 
     void onBeforePartEvaluation(PartEvaluationId partEvaluationId);
 
-    void onAfterPartEvaluation(PartEvaluationId partEvaluationId, Result result);
+    void onAfterPartEvaluation(PartEvaluationId partEvaluationId, Evaluated evaluated);
 
     default List<IntermediateResult> intermediateResults() {
         return List.of();

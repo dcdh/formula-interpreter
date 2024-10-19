@@ -25,7 +25,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("10%"))
         );
     }
@@ -42,7 +42,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -61,7 +61,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }

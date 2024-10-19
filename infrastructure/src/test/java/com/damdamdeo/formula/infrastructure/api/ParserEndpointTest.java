@@ -32,7 +32,7 @@ public class ParserEndpointTest {
         // Given
         doReturn(
                 Uni.createFrom().item(new EvaluationResult(
-                        new Result(new Value("true"), new Range(0, 10)),
+                        new Evaluated(new Value("true"), new Range(0, 10)),
                         new ParserEvaluationProcessedIn(
                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:58+01:00[Europe/Paris]")),
                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))

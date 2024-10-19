@@ -37,7 +37,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -67,7 +67,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -97,7 +97,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -131,7 +131,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -165,7 +165,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -186,7 +186,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -207,7 +207,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -232,7 +232,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("true"))
         );
     }

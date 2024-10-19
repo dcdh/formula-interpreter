@@ -36,7 +36,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -59,7 +59,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -82,7 +82,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -103,7 +103,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -134,7 +134,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("5"))
         );
     }
@@ -154,7 +154,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -175,7 +175,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -196,7 +196,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -217,7 +217,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NUM!"))
         );
     }
@@ -243,7 +243,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#DIV/0!"))
         );
     }

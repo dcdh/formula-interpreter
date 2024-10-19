@@ -39,7 +39,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value().isNumeric())
+                assertThat(executionResultToAssert.evaluated().value().isNumeric())
                         .isTrue()
         );
     }

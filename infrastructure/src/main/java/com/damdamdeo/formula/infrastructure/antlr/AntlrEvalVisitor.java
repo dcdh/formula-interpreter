@@ -9,30 +9,30 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.Objects;
 
-public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
+public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     private final PartEvaluationCallback partEvaluationCallback;
 
     public AntlrEvalVisitor(final PartEvaluationCallback partEvaluationCallback) {
         this.partEvaluationCallback = Objects.requireNonNull(partEvaluationCallback);
-        partEvaluationCallback.storeCurrentEvaluation(new Result());
+        partEvaluationCallback.storeCurrentEvaluation(new Evaluated());
     }
 
     @Override
-    public Result visitChildren(final RuleNode node) {
-        final Result value = super.visitChildren(node);
+    public Evaluated visitChildren(final RuleNode node) {
+        final Evaluated value = super.visitChildren(node);
         this.partEvaluationCallback.storeCurrentEvaluation(value);
         return value;
     }
 
     @Override
-    protected Result defaultResult() {
-        return this.partEvaluationCallback.getCurrentEvaluation();
+    protected Evaluated defaultResult() {
+        return this.partEvaluationCallback.getCurrentEvaluated();
     }
 
     final class AntlrValueProvider implements ValueProvider {
 
         private final ParseTree tree;
-        private Result result = null;
+        private Evaluated evaluated = null;
 
         AntlrValueProvider(final ParseTree tree) {
             this.tree = Objects.requireNonNull(tree);
@@ -40,18 +40,18 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
 
         @Override
         public Value provide() {
-            result = visit(tree);
-            return result.value();
+            evaluated = visit(tree);
+            return evaluated.value();
         }
 
-        public Result getResult() {
-            Objects.requireNonNull(result, "Range must have been defined");
-            return result;
+        public Evaluated getResult() {
+            Objects.requireNonNull(evaluated, "Range must have been defined");
+            return evaluated;
         }
     }
 
     @Override
-    public Result visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
+    public Evaluated visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
         return partEvaluationCallback.evaluateArithmeticFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.ADD -> ArithmeticFunction.Function.ADD;
@@ -69,7 +69,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
+    public Evaluated visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
         return partEvaluationCallback.evaluateComparisonFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.EQ -> ComparisonFunction.ComparisonType.EQ;
@@ -89,7 +89,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
+    public Evaluated visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
         return partEvaluationCallback.evaluateLogicalBooleanFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.AND -> LogicalBooleanFunction.Function.AND;
@@ -105,7 +105,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
+    public Evaluated visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
         return partEvaluationCallback.evaluateLogicalComparisonFunctions(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.IF -> LogicalComparisonFunction.Function.IF;
@@ -123,7 +123,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitState_functions(final FormulaParser.State_functionsContext ctx) {
+    public Evaluated visitState_functions(final FormulaParser.State_functionsContext ctx) {
         return partEvaluationCallback.evaluateStateFunction(
                 () -> switch (ctx.function.getType()) {
                     case FormulaParser.ISNA -> StateFunction.Function.IS_NOT_AVAILABLE;
@@ -142,7 +142,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
+    public Evaluated visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         return partEvaluationCallback.evaluateArgumentStructuredReference(
                 () -> new Reference(ctx.STRUCTURED_REFERENCE().getText()
                         .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
@@ -154,7 +154,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
+    public Evaluated visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.VALUE().getText()),
                 () -> new Range(
@@ -164,7 +164,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
+    public Evaluated visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.NUMERIC().getText()),
                 () -> new Range(
@@ -174,7 +174,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+    public Evaluated visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),
@@ -185,7 +185,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     }
 
     @Override
-    public Result visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+    public Evaluated visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),

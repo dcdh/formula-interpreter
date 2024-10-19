@@ -28,15 +28,15 @@ public final class AntlrParser implements Parser {
                         Uni.createFrom().item(Unchecked.supplier(() -> {
                             final EvaluatedAtStart evaluatedAtStart = evaluatedAtProvider.now();
                             final AntlrEvalVisitor antlrEvalVisitor = new AntlrEvalVisitor(partEvaluationCallback);
-                            final Result result = antlrEvalVisitor.visit(generatorResult.parseTree());
-                            if (result == null) {
+                            final Evaluated evaluated = antlrEvalVisitor.visit(generatorResult.parseTree());
+                            if (evaluated == null) {
                                 throw new IllegalStateException("Should not be null - a response is expected");
                             }
                             final List<IntermediateResult> intermediateResults = partEvaluationCallback.intermediateResults();
                             final EvaluatedAtEnd evaluatedAtEnd = evaluatedAtProvider.now();
-                            return new EvaluationResult(result,
+                            return new EvaluationResult(evaluated,
                                     generatorResult.parserEvaluationProcessedIn(),
-                                    intermediateResults,// TODO should not be here ...
+                                    intermediateResults,
                                     new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd));
                         }))
                 )

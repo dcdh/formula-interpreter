@@ -7,6 +7,6 @@ public final class NoOpPartEvaluationCallbackListener implements PartEvaluationC
     }
 
     @Override
-    public void onAfterPartEvaluation(final PartEvaluationId partEvaluationId, final Result result) {
+    public void onAfterPartEvaluation(final PartEvaluationId partEvaluationId, final Evaluated evaluated) {
     }
 }

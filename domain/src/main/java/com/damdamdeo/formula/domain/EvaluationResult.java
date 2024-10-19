@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public record EvaluationResult(Result result,
+public record EvaluationResult(Evaluated evaluated,
                                ParserEvaluationProcessedIn parserEvaluationProcessedIn,// can be null
                                List<IntermediateResult> intermediateResults,
                                EvaluationProcessedIn evaluationProcessedIn) {
     public EvaluationResult {
-        Objects.requireNonNull(result);
+        Objects.requireNonNull(evaluated);
         Objects.requireNonNull(intermediateResults);
         Objects.requireNonNull(evaluationProcessedIn);
     }
 
     public String value() {
-        return result.value().value();
+        return evaluated.value().value();
     }
 
     public long exactProcessedInNanos() {

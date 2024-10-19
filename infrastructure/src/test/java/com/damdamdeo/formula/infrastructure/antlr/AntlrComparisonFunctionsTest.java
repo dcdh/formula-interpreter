@@ -38,7 +38,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -68,7 +68,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -98,7 +98,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -132,7 +132,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(expectedValue)
         );
     }
@@ -176,7 +176,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#REF!"))
         );
     }
@@ -197,7 +197,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -218,7 +218,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NA!"))
         );
     }
@@ -253,7 +253,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("#NUM!"))
         );
     }
@@ -272,7 +272,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
-                assertThat(executionResultToAssert.result().value())
+                assertThat(executionResultToAssert.evaluated().value())
                         .isEqualTo(new Value("true"))
         );
     }
