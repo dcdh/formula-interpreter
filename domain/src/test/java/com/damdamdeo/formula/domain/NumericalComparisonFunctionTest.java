@@ -15,13 +15,13 @@ public class NumericalComparisonFunctionTest {
                                               final Value givenRightValue,
                                               final Value expectedValue) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThan();
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThan(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -33,13 +33,13 @@ public class NumericalComparisonFunctionTest {
                                                        final Value givenRightValue,
                                                        final Value expectedValue) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThanOrEqualTo();
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThanOrEqualTo(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -51,13 +51,13 @@ public class NumericalComparisonFunctionTest {
                                            final Value givenRightValue,
                                            final Value expectedValue) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThan();
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThan(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -69,12 +69,12 @@ public class NumericalComparisonFunctionTest {
                                                     final Value givenRightValue,
                                                     final Value expectedValue) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThanOrEqualTo();
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThanOrEqualTo(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = numericalComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 }

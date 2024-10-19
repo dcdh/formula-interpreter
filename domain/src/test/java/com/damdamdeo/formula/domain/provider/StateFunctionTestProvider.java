@@ -9,97 +9,97 @@ public class StateFunctionTestProvider {
 
     public static Stream<Arguments> provideIsNotAvailable() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), true),
-                Arguments.of(new Value("#REF!"), false),
-                Arguments.of(new Value("#NUM!"), false),
-                Arguments.of(new Value("#DIV/0!"), false),
-                Arguments.of(new Value("true"), false),
-                Arguments.of(new Value("false"), false),
-                Arguments.of(new Value("1"), false),
-                Arguments.of(new Value("0"), false),
-                Arguments.of(new Value("660"), false),
-                Arguments.of(new Value("azerty"), false),
-                Arguments.of(new Value(""), false)
+                Arguments.of(new Value("#NA!"), Value.ofTrue()),
+                Arguments.of(new Value("#REF!"), Value.ofFalse()),
+                Arguments.of(new Value("#NUM!"), Value.ofFalse()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofFalse()),
+                Arguments.of(new Value("true"), Value.ofFalse()),
+                Arguments.of(new Value("false"), Value.ofFalse()),
+                Arguments.of(new Value("1"), Value.ofFalse()),
+                Arguments.of(new Value("0"), Value.ofFalse()),
+                Arguments.of(new Value("660"), Value.ofFalse()),
+                Arguments.of(new Value("azerty"), Value.ofFalse()),
+                Arguments.of(new Value(""), Value.ofFalse())
         );
     }
 
     public static Stream<Arguments> provideIsError() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), true),
-                Arguments.of(new Value("#REF!"), true),
-                Arguments.of(new Value("#NUM!"), true),
-                Arguments.of(new Value("#DIV/0!"), true),
-                Arguments.of(new Value("true"), false),
-                Arguments.of(new Value("false"), false),
-                Arguments.of(new Value("1"), false),
-                Arguments.of(new Value("0"), false),
-                Arguments.of(new Value("660"), false),
-                Arguments.of(new Value("azerty"), false),
-                Arguments.of(new Value(""), false)
+                Arguments.of(new Value("#NA!"), Value.ofTrue()),
+                Arguments.of(new Value("#REF!"), Value.ofTrue()),
+                Arguments.of(new Value("#NUM!"), Value.ofTrue()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofTrue()),
+                Arguments.of(new Value("true"), Value.ofFalse()),
+                Arguments.of(new Value("false"), Value.ofFalse()),
+                Arguments.of(new Value("1"), Value.ofFalse()),
+                Arguments.of(new Value("0"), Value.ofFalse()),
+                Arguments.of(new Value("660"), Value.ofFalse()),
+                Arguments.of(new Value("azerty"), Value.ofFalse()),
+                Arguments.of(new Value(""), Value.ofFalse())
         );
     }
 
     public static Stream<Arguments> provideIsNumeric() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), false),
-                Arguments.of(new Value("#REF!"), false),
-                Arguments.of(new Value("#NUM!"), false),
-                Arguments.of(new Value("#DIV/0!"), false),
-                Arguments.of(new Value("true"), false),
-                Arguments.of(new Value("false"), false),
-                Arguments.of(new Value("1"), true),
-                Arguments.of(new Value("0"), true),
-                Arguments.of(new Value("660"), true),
-                Arguments.of(new Value("azerty"), false),
-                Arguments.of(new Value(""), false)
+                Arguments.of(new Value("#NA!"), Value.ofFalse()),
+                Arguments.of(new Value("#REF!"), Value.ofFalse()),
+                Arguments.of(new Value("#NUM!"), Value.ofFalse()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofFalse()),
+                Arguments.of(new Value("true"), Value.ofFalse()),
+                Arguments.of(new Value("false"), Value.ofFalse()),
+                Arguments.of(new Value("1"), Value.ofTrue()),
+                Arguments.of(new Value("0"), Value.ofTrue()),
+                Arguments.of(new Value("660"), Value.ofTrue()),
+                Arguments.of(new Value("azerty"), Value.ofFalse()),
+                Arguments.of(new Value(""), Value.ofFalse())
         );
     }
 
     public static Stream<Arguments> provideIsText() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), false),
-                Arguments.of(new Value("#REF!"), false),
-                Arguments.of(new Value("#NUM!"), false),
-                Arguments.of(new Value("#DIV/0!"), false),
-                Arguments.of(new Value("true"), false),
-                Arguments.of(new Value("false"), false),
-                Arguments.of(new Value("1"), false),
-                Arguments.of(new Value("0"), false),
-                Arguments.of(new Value("660"), false),
-                Arguments.of(new Value("azerty"), true),
-                Arguments.of(new Value(""), true)
+                Arguments.of(new Value("#NA!"), Value.ofFalse()),
+                Arguments.of(new Value("#REF!"), Value.ofFalse()),
+                Arguments.of(new Value("#NUM!"), Value.ofFalse()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofFalse()),
+                Arguments.of(new Value("true"), Value.ofFalse()),
+                Arguments.of(new Value("false"), Value.ofFalse()),
+                Arguments.of(new Value("1"), Value.ofFalse()),
+                Arguments.of(new Value("0"), Value.ofFalse()),
+                Arguments.of(new Value("660"), Value.ofFalse()),
+                Arguments.of(new Value("azerty"), Value.ofTrue()),
+                Arguments.of(new Value(""), Value.ofTrue())
         );
     }
 
     public static Stream<Arguments> provideIsBlank() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), false),
-                Arguments.of(new Value("#REF!"), false),
-                Arguments.of(new Value("#NUM!"), false),
-                Arguments.of(new Value("#DIV/0!"), false),
-                Arguments.of(new Value("true"), false),
-                Arguments.of(new Value("false"), false),
-                Arguments.of(new Value("1"), false),
-                Arguments.of(new Value("0"), false),
-                Arguments.of(new Value("660"), false),
-                Arguments.of(new Value("azerty"), false),
-                Arguments.of(new Value(""), true)
+                Arguments.of(new Value("#NA!"), Value.ofFalse()),
+                Arguments.of(new Value("#REF!"), Value.ofFalse()),
+                Arguments.of(new Value("#NUM!"), Value.ofFalse()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofFalse()),
+                Arguments.of(new Value("true"), Value.ofFalse()),
+                Arguments.of(new Value("false"), Value.ofFalse()),
+                Arguments.of(new Value("1"), Value.ofFalse()),
+                Arguments.of(new Value("0"), Value.ofFalse()),
+                Arguments.of(new Value("660"), Value.ofFalse()),
+                Arguments.of(new Value("azerty"), Value.ofFalse()),
+                Arguments.of(new Value(""), Value.ofTrue())
         );
     }
 
     public static Stream<Arguments> provideIsLogical() {
         return Stream.of(
-                Arguments.of(new Value("#NA!"), false),
-                Arguments.of(new Value("#REF!"), false),
-                Arguments.of(new Value("#NUM!"), false),
-                Arguments.of(new Value("#DIV/0!"), false),
-                Arguments.of(new Value("true"), true),
-                Arguments.of(new Value("false"), true),
-                Arguments.of(new Value("1"), true),
-                Arguments.of(new Value("0"), true),
-                Arguments.of(new Value("660"), false),
-                Arguments.of(new Value("azerty"), false),
-                Arguments.of(new Value(""), false)
+                Arguments.of(new Value("#NA!"), Value.ofFalse()),
+                Arguments.of(new Value("#REF!"), Value.ofFalse()),
+                Arguments.of(new Value("#NUM!"), Value.ofFalse()),
+                Arguments.of(new Value("#DIV/0!"), Value.ofFalse()),
+                Arguments.of(new Value("true"), Value.ofTrue()),
+                Arguments.of(new Value("false"), Value.ofTrue()),
+                Arguments.of(new Value("1"), Value.ofTrue()),
+                Arguments.of(new Value("0"), Value.ofTrue()),
+                Arguments.of(new Value("660"), Value.ofFalse()),
+                Arguments.of(new Value("azerty"), Value.ofFalse()),
+                Arguments.of(new Value(""), Value.ofFalse())
         );
     }
 }

@@ -15,13 +15,13 @@ class ArithmeticFunctionTest {
                                            final Value givenRightValue,
                                            final Value expectedValue) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofAddition();
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofAddition(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -33,13 +33,13 @@ class ArithmeticFunctionTest {
                                               final Value givenRightValue,
                                               final Value expectedValue) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofSubtraction();
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofSubtraction(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -51,13 +51,13 @@ class ArithmeticFunctionTest {
                                            final Value givenRightValue,
                                            final Value expectedValue) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofDivision();
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofDivision(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -69,12 +69,12 @@ class ArithmeticFunctionTest {
                                                  final Value givenRightValue,
                                                  final Value expectedValue) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofMultiplication();
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofMultiplication(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = arithmeticFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 }

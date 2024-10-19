@@ -25,11 +25,9 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                                                                              final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), leftValue),
-                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), leftValue),
+                new StructuredReference(new Reference("South Sales Amount"), rightValue)
         );
 
         // When
@@ -51,10 +49,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                                                                final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],%s)", givenOperation, rightValue.value());
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), leftValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), leftValue)
         );
 
         // When
@@ -76,10 +72,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                                                                final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,[@[South Sales Amount]])", givenOperation, leftValue.value());
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("South Sales Amount"), rightValue)
         );
 
         // When
@@ -101,7 +95,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                                                  final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s(%s,%s)", givenOperation, leftValue.value(), rightValue.value());
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -132,7 +126,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldCompoundArithmeticFunctions() {
         // Given
         final String givenFormula = "DIV(ADD(2,MUL(2,4)),2)";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -150,10 +144,8 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660")
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660")
         );
 
         // When
@@ -172,11 +164,9 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), (String) null),
-                        new StructuredReference(new Reference("South Sales Amount"), "260")
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), (String) null),
+                new StructuredReference(new Reference("South Sales Amount"), "260")
         );
 
         // When
@@ -195,11 +185,9 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660"),
-                        new StructuredReference(new Reference("South Sales Amount"), (String) null)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660"),
+                new StructuredReference(new Reference("South Sales Amount"), (String) null)
         );
 
         // When
@@ -218,11 +206,9 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660"),
-                        new StructuredReference(new Reference("South Sales Amount"), "boom")
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660"),
+                new StructuredReference(new Reference("South Sales Amount"), "boom")
         );
 
         // When
@@ -249,7 +235,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldDivideByZeroProduceAnError() {
         // Given
         final String givenFormula = "DIV(10,0)";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -266,7 +252,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "DIV(10,0)";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

@@ -24,11 +24,11 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     @Test
     public void shouldLogExecutionForJoe() {
         // Given
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("Sales Person"), "Joe"),
                 new StructuredReference(new Reference("Sales Amount"), "200"),
                 new StructuredReference(new Reference("% Commission"), "0.10")
-        ));
+        );
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
@@ -140,11 +140,11 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     @Test
     public void shouldLogExecutionForRobert() {
         // Given
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("Sales Person"), "Robert"),
                 new StructuredReference(new Reference("Sales Amount"), "200"),
                 new StructuredReference(new Reference("% Commission"), "0.10")
-        ));
+        );
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

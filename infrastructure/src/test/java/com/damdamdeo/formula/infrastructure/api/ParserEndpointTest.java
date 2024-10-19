@@ -26,6 +26,7 @@ public class ParserEndpointTest {
 
     @InjectMock
     private EvaluateUseCase evaluateUseCase;
+
     @Test
     public void shouldProcess() throws JSONException {
         // Given
@@ -52,10 +53,9 @@ public class ParserEndpointTest {
         )
                 .when(evaluateUseCase)
                 .execute(new EvaluateCommand(new Formula("true"),
-                        new StructuredReferences(
-                                List.of(
-                                        new StructuredReference(new Reference("ref"), new Value("val")))
-                        ),
+                        List.of(
+                                new StructuredReference(new Reference("ref"), new Value("val")))
+                        ,
                         DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
@@ -133,10 +133,8 @@ public class ParserEndpointTest {
                 .when(evaluateUseCase).execute(
                         new EvaluateCommand(
                                 new Formula("true"),
-                                new StructuredReferences(
-                                        List.of(
-                                                new StructuredReference(new Reference("ref"), new Value("val")))
-                                ),
+                                List.of(
+                                        new StructuredReference(new Reference("ref"), new Value("val"))),
                                 DebugFeature.ACTIVE));
         //language=JSON
         final String request = """
@@ -171,10 +169,8 @@ public class ParserEndpointTest {
         )
                 .when(evaluateUseCase).execute(new EvaluateCommand(
                         new Formula("true"),
-                        new StructuredReferences(
-                                List.of(
-                                        new StructuredReference(new Reference("ref"), new Value("val")))
-                        ),
+                        List.of(
+                                new StructuredReference(new Reference("ref"), new Value("val"))),
                         DebugFeature.ACTIVE));
         //language=JSON
         final String request = """

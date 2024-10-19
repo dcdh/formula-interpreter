@@ -19,12 +19,12 @@ import static org.mockito.Mockito.when;
 public class AntlrStateFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
     @MethodSource("provideValues")
-    public void shouldCheck(final String givenFunction, final Value givenValue, final boolean expectedValue) {
+    public void shouldCheck(final String givenFunction, final Value givenValue, final Value expectedValue) {
         // Given
         final String givenFormula = String.format("""
                 %s("%s")
                 """, givenFunction, givenValue.value());
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -33,18 +33,18 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideValues")
-    public void shouldCheckUsingOnStructuredReference(final String givenFunction, final Value givenValue, final boolean expectedValue) {
+    public void shouldCheckUsingOnStructuredReference(final String givenFunction, final Value givenValue, final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[%% Commission]])", givenFunction);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("% Commission"), givenValue)
-        ));
+        );
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -53,7 +53,7 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.result().value())
-                        .isEqualTo(new Value(expectedValue))
+                        .isEqualTo(expectedValue)
         );
     }
 
@@ -79,7 +79,7 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "ISNUM(\"123456\")";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

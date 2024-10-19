@@ -14,19 +14,19 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
 
     public AntlrEvalVisitor(final PartEvaluationCallback partEvaluationCallback) {
         this.partEvaluationCallback = Objects.requireNonNull(partEvaluationCallback);
-        partEvaluationCallback.storeCurrentResult(new Result());
+        partEvaluationCallback.storeCurrentEvaluation(new Result());
     }
 
     @Override
     public Result visitChildren(final RuleNode node) {
         final Result value = super.visitChildren(node);
-        this.partEvaluationCallback.storeCurrentResult(value);
+        this.partEvaluationCallback.storeCurrentEvaluation(value);
         return value;
     }
 
     @Override
     protected Result defaultResult() {
-        return this.partEvaluationCallback.getCurrentResult();
+        return this.partEvaluationCallback.getCurrentEvaluation();
     }
 
     final class AntlrValueProvider implements ValueProvider {
@@ -54,10 +54,10 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitArithmetic_functions(FormulaParser.Arithmetic_functionsContext ctx) {
         return partEvaluationCallback.evaluateArithmeticFunctions(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.ADD -> ArithmeticFunction.ofAddition();
-                    case FormulaParser.SUB -> ArithmeticFunction.ofSubtraction();
-                    case FormulaParser.DIV -> ArithmeticFunction.ofDivision();
-                    case FormulaParser.MUL -> ArithmeticFunction.ofMultiplication();
+                    case FormulaParser.ADD -> ArithmeticFunction.Function.ADD;
+                    case FormulaParser.SUB -> ArithmeticFunction.Function.SUB;
+                    case FormulaParser.DIV -> ArithmeticFunction.Function.DIV;
+                    case FormulaParser.MUL -> ArithmeticFunction.Function.MUL;
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.left),
@@ -72,12 +72,12 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
         return partEvaluationCallback.evaluateComparisonFunctions(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.EQ -> EqualityComparisonFunction.ofEqual();
-                    case FormulaParser.NEQ -> EqualityComparisonFunction.ofNotEqual();
-                    case FormulaParser.GT -> NumericalComparisonFunction.ofGreaterThan();
-                    case FormulaParser.GTE -> NumericalComparisonFunction.ofGreaterThanOrEqualTo();
-                    case FormulaParser.LT -> NumericalComparisonFunction.ofLessThan();
-                    case FormulaParser.LTE -> NumericalComparisonFunction.ofLessThanOrEqualTo();
+                    case FormulaParser.EQ -> ComparisonFunction.ComparisonType.EQ;
+                    case FormulaParser.NEQ -> ComparisonFunction.ComparisonType.NEQ;
+                    case FormulaParser.GT -> ComparisonFunction.ComparisonType.GT;
+                    case FormulaParser.GTE -> ComparisonFunction.ComparisonType.GTE;
+                    case FormulaParser.LT -> ComparisonFunction.ComparisonType.LT;
+                    case FormulaParser.LTE -> ComparisonFunction.ComparisonType.LTE;
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.left),
@@ -92,8 +92,8 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitLogical_boolean_functions(final FormulaParser.Logical_boolean_functionsContext ctx) {
         return partEvaluationCallback.evaluateLogicalBooleanFunctions(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.AND -> LogicalBooleanFunction.ofAnd();
-                    case FormulaParser.OR -> LogicalBooleanFunction.ofOr();
+                    case FormulaParser.AND -> LogicalBooleanFunction.Function.AND;
+                    case FormulaParser.OR -> LogicalBooleanFunction.Function.OR;
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.left),
@@ -107,17 +107,15 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     @Override
     public Result visitLogical_comparison_functions(final FormulaParser.Logical_comparison_functionsContext ctx) {
         return partEvaluationCallback.evaluateLogicalComparisonFunctions(
-                () -> {
-                    final AntlrValueProvider onTrue = new AntlrValueProvider(ctx.whenTrue);
-                    final AntlrValueProvider onFalse = new AntlrValueProvider(ctx.whenFalse);
-                    return switch (ctx.function.getType()) {
-                        case FormulaParser.IF -> LogicalComparisonFunction.ofIf(onTrue, onFalse);
-                        case FormulaParser.IFERROR -> LogicalComparisonFunction.ofIfError(onTrue, onFalse);
-                        case FormulaParser.IFNA -> LogicalComparisonFunction.ofIfNotAvailable(onTrue, onFalse);
-                        default -> throw new IllegalStateException("Should not be here");
-                    };
+                () -> switch (ctx.function.getType()) {
+                    case FormulaParser.IF -> LogicalComparisonFunction.Function.IF;
+                    case FormulaParser.IFERROR -> LogicalComparisonFunction.Function.IF_ERROR;
+                    case FormulaParser.IFNA -> LogicalComparisonFunction.Function.IF_NOT_AVAILABLE;
+                    default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.comparison),
+                () -> new AntlrValueProvider(ctx.whenTrue),
+                () -> new AntlrValueProvider(ctx.whenFalse),
                 () -> new Range(
                         ctx.getStart().getStartIndex(),
                         ctx.getStop().getStopIndex())
@@ -128,12 +126,12 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Result> {
     public Result visitState_functions(final FormulaParser.State_functionsContext ctx) {
         return partEvaluationCallback.evaluateStateFunction(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.ISNA -> StateFunction.ofIsNotAvailable();
-                    case FormulaParser.ISERROR -> StateFunction.ofIsError();
-                    case FormulaParser.ISNUM -> StateFunction.ofIsNumeric();
-                    case FormulaParser.ISTEXT -> StateFunction.ofIsText();
-                    case FormulaParser.ISBLANK -> StateFunction.ofIsBlank();
-                    case FormulaParser.ISLOGICAL -> StateFunction.ofIsLogical();
+                    case FormulaParser.ISNA -> StateFunction.Function.IS_NOT_AVAILABLE;
+                    case FormulaParser.ISERROR -> StateFunction.Function.IS_ERROR;
+                    case FormulaParser.ISNUM -> StateFunction.Function.IS_NUMERIC;
+                    case FormulaParser.ISTEXT -> StateFunction.Function.IS_TEXT;
+                    case FormulaParser.ISBLANK -> StateFunction.Function.IS_BLANK;
+                    case FormulaParser.ISLOGICAL -> StateFunction.Function.IS_LOGICAL;
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.value),

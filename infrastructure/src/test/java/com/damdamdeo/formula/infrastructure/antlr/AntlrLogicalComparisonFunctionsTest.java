@@ -21,7 +21,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
     @MethodSource("provideLogicalComparisonFunctions")
     public void shouldComputeIf(final String givenIfFormula, final Value expectedValue) {
         // Given
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenIfFormula),
@@ -59,7 +59,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "IF(\"true\",\"true\",\"false\")";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

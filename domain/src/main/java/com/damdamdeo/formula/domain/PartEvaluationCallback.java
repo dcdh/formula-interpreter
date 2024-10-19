@@ -1,5 +1,7 @@
 package com.damdamdeo.formula.domain;
 
+import com.damdamdeo.formula.domain.spi.ValueProvider;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -8,27 +10,27 @@ public final class PartEvaluationCallback {
     private final PartEvaluationCallbackListener partEvaluationCallbackListener;
     private PartEvaluationId currentPartEvaluationId;
     private final NumericalContext numericalContext;
-    private final StructuredReferences structuredReferences;
+    private final List<StructuredReference> structuredData;
     private Result currentResult = new Result();
 
     public PartEvaluationCallback(final PartEvaluationCallbackListener partEvaluationCallbackListener,
                                   final NumericalContext numericalContext,
-                                  final StructuredReferences structuredReferences) {
+                                  final List<StructuredReference> structuredData) {
         this.partEvaluationCallbackListener = Objects.requireNonNull(partEvaluationCallbackListener);
         this.currentPartEvaluationId = new PartEvaluationId(-1);
         this.numericalContext = Objects.requireNonNull(numericalContext);
-        this.structuredReferences = Objects.requireNonNull(structuredReferences);
+        this.structuredData = Objects.requireNonNull(structuredData);
     }
 
-    public void storeCurrentResult(final Result currentResult) {
+    public void storeCurrentEvaluation(final Result currentResult) {
         this.currentResult = Objects.requireNonNull(currentResult);
     }
 
-    public Result getCurrentResult() {
+    public Result getCurrentEvaluation() {
         return currentResult;
     }
 
-    public Result evaluateArithmeticFunctions(final Supplier<ArithmeticFunction> arithmeticFunction,
+    public Result evaluateArithmeticFunctions(final Supplier<ArithmeticFunction.Function> arithmeticFunction,
                                               final Supplier<Result> left,
                                               final Supplier<Result> right,
                                               final Supplier<Range> range) {
@@ -39,7 +41,7 @@ public final class PartEvaluationCallback {
         return evaluate(() -> {
             final Result leftResult = left.get();
             final Result rightResult = right.get();
-            final Value value = arithmeticFunction.get().evaluate(leftResult.value(), rightResult.value(), numericalContext);
+            final Value value = ArithmeticFunction.of(arithmeticFunction.get(), leftResult.value(), rightResult.value()).evaluate(numericalContext);
             return new Result(value,
                     List.of(
                             new Input(
@@ -56,7 +58,7 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Result evaluateComparisonFunctions(final Supplier<ComparisonFunction> comparisonFunction,
+    public Result evaluateComparisonFunctions(final Supplier<ComparisonFunction.ComparisonType> comparisonFunction,
                                               final Supplier<Result> left,
                                               final Supplier<Result> right,
                                               final Supplier<Range> range) {
@@ -67,7 +69,8 @@ public final class PartEvaluationCallback {
         return evaluate(() -> {
             final Result leftResult = left.get();
             final Result rightResult = right.get();
-            final Value value = comparisonFunction.get().evaluate(leftResult.value(), rightResult.value(), numericalContext);
+            final Value value = ComparisonFunction.of(comparisonFunction.get(), leftResult.value(), rightResult.value())
+                    .evaluate(numericalContext);
             return new Result(value,
                     List.of(
                             new Input(
@@ -84,7 +87,7 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Result evaluateLogicalBooleanFunctions(final Supplier<LogicalBooleanFunction> logicalBooleanFunction,
+    public Result evaluateLogicalBooleanFunctions(final Supplier<LogicalBooleanFunction.Function> logicalBooleanFunction,
                                                   final Supplier<Result> left,
                                                   final Supplier<Result> right,
                                                   final Supplier<Range> range) {
@@ -95,7 +98,7 @@ public final class PartEvaluationCallback {
         return evaluate(() -> {
             final Result leftResult = left.get();
             final Result rightResult = right.get();
-            final Value value = logicalBooleanFunction.get().evaluate(leftResult.value(), rightResult.value());
+            final Value value = LogicalBooleanFunction.of(logicalBooleanFunction.get(), leftResult.value(), rightResult.value()).evaluate(numericalContext);
             return new Result(value,
                     List.of(
                             new Input(
@@ -112,15 +115,20 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Result evaluateLogicalComparisonFunctions(final Supplier<LogicalComparisonFunction> logicalComparisonFunction,
+    public Result evaluateLogicalComparisonFunctions(final Supplier<LogicalComparisonFunction.Function> logicalComparisonFunction,
                                                      final Supplier<Result> comparison,
+                                                     final Supplier<ValueProvider> onTrue,
+                                                     final Supplier<ValueProvider> onFalse,
                                                      final Supplier<Range> range) {
         Objects.requireNonNull(logicalComparisonFunction);
         Objects.requireNonNull(comparison);
         Objects.requireNonNull(range);
         return evaluate(() -> {
             final Result comparisonResult = comparison.get();
-            final Value value = logicalComparisonFunction.get().evaluate(comparisonResult.value());
+            final Value value = LogicalComparisonFunction.of(logicalComparisonFunction.get(), comparisonResult.value(),
+                            onTrue.get(),
+                            onFalse.get())
+                    .evaluate(numericalContext);
             return new Result(value,
                     List.of(
                             new Input(
@@ -133,7 +141,7 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Result evaluateStateFunction(final Supplier<StateFunction> stateFunction,
+    public Result evaluateStateFunction(final Supplier<StateFunction.Function> stateFunction,
                                         final Supplier<Result> state,
                                         final Supplier<Range> range) {
         Objects.requireNonNull(stateFunction);
@@ -141,7 +149,7 @@ public final class PartEvaluationCallback {
         Objects.requireNonNull(range);
         return evaluate(() -> {
             final Result stateResult = state.get();
-            final Value value = stateFunction.get().evaluate(stateResult.value()) ? Value.ofTrue() : Value.ofFalse();
+            final Value value = StateFunction.of(stateFunction.get(), stateResult.value()).evaluate(numericalContext);
             return new Result(value,
                     List.of(
                             new Input(
@@ -159,19 +167,14 @@ public final class PartEvaluationCallback {
         Objects.requireNonNull(reference);
         Objects.requireNonNull(range);
         return evaluate(() -> {
-            final Reference referenceResult = reference.get();
+            final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredData, reference.get());
+            final Value value = structuredReferencesFunction.evaluate(numericalContext);
             final Range rangeReference = range.get();
-            Value value;
-            try {
-                value = this.structuredReferences.getValueByReference(referenceResult);
-            } catch (final UnknownReferenceException unknownReferenceException) {
-                value = Value.ofUnknownRef();
-            }
             return new Result(value,
                     List.of(
                             new Input(
                                     InputName.ofStructuredReference(),
-                                    referenceResult,
+                                    structuredReferencesFunction.reference(),
                                     rangeReference.of(+3, -2)
                             )),
                     rangeReference);

@@ -1,40 +1,66 @@
 package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
-import java.util.function.Function;
 
-public final class StateFunction {
-    private final Function<Value, Boolean> functionToExecute;
+public record StateFunction(java.util.function.Function<Value, Boolean> functionToExecute,
+                            Value argument) implements Function {
 
-    private StateFunction(final Function<Value, Boolean> functionToExecute) {
-        this.functionToExecute = Objects.requireNonNull(functionToExecute);
+    public StateFunction {
+        Objects.requireNonNull(functionToExecute);
+        Objects.requireNonNull(argument);
     }
 
-    public boolean evaluate(final Value argument) {
-        return this.functionToExecute.apply(argument);
+    @Override
+    public Value evaluate(final NumericalContext numericalContext) {
+        Objects.requireNonNull(numericalContext);
+        if (this.functionToExecute.apply(argument)) {
+            return Value.ofTrue();
+        }
+        return Value.ofFalse();
     }
 
-    public static StateFunction ofIsNotAvailable() {
-        return new StateFunction(Value::isNotAvailable);
+    public static StateFunction ofIsNotAvailable(final Value argument) {
+        return new StateFunction(Value::isNotAvailable, argument);
     }
 
-    public static StateFunction ofIsError() {
-        return new StateFunction(Value::isError);
+    public static StateFunction ofIsError(final Value argument) {
+        return new StateFunction(Value::isError, argument);
     }
 
-    public static StateFunction ofIsNumeric() {
-        return new StateFunction(Value::isNumeric);
+    public static StateFunction ofIsNumeric(final Value argument) {
+        return new StateFunction(Value::isNumeric, argument);
     }
 
-    public static StateFunction ofIsText() {
-        return new StateFunction(Value::isText);
+    public static StateFunction ofIsText(final Value argument) {
+        return new StateFunction(Value::isText, argument);
     }
 
-    public static StateFunction ofIsBlank() {
-        return new StateFunction(Value::isBlank);
+    public static StateFunction ofIsBlank(final Value argument) {
+        return new StateFunction(Value::isBlank, argument);
     }
 
-    public static StateFunction ofIsLogical() {
-        return new StateFunction(Value::isLogical);
+    public static StateFunction ofIsLogical(final Value argument) {
+        return new StateFunction(Value::isLogical, argument);
+    }
+
+    public static StateFunction of(final Function function, final Value argument) {
+        Objects.requireNonNull(function);
+        return switch (function) {
+            case IS_NOT_AVAILABLE -> ofIsNotAvailable(argument);
+            case IS_ERROR -> ofIsError(argument);
+            case IS_NUMERIC -> ofIsNumeric(argument);
+            case IS_TEXT -> ofIsText(argument);
+            case IS_BLANK -> ofIsBlank(argument);
+            case IS_LOGICAL -> ofIsLogical(argument);
+        };
+    }
+
+    public enum Function {
+        IS_NOT_AVAILABLE,
+        IS_ERROR,
+        IS_NUMERIC,
+        IS_TEXT,
+        IS_BLANK,
+        IS_LOGICAL,
     }
 }

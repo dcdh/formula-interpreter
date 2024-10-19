@@ -2,17 +2,16 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public final class NumericalComparisonFunction implements ComparisonFunction {
-    private final Function function;
+public record NumericalComparisonFunction(Function function, Value left, Value right) implements ComparisonFunction {
 
-    private NumericalComparisonFunction(final Function function) {
-        this.function = Objects.requireNonNull(function);
+    public NumericalComparisonFunction {
+        Objects.requireNonNull(function);
+        Objects.requireNonNull(left);
+        Objects.requireNonNull(right);
     }
 
     @Override
-    public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
-        Objects.requireNonNull(left);
-        Objects.requireNonNull(right);
+    public Value evaluate(final NumericalContext numericalContext) {
         Objects.requireNonNull(numericalContext);
         if (left.isError()) {
             return left;
@@ -25,48 +24,48 @@ public final class NumericalComparisonFunction implements ComparisonFunction {
         }
     }
 
-    public static NumericalComparisonFunction ofGreaterThan() {
-        return new NumericalComparisonFunction(Function.GT);
+    public static NumericalComparisonFunction ofGreaterThan(final Value left, final Value right) {
+        return new NumericalComparisonFunction(Function.GT, left, right);
     }
 
-    public static NumericalComparisonFunction ofGreaterThanOrEqualTo() {
-        return new NumericalComparisonFunction(Function.GTE);
+    public static NumericalComparisonFunction ofGreaterThanOrEqualTo(final Value left, final Value right) {
+        return new NumericalComparisonFunction(Function.GTE, left, right);
     }
 
-    public static NumericalComparisonFunction ofLessThan() {
-        return new NumericalComparisonFunction(Function.LT);
+    public static NumericalComparisonFunction ofLessThan(final Value left, final Value right) {
+        return new NumericalComparisonFunction(Function.LT, left, right);
     }
 
-    public static NumericalComparisonFunction ofLessThanOrEqualTo() {
-        return new NumericalComparisonFunction(Function.LTE);
+    public static NumericalComparisonFunction ofLessThanOrEqualTo(final Value left, final Value right) {
+        return new NumericalComparisonFunction(Function.LTE, left, right);
     }
 
-    private enum Function {
+    public enum Function {
         GT {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.greaterThan(right, numericalContext);
             }
         },
         GTE {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.greaterThanOrEqualTo(right, numericalContext);
             }
         },
         LT {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.lessThan(right, numericalContext);
             }
         },
         LTE {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.lessThanOrEqualTo(right, numericalContext);
             }
         };
 
-        public abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
+        abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
     }
 }

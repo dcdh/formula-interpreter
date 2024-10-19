@@ -15,9 +15,9 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnStructuredReferenceValue() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("% Commission"), "10%")
-        ));
+        );
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -34,7 +34,7 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnUnknownReferenceWhenStructureReferenceDoesNotExists() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences();
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -51,9 +51,9 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldReturnNotAvailableWhenStructureReferenceValueIsNull() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("% Commission"), (String) null)
-        ));
+        );
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -70,9 +70,9 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "[@[% Commission]]";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of(
+        final List<StructuredReference> givenStructuredReferences = List.of(
                 new StructuredReference(new Reference("% Commission"), "10%")
-        ));
+        );
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

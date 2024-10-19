@@ -4,44 +4,58 @@ import com.damdamdeo.formula.domain.spi.ValueProvider;
 
 import java.util.Objects;
 
-public final class LogicalComparisonFunction {
-    private final Function function;
-    private final ValueProvider onTrue;
-    private final ValueProvider onFalse;
+public record LogicalComparisonFunction(Function function, Value comparison, ValueProvider onTrue,
+                                        ValueProvider onFalse) implements Function {
 
-    private LogicalComparisonFunction(final Function function,
-                                      final ValueProvider onTrue,
-                                      final ValueProvider onFalse) {
-        this.function = Objects.requireNonNull(function);
-        this.onTrue = Objects.requireNonNull(onTrue);
-        this.onFalse = Objects.requireNonNull(onFalse);
+    public LogicalComparisonFunction {
+        Objects.requireNonNull(function);
+        Objects.requireNonNull(comparison);
+        Objects.requireNonNull(onTrue);
+        Objects.requireNonNull(onFalse);
     }
 
-    public Value evaluate(final Value comparison) {
+    @Override
+    public Value evaluate(final NumericalContext numericalContext) {
+        Objects.requireNonNull(numericalContext);
         return this.function.evaluate(comparison, onTrue, onFalse);
     }
 
-    public static LogicalComparisonFunction ofIf(final ValueProvider onTrue,
+    public static LogicalComparisonFunction ofIf(final Value comparison,
+                                                 final ValueProvider onTrue,
                                                  final ValueProvider onFalse) {
-        return new LogicalComparisonFunction(Function.IF, onTrue, onFalse);
+        return new LogicalComparisonFunction(Function.IF, comparison, onTrue, onFalse);
     }
 
-    public static LogicalComparisonFunction ofIfError(final ValueProvider onTrue,
+    public static LogicalComparisonFunction ofIfError(final Value comparison,
+                                                      final ValueProvider onTrue,
                                                       final ValueProvider onFalse) {
-        return new LogicalComparisonFunction(Function.IF_ERROR, onTrue, onFalse);
+        return new LogicalComparisonFunction(Function.IF_ERROR, comparison, onTrue, onFalse);
     }
 
-    public static LogicalComparisonFunction ofIfNotAvailable(final ValueProvider onTrue,
+    public static LogicalComparisonFunction ofIfNotAvailable(final Value comparison,
+                                                             final ValueProvider onTrue,
                                                              final ValueProvider onFalse) {
-        return new LogicalComparisonFunction(Function.IF_NOT_AVAILABLE, onTrue, onFalse);
+        return new LogicalComparisonFunction(Function.IF_NOT_AVAILABLE, comparison, onTrue, onFalse);
     }
 
-    private enum Function {
+    public static LogicalComparisonFunction of(final Function function,
+                                               final Value comparison,
+                                               final ValueProvider onTrue,
+                                               final ValueProvider onFalse) {
+        Objects.requireNonNull(function);
+        return switch (function) {
+            case IF -> ofIf(comparison, onTrue, onFalse);
+            case IF_ERROR -> ofIfError(comparison, onTrue, onFalse);
+            case IF_NOT_AVAILABLE -> ofIfNotAvailable(comparison, onTrue, onFalse);
+        };
+    }
+
+    public enum Function {
         IF {
             @Override
-            public Value evaluate(final Value comparison,
-                                  final ValueProvider onTrue,
-                                  final ValueProvider onFalse) {
+            Value evaluate(final Value comparison,
+                           final ValueProvider onTrue,
+                           final ValueProvider onFalse) {
                 if (comparison.isError()) {
                     return comparison;
                 } else if (!comparison.isLogical()) {
@@ -57,9 +71,9 @@ public final class LogicalComparisonFunction {
         },
         IF_ERROR {
             @Override
-            public Value evaluate(final Value comparison,
-                                  final ValueProvider onTrue,
-                                  final ValueProvider onFalse) {
+            Value evaluate(final Value comparison,
+                           final ValueProvider onTrue,
+                           final ValueProvider onFalse) {
                 if (comparison.isError()) {
                     return onTrue.provide();
                 } else {
@@ -69,9 +83,9 @@ public final class LogicalComparisonFunction {
         },
         IF_NOT_AVAILABLE {
             @Override
-            public Value evaluate(final Value comparison,
-                                  final ValueProvider onTrue,
-                                  final ValueProvider onFalse) {
+            Value evaluate(final Value comparison,
+                           final ValueProvider onTrue,
+                           final ValueProvider onFalse) {
                 if (comparison.isNotAvailable()) {
                     return onTrue.provide();
                 } else {
@@ -80,7 +94,7 @@ public final class LogicalComparisonFunction {
             }
         };
 
-        public abstract Value evaluate(Value comparison, ValueProvider onTrue, ValueProvider onFalse);
+        abstract Value evaluate(Value comparison, ValueProvider onTrue, ValueProvider onFalse);
     }
 
 }

@@ -2,16 +2,17 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public final class LogicalBooleanFunction {
-    private final Function function;
+public record LogicalBooleanFunction(Function function, Value left, Value right) implements Function {
 
-    private LogicalBooleanFunction(final Function function) {
-        this.function = Objects.requireNonNull(function);
-    }
-
-    public Value evaluate(final Value left, final Value right) {
+    public LogicalBooleanFunction {
+        Objects.requireNonNull(function);
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
+    }
+
+    @Override
+    public Value evaluate(final NumericalContext numericalContext) {
+        Objects.requireNonNull(numericalContext);
         if (left.isError()) {
             return left;
         } else if (right.isError()) {
@@ -23,29 +24,37 @@ public final class LogicalBooleanFunction {
         }
     }
 
-    public static LogicalBooleanFunction ofAnd() {
-        return new LogicalBooleanFunction(Function.AND);
+    public static LogicalBooleanFunction ofAnd(final Value left, final Value right) {
+        return new LogicalBooleanFunction(Function.AND, left, right);
     }
 
-    public static LogicalBooleanFunction ofOr() {
-        return new LogicalBooleanFunction(Function.OR);
+    public static LogicalBooleanFunction ofOr(final Value left, final Value right) {
+        return new LogicalBooleanFunction(Function.OR, left, right);
     }
 
-    private enum Function {
+    public static LogicalBooleanFunction of(final Function function, final Value left, final Value right) {
+        Objects.requireNonNull(function);
+        return switch (function) {
+            case AND -> ofAnd(left, right);
+            case OR -> ofOr(left, right);
+        };
+    }
+
+    public enum Function {
 
         OR {
             @Override
-            public Value evaluate(final Value left, final Value right) {
+            Value evaluate(final Value left, final Value right) {
                 return left.or(right);
             }
         },
         AND {
             @Override
-            public Value evaluate(final Value left, final Value right) {
+            Value evaluate(final Value left, final Value right) {
                 return left.and(right);
             }
         };
 
-        public abstract Value evaluate(Value left, Value right);
+        abstract Value evaluate(Value left, Value right);
     }
 }

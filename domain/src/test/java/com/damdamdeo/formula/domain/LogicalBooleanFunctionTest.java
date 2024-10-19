@@ -15,13 +15,13 @@ public class LogicalBooleanFunctionTest {
                                      final Value givenRightValue,
                                      final Value expectedValue) {
         // Given
-        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofOr();
+        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofOr(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = logicalBooleanFunction.evaluate(givenLeftValue, givenRightValue);
+        final Value evaluated = logicalBooleanFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -33,12 +33,12 @@ public class LogicalBooleanFunctionTest {
                                       final Value givenRightValue,
                                       final Value expectedValue) {
         // Given
-        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofAnd();
+        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofAnd(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = logicalBooleanFunction.evaluate(givenLeftValue, givenRightValue);
+        final Value evaluated = logicalBooleanFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 }

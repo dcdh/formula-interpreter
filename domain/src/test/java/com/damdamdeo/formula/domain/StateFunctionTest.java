@@ -11,15 +11,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsNotAvailable"
     })
     void shouldIsNotAvailableReturnExpectedValue(final Value givenArgument,
-                                                 final boolean expectedArgument) {
+                                                 final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNotAvailable();
+        final StateFunction stateFunction = StateFunction.ofIsNotAvailable(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
     @ParameterizedTest
@@ -27,15 +27,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsError"
     })
     void shouldIsErrorReturnExpectedValue(final Value givenArgument,
-                                          final boolean expectedArgument) {
+                                          final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsError();
+        final StateFunction stateFunction = StateFunction.ofIsError(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
     @ParameterizedTest
@@ -43,15 +43,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsNumeric"
     })
     void shouldIsNumericReturnExpectedValue(final Value givenArgument,
-                                            final boolean expectedArgument) {
+                                            final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNumeric();
+        final StateFunction stateFunction = StateFunction.ofIsNumeric(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
     @ParameterizedTest
@@ -59,15 +59,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsText"
     })
     void shouldIsTextReturnExpectedValue(final Value givenArgument,
-                                         final boolean expectedArgument) {
+                                         final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsText();
+        final StateFunction stateFunction = StateFunction.ofIsText(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
     @ParameterizedTest
@@ -75,15 +75,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsBlank"
     })
     void shouldIsBlankReturnExpectedValue(final Value givenArgument,
-                                          final boolean expectedArgument) {
+                                          final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsBlank();
+        final StateFunction stateFunction = StateFunction.ofIsBlank(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
     @ParameterizedTest
@@ -91,15 +91,15 @@ public class StateFunctionTest {
             "com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsLogical"
     })
     void shouldIsLogicalReturnExpectedValue(final Value givenArgument,
-                                            final boolean expectedArgument) {
+                                            final Value expectedArgument) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsLogical();
+        final StateFunction stateFunction = StateFunction.ofIsLogical(givenArgument);
 
         // When
-        final boolean result = stateFunction.evaluate(givenArgument);
+        final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expectedArgument);
     }
 
 }

@@ -15,9 +15,9 @@ public record EvaluateDTO(@Schema(required = true) String formula,
     public EvaluateCommand toEvaluateCommand() {
         return new EvaluateCommand(
                 new Formula(formula),
-                new StructuredReferences(structuredReferences.entrySet().stream()
+                structuredReferences.entrySet().stream()
                         .map(structuredDatum -> new StructuredReference(new Reference(structuredDatum.getKey()), new Value(structuredDatum.getValue())))
-                        .collect(Collectors.toList())),
+                        .collect(Collectors.toList()),
                 debugFeature
         );
     }

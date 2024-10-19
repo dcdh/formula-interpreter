@@ -17,13 +17,13 @@ public class LogicalComparisonFunctionTest {
     void shouldIfReturnExpectedValue(final Value givenComparison,
                                      final Value expectedResult) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIf(givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIf(givenComparison, givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.evaluate(givenComparison);
+        final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expectedResult);
     }
 
     @ParameterizedTest
@@ -33,13 +33,13 @@ public class LogicalComparisonFunctionTest {
     void shouldIfErrorReturnExpectedValue(final Value givenComparison,
                                           final Value expectedResult) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfError(givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfError(givenComparison, givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.evaluate(givenComparison);
+        final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expectedResult);
     }
 
     @ParameterizedTest
@@ -49,12 +49,12 @@ public class LogicalComparisonFunctionTest {
     void shouldIfNotAvailableReturnExpectedValue(final Value givenComparison,
                                                  final Value expectedResult) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfNotAvailable(givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfNotAvailable(givenComparison, givenOnTrue, givenOnFalse);
 
         // When
-        final Value result = logicalComparisonFunction.evaluate(givenComparison);
+        final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expectedResult);
     }
 }

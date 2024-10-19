@@ -26,11 +26,9 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             final Value expectedValue) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), leftValue),
-                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), leftValue),
+                new StructuredReference(new Reference("South Sales Amount"), rightValue)
         );
 
         // When
@@ -59,10 +57,8 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s([@[North Sales Amount]],%s)""", givenLogicalFunction, rightValue.value());
         }
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), leftValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), leftValue)
         );
 
         // When
@@ -91,10 +87,8 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s(%s,[@[South Sales Amount]])""", givenLogicalFunction, leftValue.value());
         }
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("South Sales Amount"), rightValue)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("South Sales Amount"), rightValue)
         );
 
         // When
@@ -129,7 +123,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             givenFormula = String.format("""
                     %s(%s,%s)""", givenLogicalFunction, leftValue.value(), rightValue.value());
         }
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
@@ -161,10 +155,8 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660")
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660")
         );
 
         // When
@@ -183,12 +175,9 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), (String) null),
-                        new StructuredReference(new Reference("South Sales Amount"), "260")
-
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), (String) null),
+                new StructuredReference(new Reference("South Sales Amount"), "260")
         );
 
         // When
@@ -207,11 +196,9 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenLogicalFunction) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660"),
-                        new StructuredReference(new Reference("South Sales Amount"), (String) null)
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660"),
+                new StructuredReference(new Reference("South Sales Amount"), (String) null)
         );
 
         // When
@@ -235,10 +222,8 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     @MethodSource("provideLogicalFunctionsUsingComparisonsFunction")
     public void shouldUseComparisonsFunctions(final String givenFormula) {
         // Given
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(
-                List.of(
-                        new StructuredReference(new Reference("North Sales Amount"), "660")
-                )
+        final List<StructuredReference> givenStructuredReferences = List.of(
+                new StructuredReference(new Reference("North Sales Amount"), "660")
         );
 
         // When
@@ -268,7 +253,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "AND(0,0)";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

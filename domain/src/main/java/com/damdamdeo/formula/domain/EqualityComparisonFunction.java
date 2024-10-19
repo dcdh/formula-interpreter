@@ -2,17 +2,16 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public final class EqualityComparisonFunction implements ComparisonFunction {
-    private final Function function;
+public record EqualityComparisonFunction(Function function, Value left, Value right) implements ComparisonFunction {
 
-    private EqualityComparisonFunction(final Function function) {
-        this.function = Objects.requireNonNull(function);
+    public EqualityComparisonFunction {
+        Objects.requireNonNull(function);
+        Objects.requireNonNull(left);
+        Objects.requireNonNull(right);
     }
 
     @Override
-    public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
-        Objects.requireNonNull(left);
-        Objects.requireNonNull(right);
+    public Value evaluate(final NumericalContext numericalContext) {
         Objects.requireNonNull(numericalContext);
         if (left.isError()) {
             return left;
@@ -23,29 +22,29 @@ public final class EqualityComparisonFunction implements ComparisonFunction {
         }
     }
 
-    public static EqualityComparisonFunction ofEqual() {
-        return new EqualityComparisonFunction(Function.EQ);
+    public static EqualityComparisonFunction ofEqual(final Value left, final Value right) {
+        return new EqualityComparisonFunction(Function.EQ, left, right);
     }
 
-    public static EqualityComparisonFunction ofNotEqual() {
-        return new EqualityComparisonFunction(Function.NEQ);
+    public static EqualityComparisonFunction ofNotEqual(final Value left, final Value right) {
+        return new EqualityComparisonFunction(Function.NEQ, left, right);
     }
 
-    private enum Function {
+    public enum Function {
         EQ {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.equalTo(right, numericalContext);
             }
         },
 
         NEQ {
             @Override
-            public Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
+            Value evaluate(final Value left, final Value right, final NumericalContext numericalContext) {
                 return left.notEqualTo(right, numericalContext);
             }
         };
 
-        public abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
+        abstract Value evaluate(Value left, Value right, NumericalContext numericalContext);
     }
 }

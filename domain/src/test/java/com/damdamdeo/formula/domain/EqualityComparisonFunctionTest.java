@@ -15,13 +15,13 @@ public class EqualityComparisonFunctionTest {
                                      final Value givenRightValue,
                                      final Value expectedValue) {
         // Given
-        final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofEqual();
+        final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofEqual(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = equalityComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = equalityComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 
     @ParameterizedTest
@@ -33,12 +33,12 @@ public class EqualityComparisonFunctionTest {
                                       final Value givenRightValue,
                                       final Value expectedValue) {
         // Given
-        final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofNotEqual();
+        final EqualityComparisonFunction equalityComparisonFunction = EqualityComparisonFunction.ofNotEqual(givenLeftValue, givenRightValue);
 
         // When
-        final Value result = equalityComparisonFunction.evaluate(givenLeftValue, givenRightValue, new NumericalContext());
+        final Value evaluated = equalityComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(result).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expectedValue);
     }
 }

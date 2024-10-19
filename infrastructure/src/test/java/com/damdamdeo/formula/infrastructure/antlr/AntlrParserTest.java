@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -36,7 +37,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\""),
-                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), new StructuredReferences()));
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), List.of()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -58,7 +59,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"Hello\"\n\"World\""),
-                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), new StructuredReferences()));
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), List.of()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -75,7 +76,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
     public void shouldLogWhenDebugFeatureIsActive() {
         // Given
         final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider),
-                new NumericalContext(), new StructuredReferences());
+                new NumericalContext(), List.of());
         doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When
@@ -91,7 +92,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
     public void shouldNotLogWhenDebugFeatureIsInactive() {
         // Given
         final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(),
-                new NumericalContext(), new StructuredReferences());
+                new NumericalContext(), List.of());
         doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When

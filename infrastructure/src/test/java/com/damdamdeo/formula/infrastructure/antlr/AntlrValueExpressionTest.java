@@ -26,7 +26,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
-                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), new StructuredReferences()));
+                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), List.of()));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -39,7 +39,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
     public void shouldLogExecution() {
         // Given
         final String givenFormula = "\"Hello World\"";
-        final StructuredReferences givenStructuredReferences = new StructuredReferences(List.of());
+        final List<StructuredReference> givenStructuredReferences = List.of();
         when(evaluatedAtProvider.now())
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
                 .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))

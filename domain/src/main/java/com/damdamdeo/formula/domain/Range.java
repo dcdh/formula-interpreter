@@ -11,6 +11,10 @@ public record Range(RangeStart rangeStart, RangeEnd rangeEnd) {
         Validate.validState(rangeStart.isValid(rangeEnd), "Range is invalid start: %d, end: %d", rangeStart.start(), rangeEnd.end());
     }
 
+    public Range() {
+        this(new RangeStart(), new RangeEnd());
+    }
+
     @Deprecated(forRemoval = true)
     public Range(final Integer start, final Integer end) {
         this(new RangeStart(start), new RangeEnd(end));
