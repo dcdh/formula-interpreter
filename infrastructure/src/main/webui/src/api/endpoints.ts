@@ -5,20 +5,20 @@
  * OpenAPI spec version: 1.0-SNAPSHOT
  */
 import type {
-  Execute,
-  ExecutionResult,
+  Evaluate,
+  EvaluationResult,
   SuggestCompletionBody,
   Validate200,
   ValidateBody,
 } from "./model";
 import { customInstance } from "./mutator/custom-instance";
 
-export const execute = (execute: Execute) => {
-  return customInstance<ExecutionResult>({
+export const evaluate = (evaluate: Evaluate) => {
+  return customInstance<EvaluationResult>({
     url: `/evaluate`,
     method: "POST",
-    headers: { "Content-Type": "application/vnd.formula-execute-v1+json" },
-    data: execute,
+    headers: { "Content-Type": "application/vnd.formula-evaluate-v1+json" },
+    data: evaluate,
   });
 };
 
@@ -48,7 +48,7 @@ export const validate = (validateBody: ValidateBody) => {
   });
 };
 
-export type ExecuteResult = NonNullable<Awaited<ReturnType<typeof execute>>>;
+export type EvaluateResult = NonNullable<Awaited<ReturnType<typeof evaluate>>>;
 export type SuggestCompletionResult = NonNullable<
   Awaited<ReturnType<typeof suggestCompletion>>
 >;
