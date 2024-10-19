@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public final class LoggingPartEvaluationCallbackListener implements PartEvaluationCallbackListener {
+public final class DebugPartEvaluationCallbackListener implements PartEvaluationCallbackListener {
     private final EvaluatedAtProvider evaluatedAtProvider;
     private final Map<PartEvaluationId, IntermediateResult> intermediateResultsByExecutionId;
     private final Map<PartEvaluationId, EvaluatedAtStart> evaluatedAtStartsByExecutionId;
 
-    public LoggingPartEvaluationCallbackListener(final EvaluatedAtProvider evaluatedAtProvider) {
+    public DebugPartEvaluationCallbackListener(final EvaluatedAtProvider evaluatedAtProvider) {
         this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
         this.intermediateResultsByExecutionId = new HashMap<>();
         this.evaluatedAtStartsByExecutionId = new HashMap<>();

@@ -23,7 +23,7 @@ public final class EvaluateUseCase implements UseCase<EvaluationResult, Evaluate
     @Override
     public Uni<EvaluationResult> execute(final EvaluateCommand command) {
         final PartEvaluationCallbackListener partEvaluationCallbackListener = switch (command.debugFeature()) {
-            case ACTIVE -> new LoggingPartEvaluationCallbackListener(evaluatedAtProvider);
+            case ACTIVE -> new DebugPartEvaluationCallbackListener(evaluatedAtProvider);
             case INACTIVE -> new NoOpPartEvaluationCallbackListener();
         };
         return parser.process(command.formula(),

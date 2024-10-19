@@ -75,7 +75,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
     @Test
     public void shouldLogWhenDebugFeatureIsActive() {
         // Given
-        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider),
+        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new DebugPartEvaluationCallbackListener(evaluatedAtProvider),
                 new NumericalContext(), List.of());
         doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 

@@ -59,7 +59,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
-                new PartEvaluationCallback(new LoggingPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
+                new PartEvaluationCallback(new DebugPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
