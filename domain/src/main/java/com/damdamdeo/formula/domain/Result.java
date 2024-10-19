@@ -17,6 +17,6 @@ public record Result(Value value,
     }
 
     public Result() {
-        this(Value.ofNotAvailable(), List.of(), new Range(-1, -1));
+        this(Value.ofNotAvailable(), List.of(), new Range(new RangeStart(), new RangeEnd()));
     }
 }

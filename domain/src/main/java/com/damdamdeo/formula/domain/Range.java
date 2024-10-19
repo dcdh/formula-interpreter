@@ -1,16 +1,24 @@
 package com.damdamdeo.formula.domain;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.Objects;
 
-public record Range(Integer start, Integer end) {
+public record Range(RangeStart rangeStart, RangeEnd rangeEnd) {
     public Range {
-        Objects.requireNonNull(start);
-        Objects.requireNonNull(end);
+        Objects.requireNonNull(rangeStart);
+        Objects.requireNonNull(rangeEnd);
+        Validate.validState(rangeStart.isValid(rangeEnd), "Range is invalid start: %d, end: %d", rangeStart.start(), rangeEnd.end());
     }
 
-    public Range of(final Integer plusStart, final Integer plusEnd) {
-        Objects.requireNonNull(plusStart);
-        Objects.requireNonNull(plusEnd);
-        return new Range(start + plusStart, end + plusEnd);
+    @Deprecated(forRemoval = true)
+    public Range(final Integer start, final Integer end) {
+        this(new RangeStart(start), new RangeEnd(end));
+    }
+
+    public Range of(final Integer addStart, final Integer addEnd) {
+        Objects.requireNonNull(addStart);
+        Objects.requireNonNull(addEnd);
+        return new Range(rangeStart.add(addStart), rangeEnd.add(addEnd));
     }
 }

@@ -7,6 +7,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 public record RangeDTO(@Schema(required = true) Integer start,
                        @Schema(required = true) Integer end) {
     public RangeDTO(final Range range) {
-        this(range.start(), range.end());
+        this(range.rangeStart().start(), range.rangeEnd().end());
     }
 }
