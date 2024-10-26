@@ -1,7 +1,6 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +49,7 @@ public class AntlrValueExpressionTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("Hello World"),
-                                new Range(0, 12),
+                                new PositionedAt(0, 12),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),

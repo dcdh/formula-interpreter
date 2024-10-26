@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 public record IntermediateResult(Value value,
-                                 Range range,
+                                 PositionedAt positionedAt,
                                  List<Input> inputs,
                                  EvaluationProcessedIn evaluationProcessedIn) {
     public IntermediateResult {
         Objects.requireNonNull(value);
-        Objects.requireNonNull(range);
+        Objects.requireNonNull(positionedAt);
         Objects.requireNonNull(inputs);
         Objects.requireNonNull(evaluationProcessedIn);
     }
@@ -18,7 +18,7 @@ public record IntermediateResult(Value value,
 
         EvaluatedAtStart evaluatedAtStart;
         EvaluatedAtEnd evaluatedAtEnd;
-        Range range;
+        PositionedAt positionedAt;
         List<Input> inputs;
         Value value;
 
@@ -26,8 +26,8 @@ public record IntermediateResult(Value value,
             return new IntermediateResult.Builder();
         }
 
-        public IntermediateResult.Builder withRange(final Range range) {
-            this.range = range;
+        public IntermediateResult.Builder withPositionedAt(final PositionedAt positionedAt) {
+            this.positionedAt = positionedAt;
             return this;
         }
 
@@ -53,7 +53,7 @@ public record IntermediateResult(Value value,
 
         public IntermediateResult build() {
             return new IntermediateResult(
-                    value, range, inputs, new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd)
+                    value, positionedAt, inputs, new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd)
             );
         }
     }

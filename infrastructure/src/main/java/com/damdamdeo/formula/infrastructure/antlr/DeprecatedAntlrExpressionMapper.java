@@ -56,7 +56,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
     public void exitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
         final Expression expression = new StructuredReferencesExpression(
                 new Reference(ctx.STRUCTURED_REFERENCE().getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -64,7 +64,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
     public void exitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         final Expression expression = new ArgumentExpression(
                 new Value(ctx.VALUE().getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -72,7 +72,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
     public void exitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         final Expression expression = new ArgumentExpression(
                 new Value(ctx.NUMERIC().getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -81,7 +81,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         final Expression expression = new ArgumentExpression(
                 new Value(ctx.getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -90,7 +90,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         final Expression expression = new ArgumentExpression(
                 new Value(ctx.getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -111,7 +111,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
             default -> throw new IllegalStateException("Should not be here");
         };
         final Expression expression = new ArithmeticExpression(function,
-                left, right, AntlrDomainMapperHelper.toRange(ctx));
+                left, right, AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -129,7 +129,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
             default -> throw new IllegalStateException("Should not be here");
         };
         final Expression expression = new ComparisonExpression(comparaison,
-                left, right, AntlrDomainMapperHelper.toRange(ctx));
+                left, right, AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -143,7 +143,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
             default -> throw new IllegalStateException("Should not be here");
         };
         final Expression expression = new LogicalBooleanExpression(function,
-                left, right, AntlrDomainMapperHelper.toRange(ctx));
+                left, right, AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -159,7 +159,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
             default -> throw new IllegalStateException("Should not be here");
         };
         final Expression expression = new LogicalComparisonExpression(function, comparison, onTrue, onFalse,
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 
@@ -175,7 +175,7 @@ public final class DeprecatedAntlrExpressionMapper extends FormulaBaseListener {
             case FormulaParser.ISLOGICAL -> StateFunction.Function.IS_LOGICAL;
             default -> throw new IllegalStateException("Should not be here");
         };
-        final Expression expression = new StateExpression(function, argument, AntlrDomainMapperHelper.toRange(ctx));
+        final Expression expression = new StateExpression(function, argument, AntlrDomainMapperHelper.toPositionedAt(ctx));
         stackOfExpressions.push(expression);
     }
 

@@ -1,13 +1,10 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
-import io.quarkus.cache.Cache;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -62,7 +59,7 @@ public class AntlrArgumentNumericTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("0.00"),
-                                new Range(0, 3),
+                                new PositionedAt(0, 3),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),

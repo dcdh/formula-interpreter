@@ -173,7 +173,7 @@ public final class EvaluateEndpoint {
                                                   "evaluatedAtStart": "2024-05-05T01:09:39.724292501+02:00",
                                                   "evaluatedAtEnd": "2024-05-05T01:09:39.728590951+02:00",
                                                   "processedInNanos": 4298450,
-                                                  "range": {
+                                                  "positionedAt": {
                                                     "start": 0,
                                                     "end": 48
                                                   },
@@ -181,7 +181,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "left",
                                                       "value": "260",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 4,
                                                         "end": 20
                                                       }
@@ -189,7 +189,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "right",
                                                       "value": "0.1",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 22,
                                                         "end": 47
                                                       }
@@ -201,7 +201,7 @@ public final class EvaluateEndpoint {
                                                   "evaluatedAtStart": "2024-05-05T01:09:39.724415205+02:00",
                                                   "evaluatedAtEnd": "2024-05-05T01:09:39.726876407+02:00",
                                                   "processedInNanos": 2461202,
-                                                  "range": {
+                                                  "positionedAt": {
                                                     "start": 4,
                                                     "end": 20
                                                   },
@@ -209,7 +209,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "structuredReference",
                                                       "value": "Sales Amount",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 7,
                                                         "end": 18
                                                       }
@@ -221,7 +221,7 @@ public final class EvaluateEndpoint {
                                                   "evaluatedAtStart": "2024-05-05T01:09:39.727326633+02:00",
                                                   "evaluatedAtEnd": "2024-05-05T01:09:39.728449028+02:00",
                                                   "processedInNanos": 1122395,
-                                                  "range": {
+                                                  "positionedAt": {
                                                     "start": 22,
                                                     "end": 47
                                                   },
@@ -229,7 +229,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "left",
                                                       "value": "10",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 26,
                                                         "end": 42
                                                       }
@@ -237,7 +237,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "right",
                                                       "value": "100",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 44,
                                                         "end": 46
                                                       }
@@ -249,7 +249,7 @@ public final class EvaluateEndpoint {
                                                   "evaluatedAtStart": "2024-05-05T01:09:39.727336957+02:00",
                                                   "evaluatedAtEnd": "2024-05-05T01:09:39.727368776+02:00",
                                                   "processedInNanos": 31819,
-                                                  "range": {
+                                                  "positionedAt": {
                                                     "start": 26,
                                                     "end": 42
                                                   },
@@ -257,7 +257,7 @@ public final class EvaluateEndpoint {
                                                     {
                                                       "name": "structuredReference",
                                                       "value": "% Commission",
-                                                      "range": {
+                                                      "positionedAt": {
                                                         "start": 29,
                                                         "end": 40
                                                       }
@@ -269,7 +269,7 @@ public final class EvaluateEndpoint {
                                                   "evaluatedAtStart": "2024-05-05T01:09:39.727476161+02:00",
                                                   "evaluatedAtEnd": "2024-05-05T01:09:39.72750957+02:00",
                                                   "processedInNanos": 33409,
-                                                  "range": {
+                                                  "positionedAt": {
                                                     "start": 44,
                                                     "end": 46
                                                   },

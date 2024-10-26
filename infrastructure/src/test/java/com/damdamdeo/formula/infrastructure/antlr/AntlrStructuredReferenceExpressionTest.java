@@ -1,7 +1,6 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 
@@ -83,9 +82,9 @@ public class AntlrStructuredReferenceExpressionTest extends AbstractFunctionTest
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("10%"),
-                                new Range(0, 16),
+                                new PositionedAt(0, 16),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new Range(3, 14))),
+                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new PositionedAt(3, 14))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]"))))

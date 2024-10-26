@@ -29,19 +29,19 @@ public final class Evaluator implements ExpressionVisitor {
             final ArithmeticFunction arithmeticFunction = ArithmeticFunction.of(arithmeticExpression.arithmeticFunction(),
                     left.value(), right.value());
             final Value evaluated = arithmeticFunction.evaluate(numericalContext);
-            final Range range = arithmeticExpression.range();
+            final PositionedAt positionedAt = arithmeticExpression.positionedAt();
             return new Evaluated(
                     evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
-                                    left.range()),
+                                    left.positionedAt()),
                             new Input(
                                     InputName.ofRight(),
                                     right.value(),
-                                    right.range())));
+                                    right.positionedAt())));
         });
     }
 
@@ -53,18 +53,18 @@ public final class Evaluator implements ExpressionVisitor {
             final ComparisonFunction comparisonFunction = ComparisonFunction.of(comparisonExpression.comparisonFunction(),
                     left.value(), right.value());
             final Value evaluated = comparisonFunction.evaluate(numericalContext);
-            final Range range = comparisonExpression.range();
+            final PositionedAt positionedAt = comparisonExpression.positionedAt();
             return new Evaluated(evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
-                                    left.range()),
+                                    left.positionedAt()),
                             new Input(
                                     InputName.ofRight(),
                                     right.value(),
-                                    right.range())
+                                    right.positionedAt())
                     )
             );
         });
@@ -78,18 +78,18 @@ public final class Evaluator implements ExpressionVisitor {
             final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.of(logicalBooleanExpression.logicalBooleanFunction(),
                     left.value(), right.value());
             final Value evaluated = logicalBooleanFunction.evaluate(numericalContext);
-            final Range range = logicalBooleanExpression.range();
+            final PositionedAt positionedAt = logicalBooleanExpression.positionedAt();
             return new Evaluated(evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
-                                    left.range()),
+                                    left.positionedAt()),
                             new Input(
                                     InputName.ofRight(),
                                     right.value(),
-                                    right.range())
+                                    right.positionedAt())
                     ));
         });
     }
@@ -103,14 +103,14 @@ public final class Evaluator implements ExpressionVisitor {
                             () -> logicalComparisonExpression.onTrue().accept(this).value(),
                             () -> logicalComparisonExpression.onFalse().accept(this).value())
                     .evaluate(numericalContext);
-            final Range range = logicalComparisonExpression.range();
+            final PositionedAt positionedAt = logicalComparisonExpression.positionedAt();
             return new Evaluated(evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofComparisonValue(),
                                     comparison.value(),
-                                    comparison.range()))
+                                    comparison.positionedAt()))
             );
         });
     }
@@ -120,14 +120,14 @@ public final class Evaluator implements ExpressionVisitor {
         return evaluate(() -> {
             final Evaluated argument = stateExpression.argument().accept(this);
             final Value evaluated = StateFunction.of(stateExpression.stateFunction(), argument.value()).evaluate(numericalContext);
-            final Range range = stateExpression.range();
+            final PositionedAt positionedAt = stateExpression.positionedAt();
             return new Evaluated(evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofValue(),
                                     argument.value(),
-                                    argument.range()))
+                                    argument.positionedAt()))
             );
         });
     }
@@ -138,14 +138,14 @@ public final class Evaluator implements ExpressionVisitor {
             final Reference reference = structuredReferencesExpression.reference();
             final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredReferences, reference);
             final Value evaluated = structuredReferencesFunction.evaluate(numericalContext);
-            final Range range = structuredReferencesExpression.range();
+            final PositionedAt positionedAt = structuredReferencesExpression.positionedAt();
             return new Evaluated(evaluated,
-                    range,
+                    positionedAt,
                     () -> List.of(
                             new Input(
                                     InputName.ofStructuredReference(),
                                     structuredReferencesFunction.reference(),
-                                    range.of(+3, -2)))
+                                    positionedAt.of(+3, -2)))
             );
         });
     }
@@ -156,7 +156,7 @@ public final class Evaluator implements ExpressionVisitor {
             final Value value = argumentExpression.value();
             return new Evaluated(
                     value,
-                    argumentExpression.range()
+                    argumentExpression.positionedAt()
             );
         });
     }

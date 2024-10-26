@@ -34,7 +34,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
                 function,
                 this.visit(ctx.left),
                 this.visit(ctx.right),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -52,7 +52,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
                 comparison,
                 this.visit(ctx.left),
                 this.visit(ctx.right),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
                 function,
                 this.visit(ctx.left),
                 this.visit(ctx.right),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -82,7 +82,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
                 this.visit(ctx.comparison),
                 this.visit(ctx.whenTrue),
                 this.visit(ctx.whenFalse),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -99,7 +99,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
         return new StateExpression(
                 function,
                 this.visit(ctx.value),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -108,21 +108,21 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
                 new Reference(ctx.STRUCTURED_REFERENCE().getText()
                         .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
                         .substring(3)),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
     public Expression visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         return new ArgumentExpression(
                 Value.of(ctx.VALUE().getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
     public Expression visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return new ArgumentExpression(
                 Value.of(ctx.NUMERIC().getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -130,7 +130,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return new ArgumentExpression(
                 Value.of(ctx.getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
@@ -138,7 +138,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return new ArgumentExpression(
                 Value.of(ctx.getText()),
-                AntlrDomainMapperHelper.toRange(ctx));
+                AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
 }

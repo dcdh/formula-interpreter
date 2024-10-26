@@ -29,7 +29,7 @@ public final class DebugPartEvaluationListener implements PartEvaluationListener
                 IntermediateResult.Builder.newBuilder()
                         .withValue(evaluated.value())
                         .withInputs(evaluated.inputs().get())
-                        .withRange(evaluated.range())
+                        .withPositionedAt(evaluated.positionedAt())
                         .withEvaluatedAtStart(evaluatedAtStartsByExecutionId.get(partEvaluationId))
                         .withEvaluatedAtEnd(evaluatedAtProvider.now())
                         .build());

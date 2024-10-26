@@ -28,7 +28,7 @@ public final class EvaluationExceptionMapper implements ExceptionMapper<Evaluati
                                                     //language=JSON
                                                     value = """
                                                             {
-                                                                "message": "Syntax error at line '0' at range '1' with message 'custom \\"msg\\"'"
+                                                                "message": "Syntax error at line '0' at positionedAt '1' with message 'custom \\"msg\\"'"
                                                             }
                                                             """)
                                     }

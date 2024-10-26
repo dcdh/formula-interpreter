@@ -118,69 +118,69 @@ paths:
                     - evaluatedAtStart: 2024-05-05T01:09:39.724292501+02:00
                       evaluatedAtEnd: 2024-05-05T01:09:39.728590951+02:00
                       processedInNanos: 4298450
-                      range:
+                      positionedAt:
                         start: 0
                         end: 48
                       inputs:
                       - name: left
                         value: "260"
-                        range:
+                        positionedAt:
                           start: 4
                           end: 20
                       - name: right
                         value: "0.1"
-                        range:
+                        positionedAt:
                           start: 22
                           end: 47
                       result: "26"
                     - evaluatedAtStart: 2024-05-05T01:09:39.724415205+02:00
                       evaluatedAtEnd: 2024-05-05T01:09:39.726876407+02:00
                       processedInNanos: 2461202
-                      range:
+                      positionedAt:
                         start: 4
                         end: 20
                       inputs:
                       - name: structuredReference
                         value: Sales Amount
-                        range:
+                        positionedAt:
                           start: 7
                           end: 18
                       result: "260"
                     - evaluatedAtStart: 2024-05-05T01:09:39.727326633+02:00
                       evaluatedAtEnd: 2024-05-05T01:09:39.728449028+02:00
                       processedInNanos: 1122395
-                      range:
+                      positionedAt:
                         start: 22
                         end: 47
                       inputs:
                       - name: left
                         value: "10"
-                        range:
+                        positionedAt:
                           start: 26
                           end: 42
                       - name: right
                         value: "100"
-                        range:
+                        positionedAt:
                           start: 44
                           end: 46
                       result: "0.1"
                     - evaluatedAtStart: 2024-05-05T01:09:39.727336957+02:00
                       evaluatedAtEnd: 2024-05-05T01:09:39.727368776+02:00
                       processedInNanos: 31819
-                      range:
+                      positionedAt:
                         start: 26
                         end: 42
                       inputs:
                       - name: structuredReference
                         value: '% Commission'
-                        range:
+                        positionedAt:
                           start: 29
                           end: 40
                       result: "10"
                     - evaluatedAtStart: 2024-05-05T01:09:39.727476161+02:00
                       evaluatedAtEnd: 2024-05-05T01:09:39.72750957+02:00
                       processedInNanos: 33409
-                      range:
+                      positionedAt:
                         start: 44
                         end: 46
                       inputs: []
@@ -195,8 +195,8 @@ paths:
                 Syntax in error:
                   description: Syntax in error
                   value:
-                    message: Syntax error at line '0' at range '1' with message 'custom
-                      "msg"'
+                    message: Syntax error at line '0' at positionedAt '1' with message
+                      'custom "msg"'
         "500":
           description: Unhandled exception while evaluating formula
           content:
@@ -442,30 +442,30 @@ components:
       required:
       - name
       - value
-      - range
+      - positionedAt
       - name
       - value
-      - range
+      - positionedAt
       type: object
       properties:
         name:
           type: string
         value:
           type: string
-        range:
-          $ref: "#/components/schemas/Range"
+        positionedAt:
+          $ref: "#/components/schemas/PositionedAt"
     IntermediateResult:
       required:
       - evaluatedAtStart
       - evaluatedAtEnd
       - processedInNanos
-      - range
+      - positionedAt
       - inputs
       - value
       - evaluatedAtStart
       - evaluatedAtEnd
       - processedInNanos
-      - range
+      - positionedAt
       - inputs
       - result
       type: object
@@ -481,8 +481,8 @@ components:
         processedInNanos:
           format: int64
           type: integer
-        range:
-          $ref: "#/components/schemas/Range"
+        positionedAt:
+          $ref: "#/components/schemas/PositionedAt"
         inputs:
           type: array
           items:
@@ -510,7 +510,7 @@ components:
         processedInNanos:
           format: int64
           type: integer
-    Range:
+    PositionedAt:
       required:
       - start
       - end

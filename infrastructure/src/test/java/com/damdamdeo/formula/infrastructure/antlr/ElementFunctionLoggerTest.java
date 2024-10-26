@@ -1,7 +1,6 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,73 +38,73 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("40"),
-                                new Range(0, 119),
+                                new PositionedAt(0, 119),
                                 List.of(
-                                        new Input(new InputName("comparisonValue"), Value.of("true"), new Range(3, 29))),
+                                        new Input(new InputName("comparisonValue"), Value.of("true"), new PositionedAt(3, 29))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:20+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("true"),
-                                new Range(3, 29),
+                                new PositionedAt(3, 29),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("Joe"), new Range(6, 22)),
-                                        new Input(new InputName("right"), Value.of("Joe"), new Range(24, 28))),
+                                        new Input(new InputName("left"), Value.of("Joe"), new PositionedAt(6, 22)),
+                                        new Input(new InputName("right"), Value.of("Joe"), new PositionedAt(24, 28))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("Joe"),
-                                new Range(6, 22),
+                                new PositionedAt(6, 22),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("Sales Person"), new Range(9, 20))),
+                                        new Input(new InputName("structuredReference"), new Reference("Sales Person"), new PositionedAt(9, 20))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("Joe"),
-                                new Range(24, 28),
+                                new PositionedAt(24, 28),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("40"),
-                                new Range(31, 77),
+                                new PositionedAt(31, 77),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("20"), new Range(35, 74)),
-                                        new Input(new InputName("right"), Value.of("2"), new Range(76, 76))),
+                                        new Input(new InputName("left"), Value.of("20"), new PositionedAt(35, 74)),
+                                        new Input(new InputName("right"), Value.of("2"), new PositionedAt(76, 76))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:19+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("20"),
-                                new Range(35, 74),
+                                new PositionedAt(35, 74),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("200"), new Range(39, 55)),
-                                        new Input(new InputName("right"), Value.of("0.10"), new Range(57, 73))),
+                                        new Input(new InputName("left"), Value.of("200"), new PositionedAt(39, 55)),
+                                        new Input(new InputName("right"), Value.of("0.10"), new PositionedAt(57, 73))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("200"),
-                                new Range(39, 55),
+                                new PositionedAt(39, 55),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("Sales Amount"), new Range(42, 53))),
+                                        new Input(new InputName("structuredReference"), new Reference("Sales Amount"), new PositionedAt(42, 53))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("0.10"),
-                                new Range(57, 73),
+                                new PositionedAt(57, 73),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new Range(60, 71))),
+                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new PositionedAt(60, 71))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("2"),
-                                new Range(76, 76),
+                                new PositionedAt(76, 76),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")),
@@ -132,58 +131,58 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("20"),
-                                new Range(0, 119),
+                                new PositionedAt(0, 119),
                                 List.of(
-                                        new Input(new InputName("comparisonValue"), Value.of("false"), new Range(3, 29))),
+                                        new Input(new InputName("comparisonValue"), Value.of("false"), new PositionedAt(3, 29))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("false"),
-                                new Range(3, 29),
+                                new PositionedAt(3, 29),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("Robert"), new Range(6, 22)),
-                                        new Input(new InputName("right"), Value.of("Joe"), new Range(24, 28))),
+                                        new Input(new InputName("left"), Value.of("Robert"), new PositionedAt(6, 22)),
+                                        new Input(new InputName("right"), Value.of("Joe"), new PositionedAt(24, 28))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("Robert"),
-                                new Range(6, 22),
+                                new PositionedAt(6, 22),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("Sales Person"), new Range(9, 20))),
+                                        new Input(new InputName("structuredReference"), new Reference("Sales Person"), new PositionedAt(9, 20))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("Joe"),
-                                new Range(24, 28),
+                                new PositionedAt(24, 28),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("20"),
-                                new Range(79, 118),
+                                new PositionedAt(79, 118),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("200"), new Range(83, 99)),
-                                        new Input(new InputName("right"), Value.of("0.10"), new Range(101, 117))),
+                                        new Input(new InputName("left"), Value.of("200"), new PositionedAt(83, 99)),
+                                        new Input(new InputName("right"), Value.of("0.10"), new PositionedAt(101, 117))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("200"),
-                                new Range(83, 99),
+                                new PositionedAt(83, 99),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("Sales Amount"), new Range(86, 97))),
+                                        new Input(new InputName("structuredReference"), new Reference("Sales Amount"), new PositionedAt(86, 97))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("0.10"),
-                                new Range(101, 117),
+                                new PositionedAt(101, 117),
                                 List.of(
-                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new Range(104, 115))),
+                                        new Input(new InputName("structuredReference"), new Reference("% Commission"), new PositionedAt(104, 115))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]"))))

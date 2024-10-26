@@ -40,9 +40,9 @@ public class EvaluateEndpointTest {
                         List.of(
                                 new IntermediateResult(
                                         Value.of("10"),
-                                        new Range(4, 5),
+                                        new PositionedAt(4, 5),
                                         List.of(
-                                                new Input(new InputName("reference"), new Value("ref"), new Range(2, 3))),
+                                                new Input(new InputName("reference"), new Value("ref"), new PositionedAt(2, 3))),
                                         new EvaluationProcessedIn(
                                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
                                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))))
@@ -90,7 +90,7 @@ public class EvaluateEndpointTest {
                              "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
                              "evaluatedAtEnd": "2023-12-25T10:15:01+01:00",
                              "processedInNanos": 1000000000,
-                             "range": {
+                             "positionedAt": {
                                  "start": 4,
                                  "end": 5
                              },
@@ -98,7 +98,7 @@ public class EvaluateEndpointTest {
                                  {
                                      "name": "reference",
                                      "value": "ref",
-                                     "range": {
+                                     "positionedAt": {
                                          "start": 2,
                                          "end": 3
                                      }
@@ -161,7 +161,7 @@ public class EvaluateEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType("application/vnd.evaluation-syntax-error-v1+json")
-                .body("message", is("Syntax error at line '0' at range '1' with message 'custom \"msg\"'"));
+                .body("message", is("Syntax error at line '0' at positionedAt '1' with message 'custom \"msg\"'"));
     }
 
     @Test

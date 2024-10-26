@@ -2,7 +2,6 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.provider.StateFunctionTestProvider;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -90,16 +89,16 @@ public class AntlrStateFunctionsTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("true"),
-                                new Range(0, 14),
+                                new PositionedAt(0, 14),
                                 List.of(
-                                        new Input(new InputName("value"), Value.of("123456"), new Range(6, 13))
+                                        new Input(new InputName("value"), Value.of("123456"), new PositionedAt(6, 13))
                                 ),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("123456"),
-                                new Range(6, 13),
+                                new PositionedAt(6, 13),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),

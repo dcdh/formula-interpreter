@@ -2,19 +2,19 @@ package com.damdamdeo.formula.domain.evaluation;
 
 import com.damdamdeo.formula.domain.Evaluated;
 import com.damdamdeo.formula.domain.LogicalComparisonFunction;
-import com.damdamdeo.formula.domain.Range;
+import com.damdamdeo.formula.domain.PositionedAt;
 
 import java.util.Objects;
 
 public record LogicalComparisonExpression(LogicalComparisonFunction.Function logicalComparisonFunction,
                                           Expression comparison, Expression onTrue, Expression onFalse,
-                                          Range range) implements Expression {
+                                          PositionedAt positionedAt) implements Expression {
     public LogicalComparisonExpression {
         Objects.requireNonNull(logicalComparisonFunction);
         Objects.requireNonNull(comparison);
         Objects.requireNonNull(onTrue);
         Objects.requireNonNull(onFalse);
-        Objects.requireNonNull(range);
+        Objects.requireNonNull(positionedAt);
     }
 
     @Override

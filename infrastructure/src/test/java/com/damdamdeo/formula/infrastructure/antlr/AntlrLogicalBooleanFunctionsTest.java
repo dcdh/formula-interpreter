@@ -2,7 +2,6 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -264,23 +263,23 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
                 assertThat(executionResultToAssert.intermediateResults()).containsExactly(
                         new IntermediateResult(
                                 Value.of("false"),
-                                new Range(0, 7),
+                                new PositionedAt(0, 7),
                                 List.of(
-                                        new Input(new InputName("left"), Value.of("0"), new Range(4, 4)),
-                                        new Input(new InputName("right"), Value.of("0"), new Range(6, 6))),
+                                        new Input(new InputName("left"), Value.of("0"), new PositionedAt(4, 4)),
+                                        new Input(new InputName("right"), Value.of("0"), new PositionedAt(6, 6))),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("0"),
-                                new Range(4, 4),
+                                new PositionedAt(4, 4),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))),
                         new IntermediateResult(
                                 Value.of("0"),
-                                new Range(6, 6),
+                                new PositionedAt(6, 6),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")),

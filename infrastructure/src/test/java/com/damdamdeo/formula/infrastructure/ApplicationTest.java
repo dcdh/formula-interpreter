@@ -72,7 +72,7 @@ public class ApplicationTest {
                                  "evaluatedAtStart": "2023-12-25T10:15:03+01:00",
                                  "evaluatedAtEnd": "2023-12-25T10:15:04+01:00",
                                  "processedInNanos": 1000000000,
-                                 "range": {
+                                 "positionedAt": {
                                      "start": 0,
                                      "end": 3
                                  },
@@ -126,16 +126,16 @@ public class ApplicationTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("intermediateResults[0].range.start", is(0))
-                    .body("intermediateResults[0].range.end", is(48))
-                    .body("intermediateResults[1].range.start", is(4))
-                    .body("intermediateResults[1].range.end", is(20))
-                    .body("intermediateResults[2].range.start", is(22))
-                    .body("intermediateResults[2].range.end", is(47))
-                    .body("intermediateResults[3].range.start", is(26))
-                    .body("intermediateResults[3].range.end", is(42))
-                    .body("intermediateResults[4].range.start", is(44))
-                    .body("intermediateResults[4].range.end", is(46));
+                    .body("intermediateResults[0].positionedAt.start", is(0))
+                    .body("intermediateResults[0].positionedAt.end", is(48))
+                    .body("intermediateResults[1].positionedAt.start", is(4))
+                    .body("intermediateResults[1].positionedAt.end", is(20))
+                    .body("intermediateResults[2].positionedAt.start", is(22))
+                    .body("intermediateResults[2].positionedAt.end", is(47))
+                    .body("intermediateResults[3].positionedAt.start", is(26))
+                    .body("intermediateResults[3].positionedAt.end", is(42))
+                    .body("intermediateResults[4].positionedAt.start", is(44))
+                    .body("intermediateResults[4].positionedAt.end", is(46));
         }
     }
 
