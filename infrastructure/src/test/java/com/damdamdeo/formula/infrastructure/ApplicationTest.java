@@ -1,8 +1,9 @@
 package com.damdamdeo.formula.infrastructure;
 
 import com.damdamdeo.formula.domain.EvaluatedAt;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.provider.ListOfEvaluatedAtParameterResolver;
+import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import com.damdamdeo.formula.infrastructure.antlr.AntlrParseTreeGenerator;
 import com.damdamdeo.formula.infrastructure.antlr.DefaultGenerator;
 import io.quarkus.test.InjectMock;
@@ -13,6 +14,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
+@ExtendWith(ListOfEvaluatedAtParameterResolver.class)
 public class ApplicationTest {
 
     // only happy path here
@@ -34,20 +37,16 @@ public class ApplicationTest {
         private EvaluatedAtProvider evaluatedAtProvider;
 
         @Test
-        public void shouldEvaluate() throws JSONException {
+        public void shouldEvaluate(final ListOfEvaluatedAtParameterResolver.ListOfEvaluatedAt listOfEvaluatedAt) throws JSONException {
             // Given
             when(evaluatedAtProvider.now())
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                    .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")));
+                    .thenReturn(listOfEvaluatedAt.first(), listOfEvaluatedAt.next());
             //language=JSON
             final String givenRequest = """
                     {
                         "formula":"true",
                         "structuredReferences": {},
+                        "evaluateOn": "ANTLR",
                         "debugFeature": "ACTIVE"
                     }
                     """;
@@ -112,6 +111,7 @@ public class ApplicationTest {
                             "Sales Amount": "260",
                             "% Commission": "10"
                         },
+                        "evaluateOn": "ANTLR",
                         "debugFeature": "ACTIVE"
                     }
                     """;
@@ -227,6 +227,7 @@ public class ApplicationTest {
                             "Sales Amount": "260",
                             "% Commission": "10"
                         },
+                        "evaluateOn": "ANTLR",
                         "debugFeature": "ACTIVE"
                     }
                     """;

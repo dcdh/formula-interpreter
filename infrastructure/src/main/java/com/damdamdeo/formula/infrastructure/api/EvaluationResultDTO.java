@@ -14,7 +14,7 @@ public record EvaluationResultDTO(@Schema(required = true) String result,
                                   @Schema(required = true) List<IntermediateResultDTO> intermediateResults) {
     public EvaluationResultDTO(final EvaluationResult evaluationResult) {
         this(
-                evaluationResult.value(),
+                evaluationResult.value().value(),
                 evaluationResult.exactProcessedInNanos(),
                 evaluationResult.parserEvaluationProcessedIn() != null ? new ParserEvaluationProcessedInDTO(evaluationResult.parserEvaluationProcessedIn()) : null,
                 new EvaluationProcessedInDTO(evaluationResult.evaluationProcessedIn()),

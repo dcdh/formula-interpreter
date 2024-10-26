@@ -22,17 +22,17 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
 
 @QuarkusTest
-public class ParserEndpointTest {
+public class EvaluateEndpointTest {
 
     @InjectMock
-    private EvaluateUseCase evaluateUseCase;
+    EvaluateUseCase evaluateUseCase;
 
     @Test
     public void shouldProcess() throws JSONException {
         // Given
         doReturn(
                 Uni.createFrom().item(new EvaluationResult(
-                        new Evaluated(new Value("true"), new Range(0, 10)),
+                        new Value("true"),
                         new ParserEvaluationProcessedIn(
                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:58+01:00[Europe/Paris]")),
                                 new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:14:59+01:00[Europe/Paris]"))
@@ -54,9 +54,9 @@ public class ParserEndpointTest {
                 .when(evaluateUseCase)
                 .execute(new EvaluateCommand(new Formula("true"),
                         List.of(
-                                new StructuredReference(new Reference("ref"), new Value("val")))
-                        ,
-                        DebugFeature.ACTIVE));
+                                new StructuredReference(new Reference("ref"), new Value("val"))),
+                        DebugFeature.ACTIVE,
+                        EvaluateOn.ANTLR));
         //language=JSON
         final String request = """
                 {
@@ -64,6 +64,7 @@ public class ParserEndpointTest {
                     "structuredReferences": {
                         "ref": "val"
                     },
+                    "evaluateOn": "ANTLR",
                     "debugFeature": "ACTIVE"
                 }
                 """;
@@ -135,7 +136,8 @@ public class ParserEndpointTest {
                                 new Formula("true"),
                                 List.of(
                                         new StructuredReference(new Reference("ref"), new Value("val"))),
-                                DebugFeature.ACTIVE));
+                                DebugFeature.ACTIVE,
+                                EvaluateOn.ANTLR));
         //language=JSON
         final String request = """
                 {
@@ -143,6 +145,7 @@ public class ParserEndpointTest {
                     "structuredReferences": {
                         "ref":"val"
                     },
+                    "evaluateOn": "ANTLR",
                     "debugFeature": "ACTIVE"
                 }
                 """;
@@ -171,7 +174,8 @@ public class ParserEndpointTest {
                         new Formula("true"),
                         List.of(
                                 new StructuredReference(new Reference("ref"), new Value("val"))),
-                        DebugFeature.ACTIVE));
+                        DebugFeature.ACTIVE,
+                        EvaluateOn.ANTLR));
         //language=JSON
         final String request = """
                 {
@@ -179,6 +183,7 @@ public class ParserEndpointTest {
                     "structuredReferences": {
                         "ref":"val"
                     },
+                    "evaluateOn": "ANTLR",
                     "debugFeature": "ACTIVE"
                 }
                 """;

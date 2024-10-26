@@ -2,7 +2,7 @@ package com.damdamdeo.formula.domain;
 
 import java.util.List;
 
-public interface PartEvaluationCallbackListener {
+public interface PartEvaluationListener {
 
     void onBeforePartEvaluation(PartEvaluationId partEvaluationId);
 

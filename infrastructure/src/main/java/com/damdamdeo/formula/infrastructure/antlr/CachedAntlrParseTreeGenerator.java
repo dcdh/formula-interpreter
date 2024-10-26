@@ -7,7 +7,7 @@ import io.smallrye.mutiny.Uni;
 import java.util.Objects;
 
 public final class CachedAntlrParseTreeGenerator implements AntlrParseTreeGenerator {
-    private static final String PUT_IN_CACHE = "putInCache";
+    private static final String PUT_IN_CACHE = "putInCache" + CachedAntlrParseTreeGenerator.class.getName();
 
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
     private final Cache cache;

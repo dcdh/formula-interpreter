@@ -2,42 +2,34 @@ package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
+import io.quarkus.cache.Cache;
 import io.smallrye.mutiny.Uni;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class AntlrParserTest extends AbstractFunctionTest {
     private AntlrParser antlrExecutor;
-    private EvaluatedAtProvider evaluatedAtProvider;
 
     @BeforeEach
-    public void setup() {
-        evaluatedAtProvider = mock(EvaluatedAtProvider.class);
-        antlrExecutor = new AntlrParser(evaluatedAtProvider, new DefaultAntlrParseTreeGenerator(evaluatedAtProvider));
-    }
-
-    @AfterEach
-    public void tearDown() {
-        reset(evaluatedAtProvider);
+    public void setup(final EvaluatedAtProvider evaluatedAtProvider) {
+        antlrExecutor = new AntlrParser(evaluatedAtProvider,
+                new DefaultAntlrParseTreeGenerator(evaluatedAtProvider),
+                mock(ParserProcessing.class),
+                mock(Cache.class));
     }
 
     @Test
     public void shouldFailOnUnrecognizedToken() {
         // Given
-        when(evaluatedAtProvider.now())
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\""),
-                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), List.of()));
+                new PartEvaluationCallback(new NoOpPartEvaluationListener(), new NumericalContext(), List.of()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -53,13 +45,10 @@ public class AntlrParserTest extends AbstractFunctionTest {
     @Test
     public void shouldFailWhenFormulaIsDefinedOnMultipleLines() {
         // Given
-        when(evaluatedAtProvider.now())
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"Hello\"\n\"World\""),
-                new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(), new NumericalContext(), List.of()));
+                new PartEvaluationCallback(new NoOpPartEvaluationListener(), new NumericalContext(), List.of()));
 
         // Then
         assertOnFailure(executionResult, throwableToAssert ->
@@ -73,11 +62,10 @@ public class AntlrParserTest extends AbstractFunctionTest {
     }
 
     @Test
-    public void shouldLogWhenDebugFeatureIsActive() {
+    public void shouldLogWhenDebugFeatureIsActive(final EvaluatedAtProvider evaluatedAtProvider) {
         // Given
-        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new DebugPartEvaluationCallbackListener(evaluatedAtProvider),
+        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new DebugPartEvaluationListener(evaluatedAtProvider),
                 new NumericalContext(), List.of());
-        doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"true\""), givenPartEvaluationCallback);
@@ -91,9 +79,8 @@ public class AntlrParserTest extends AbstractFunctionTest {
     @Test
     public void shouldNotLogWhenDebugFeatureIsInactive() {
         // Given
-        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new NoOpPartEvaluationCallbackListener(),
+        final PartEvaluationCallback givenPartEvaluationCallback = new PartEvaluationCallback(new NoOpPartEvaluationListener(),
                 new NumericalContext(), List.of());
-        doReturn(new EvaluatedAt(ZonedDateTime.now())).when(evaluatedAtProvider).now();
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(new Formula("\"true\""), givenPartEvaluationCallback);

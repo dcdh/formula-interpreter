@@ -3,6 +3,7 @@ package com.damdamdeo.formula.infrastructure.antlr;
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import com.damdamdeo.formula.domain.spi.Parser;
+import io.quarkus.cache.Cache;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 
@@ -11,13 +12,21 @@ import java.util.Objects;
 
 public final class AntlrParser implements Parser {
 
+    private static final String PUT_IN_CACHE = "putInCache" + AntlrParser.class.getName();
+
     private final EvaluatedAtProvider evaluatedAtProvider;
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
+    private final ParserProcessing parserProcessing;
+    private final Cache cache;
 
     public AntlrParser(final EvaluatedAtProvider evaluatedAtProvider,
-                       final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+                       final AntlrParseTreeGenerator antlrParseTreeGenerator,
+                       final ParserProcessing parserProcessing,
+                       final Cache cache) {
         this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
         this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
+        this.parserProcessing = Objects.requireNonNull(parserProcessing);
+        this.cache = Objects.requireNonNull(cache);
     }
 
     @Override
@@ -34,7 +43,7 @@ public final class AntlrParser implements Parser {
                             }
                             final List<IntermediateResult> intermediateResults = partEvaluationCallback.intermediateResults();
                             final EvaluatedAtEnd evaluatedAtEnd = evaluatedAtProvider.now();
-                            return new EvaluationResult(evaluated,
+                            return new EvaluationResult(evaluated.value(),
                                     generatorResult.parserEvaluationProcessedIn(),
                                     intermediateResults,
                                     new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd));
@@ -42,5 +51,16 @@ public final class AntlrParser implements Parser {
                 )
                 .onFailure(Exception.class)
                 .transform(EvaluationException::new);
+    }
+
+    @Override
+    public Uni<ProcessingResult> process(final Formula formula) {
+        return Uni.createFrom().context(context -> {
+            context.put(PUT_IN_CACHE, false);
+            return cache.getAsync(formula, (__) -> {
+                context.put(PUT_IN_CACHE, true);
+                return parserProcessing.process(formula);
+            });
+        });
     }
 }

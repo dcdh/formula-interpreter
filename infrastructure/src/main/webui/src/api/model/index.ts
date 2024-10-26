@@ -28,3 +28,4 @@ export * from "./validate200";
 export * from "./validateBody";
 export * from "./validation";
 export * from "./zonedDateTime";
+export * from "./evaluateOn";

@@ -15,7 +15,6 @@ public record Range(RangeStart rangeStart, RangeEnd rangeEnd) {
         this(new RangeStart(), new RangeEnd());
     }
 
-    @Deprecated(forRemoval = true)
     public Range(final Integer start, final Integer end) {
         this(new RangeStart(start), new RangeEnd(end));
     }

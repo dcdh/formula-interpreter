@@ -31,6 +31,7 @@
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -42,6 +43,7 @@
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -53,6 +55,7 @@
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -65,6 +68,7 @@
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -77,6 +81,7 @@
                       "Sales Amount" : "260",
                       "% Commission" : "10"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -87,6 +92,7 @@
                     "structuredReferences" : {
                       "Sales Amount" : "260"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 },
@@ -97,6 +103,7 @@
                     "structuredReferences" : {
                       "Sales Amount" : "260"
                     },
+                    "evaluateOn" : "ANTLR",
                     "debugFeature" : "ACTIVE"
                   }
                 }
@@ -479,7 +486,7 @@
         }
       },
       "Evaluate" : {
-        "required" : [ "formula", "structuredReferences", "debugFeature", "formula", "structuredReferences", "debugFeature" ],
+        "required" : [ "formula", "structuredReferences", "debugFeature", "evaluateOn", "formula", "structuredReferences", "debugFeature", "evaluateOn" ],
         "type" : "object",
         "properties" : {
           "formula" : {
@@ -493,8 +500,15 @@
           },
           "debugFeature" : {
             "$ref" : "#/components/schemas/DebugFeature"
+          },
+          "evaluateOn" : {
+            "$ref" : "#/components/schemas/EvaluateOn"
           }
         }
+      },
+      "EvaluateOn" : {
+        "enum" : [ "ANTLR", "ANTLR_MAPPING_DOMAIN_EVAL" ],
+        "type" : "string"
       },
       "EvaluationProcessedInDTO" : {
         "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],

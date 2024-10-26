@@ -19,6 +19,7 @@ public class ApplicationTestIT {
                 {
                     "formula":"true",
                     "structuredReferences": {},
+                    "evaluateOn": "ANTLR",
                     "debugFeature": "ACTIVE"
                 }
                 """;
@@ -78,6 +79,7 @@ public class ApplicationTestIT {
                         "Sales Amount": "260",
                         "% Commission": "10"
                     },
+                    "evaluateOn": "ANTLR",
                     "debugFeature": "ACTIVE"
                 }
                 """;

@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.domain;
 
-public final class NoOpPartEvaluationCallbackListener implements PartEvaluationCallbackListener {
+public final class NoOpPartEvaluationListener implements PartEvaluationListener {
 
     @Override
     public void onBeforePartEvaluation(final PartEvaluationId partEvaluationId) {

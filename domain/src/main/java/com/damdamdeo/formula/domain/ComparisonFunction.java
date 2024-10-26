@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public interface ComparisonFunction extends Function {
 
-    enum ComparisonType {
+    enum Comparison {
         EQ, NEQ,
         GT, GTE, LT, LTE
     }
 
-    static ComparisonFunction of(final ComparisonType comparisonType, final Value left, final Value right) {
-        Objects.requireNonNull(comparisonType);
-        return switch (comparisonType) {
+    static ComparisonFunction of(final Comparison comparison, final Value left, final Value right) {
+        Objects.requireNonNull(comparison);
+        return switch (comparison) {
             case EQ -> EqualityComparisonFunction.ofEqual(left, right);
             case NEQ -> EqualityComparisonFunction.ofNotEqual(right, left);
             case GT -> NumericalComparisonFunction.ofGreaterThan(left, right);

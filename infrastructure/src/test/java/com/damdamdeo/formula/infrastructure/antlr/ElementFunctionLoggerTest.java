@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 public class ElementFunctionLoggerTest extends AbstractFunctionTest {
     private String givenFormula;
@@ -29,33 +29,10 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 new StructuredReference(new Reference("Sales Amount"), "200"),
                 new StructuredReference(new Reference("% Commission"), "0.10")
         );
-        when(evaluatedAtProvider.now())
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:18+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:19+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:20+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:21+01:00[Europe/Paris]")));
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
-                new PartEvaluationCallback(new DebugPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
+                new PartEvaluationCallback(new DebugPartEvaluationListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
@@ -145,29 +122,10 @@ public class ElementFunctionLoggerTest extends AbstractFunctionTest {
                 new StructuredReference(new Reference("Sales Amount"), "200"),
                 new StructuredReference(new Reference("% Commission"), "0.10")
         );
-        when(evaluatedAtProvider.now())
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:02+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:06+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:07+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:09+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:10+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:11+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:12+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:13+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:14+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:15+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:16+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:17+01:00[Europe/Paris]")));
 
         // When
         final Uni<EvaluationResult> executionResult = antlrExecutor.process(formula4Test(givenFormula),
-                new PartEvaluationCallback(new DebugPartEvaluationCallbackListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
+                new PartEvaluationCallback(new DebugPartEvaluationListener(evaluatedAtProvider), new NumericalContext(), givenStructuredReferences));
 
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->

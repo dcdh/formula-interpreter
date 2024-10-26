@@ -1,28 +1,29 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
-import com.damdamdeo.formula.domain.*;
+import com.damdamdeo.formula.domain.EvaluationResult;
+import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.provider.StubbedEvaluatedAtProviderTestProvider;
 import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
+import io.quarkus.cache.Cache;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+@ExtendWith(StubbedEvaluatedAtProviderTestProvider.class)
 public abstract class AbstractFunctionTest {
     protected AntlrParser antlrExecutor;
     protected EvaluatedAtProvider evaluatedAtProvider;
 
     @BeforeEach
-    public void setup() {
-        evaluatedAtProvider = mock(EvaluatedAtProvider.class);
-        when(evaluatedAtProvider.now())
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")))
-                .thenReturn(new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")));
-        antlrExecutor = new AntlrParser(evaluatedAtProvider, new DefaultAntlrParseTreeGenerator(evaluatedAtProvider));
+    public void setup(final EvaluatedAtProvider evaluatedAtProvider) {
+        this.antlrExecutor = new AntlrParser(evaluatedAtProvider, new DefaultAntlrParseTreeGenerator(evaluatedAtProvider),
+                mock(ParserProcessing.class), mock(Cache.class));
+        this.evaluatedAtProvider = evaluatedAtProvider;
     }
 
     protected Formula formula4Test(final String formula) {

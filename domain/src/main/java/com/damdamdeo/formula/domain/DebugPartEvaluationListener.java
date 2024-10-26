@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public final class DebugPartEvaluationCallbackListener implements PartEvaluationCallbackListener {
+public final class DebugPartEvaluationListener implements PartEvaluationListener {
     private final EvaluatedAtProvider evaluatedAtProvider;
     private final Map<PartEvaluationId, IntermediateResult> intermediateResultsByExecutionId;
     private final Map<PartEvaluationId, EvaluatedAtStart> evaluatedAtStartsByExecutionId;
 
-    public DebugPartEvaluationCallbackListener(final EvaluatedAtProvider evaluatedAtProvider) {
+    public DebugPartEvaluationListener(final EvaluatedAtProvider evaluatedAtProvider) {
         this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
         this.intermediateResultsByExecutionId = new HashMap<>();
         this.evaluatedAtStartsByExecutionId = new HashMap<>();
@@ -35,7 +35,6 @@ public final class DebugPartEvaluationCallbackListener implements PartEvaluation
                         .build());
     }
 
-    @Override
     public List<IntermediateResult> intermediateResults() {
         return intermediateResultsByExecutionId
                 .entrySet()

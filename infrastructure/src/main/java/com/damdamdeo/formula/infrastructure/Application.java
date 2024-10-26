@@ -55,8 +55,16 @@ public class Application {
     @Produces
     @ApplicationScoped
     public Parser parserProducer(final EvaluatedAtProvider evaluatedAtProvider,
-                                 @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
-        return new AntlrParser(evaluatedAtProvider, antlrParseTreeGenerator);
+                                 @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator,
+                                 final ParserProcessing parserProcessing,
+                                 @CacheName("parser") final Cache cache) {
+        return new AntlrParser(evaluatedAtProvider, antlrParseTreeGenerator, parserProcessing, cache);
+    }
+
+    @Produces
+    @ApplicationScoped
+    public ParserProcessing parserProcessingProducer(final EvaluatedAtProvider evaluatedAtProvider) {
+        return new AntlrParserProcessing(evaluatedAtProvider);
     }
 
     @Produces

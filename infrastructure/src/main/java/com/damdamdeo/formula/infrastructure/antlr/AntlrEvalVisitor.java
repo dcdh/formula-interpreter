@@ -4,6 +4,7 @@ import com.damdamdeo.formula.FormulaBaseVisitor;
 import com.damdamdeo.formula.FormulaParser;
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.ValueProvider;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
@@ -62,9 +63,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                 },
                 () -> this.visit(ctx.left),
                 () -> this.visit(ctx.right),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -72,19 +71,17 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     public Evaluated visitComparison_functions(final FormulaParser.Comparison_functionsContext ctx) {
         return partEvaluationCallback.evaluateComparisonFunctions(
                 () -> switch (ctx.function.getType()) {
-                    case FormulaParser.EQ -> ComparisonFunction.ComparisonType.EQ;
-                    case FormulaParser.NEQ -> ComparisonFunction.ComparisonType.NEQ;
-                    case FormulaParser.GT -> ComparisonFunction.ComparisonType.GT;
-                    case FormulaParser.GTE -> ComparisonFunction.ComparisonType.GTE;
-                    case FormulaParser.LT -> ComparisonFunction.ComparisonType.LT;
-                    case FormulaParser.LTE -> ComparisonFunction.ComparisonType.LTE;
+                    case FormulaParser.EQ -> ComparisonFunction.Comparison.EQ;
+                    case FormulaParser.NEQ -> ComparisonFunction.Comparison.NEQ;
+                    case FormulaParser.GT -> ComparisonFunction.Comparison.GT;
+                    case FormulaParser.GTE -> ComparisonFunction.Comparison.GTE;
+                    case FormulaParser.LT -> ComparisonFunction.Comparison.LT;
+                    case FormulaParser.LTE -> ComparisonFunction.Comparison.LTE;
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.left),
                 () -> this.visit(ctx.right),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -98,9 +95,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                 },
                 () -> this.visit(ctx.left),
                 () -> this.visit(ctx.right),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -116,9 +111,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                 () -> this.visit(ctx.comparison),
                 () -> new AntlrValueProvider(ctx.whenTrue),
                 () -> new AntlrValueProvider(ctx.whenFalse),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -135,9 +128,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                     default -> throw new IllegalStateException("Should not be here");
                 },
                 () -> this.visit(ctx.value),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -147,9 +138,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                 () -> new Reference(ctx.STRUCTURED_REFERENCE().getText()
                         .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
                         .substring(3)),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -157,9 +146,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     public Evaluated visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.VALUE().getText()),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -167,9 +154,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     public Evaluated visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.NUMERIC().getText()),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -178,9 +163,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
 
@@ -189,9 +172,8 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
                 () -> Value.of(ctx.getText()),
-                () -> new Range(
-                        ctx.getStart().getStartIndex(),
-                        ctx.getStop().getStopIndex())
+                () -> AntlrDomainMapperHelper.toRange(ctx)
         );
     }
+
 }

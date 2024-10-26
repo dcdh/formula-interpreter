@@ -45,6 +45,7 @@ public final class EvaluateEndpoint {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -59,6 +60,7 @@ public final class EvaluateEndpoint {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -73,6 +75,7 @@ public final class EvaluateEndpoint {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -88,6 +91,7 @@ public final class EvaluateEndpoint {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -103,6 +107,7 @@ public final class EvaluateEndpoint {
                                                     "Sales Amount": "260",
                                                     "% Commission": "10"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -116,6 +121,7 @@ public final class EvaluateEndpoint {
                                                 "structuredReferences": {
                                                     "Sales Amount": "260"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """),
@@ -129,6 +135,7 @@ public final class EvaluateEndpoint {
                                                 "structuredReferences": {
                                                     "Sales Amount": "260"
                                                 },
+                                                "evaluateOn": "ANTLR",
                                                 "debugFeature": "ACTIVE"
                                             }
                                             """)

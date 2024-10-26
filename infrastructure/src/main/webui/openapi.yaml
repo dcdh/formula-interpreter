@@ -27,6 +27,7 @@ paths:
                   structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Compute commission amount by multiplying Sales Amount by Percent Commission:
                 description: Compute commission amount by multiplying Sales Amount
@@ -36,6 +37,7 @@ paths:
                   structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Compute commission amount by multiplying Sales Amount by Percent Commission if it is Joe multiply by two:
                 description: Compute commission amount by multiplying Sales Amount
@@ -46,6 +48,7 @@ paths:
                   structuredReferences:
                     Sales Amount: "260"
                     '% Commission': "10"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Fail on unknown Structured Reference:
                 description: "Should return #REF! on unknown Structured Reference"
@@ -57,6 +60,7 @@ paths:
                     Sales Person: Joe
                     Sales Amount: "260"
                     '% Commission': "10"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Fail when dividing by zero:
                 description: "Should return #DIV/0! when dividing by zero"
@@ -67,6 +71,7 @@ paths:
                     Sales Person: Joe
                     Sales Amount: "260"
                     '% Commission': "10"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Fail when doing an operation on not a number:
                 description: "Should return #NUM! when doing an operation on not a\
@@ -75,6 +80,7 @@ paths:
                   formula: "MUL([@[Sales Amount]],\"not a number\")"
                   structuredReferences:
                     Sales Amount: "260"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
               Check if it is a number:
                 description: Should return I am a number if the Structured Reference
@@ -84,6 +90,7 @@ paths:
                     \ not a number\")"
                   structuredReferences:
                     Sales Amount: "260"
+                  evaluateOn: ANTLR
                   debugFeature: ACTIVE
         required: true
       responses:
@@ -363,9 +370,11 @@ components:
       - formula
       - structuredReferences
       - debugFeature
+      - evaluateOn
       - formula
       - structuredReferences
       - debugFeature
+      - evaluateOn
       type: object
       properties:
         formula:
@@ -376,6 +385,13 @@ components:
             type: string
         debugFeature:
           $ref: "#/components/schemas/DebugFeature"
+        evaluateOn:
+          $ref: "#/components/schemas/EvaluateOn"
+    EvaluateOn:
+      enum:
+      - ANTLR
+      - ANTLR_MAPPING_DOMAIN_EVAL
+      type: string
     EvaluationProcessedInDTO:
       required:
       - evaluatedAtStart
