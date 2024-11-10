@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.domain.spi;
 
 import com.damdamdeo.formula.domain.EvaluationResult;
-import com.damdamdeo.formula.domain.ProcessingResult;
+import com.damdamdeo.formula.domain.MappingResult;
 import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.domain.PartEvaluationCallback;
 import io.smallrye.mutiny.Uni;
@@ -13,5 +13,5 @@ public interface Parser {
     Uni<EvaluationResult> process(Formula formula, PartEvaluationCallback partEvaluationCallback);
 
     // The formula need to be evaluated from domain side
-    Uni<ProcessingResult> process(Formula formula);
+    Uni<MappingResult> mapToExpression(Formula formula);
 }

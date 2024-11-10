@@ -1,8 +1,9 @@
 package com.damdamdeo.formula.domain;
 
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,38 +12,55 @@ class ValueTest {
     class IsNumeric {
 
         @ParameterizedTest
-        @CsvSource({
-                "0",
-                "0.00",
-                "123",
-                "-123",
-                "1.23E3",
-                "1.23E+3",
-                "12.3E+7",
-                "12.0",
-                "12.3",
-                "0.00123",
-                "-1.23E-12",
-                "1234.5E-4",
-                "0E+7",
-                "-0"
-        })
+        @MethodSource("com.damdamdeo.formula.domain.provider.ArgumentNumericTestProvider#provideNumerical")
         public void shouldBeANumeric(final String givenValue) {
             assertThat(new Value(givenValue).isNumeric()).isTrue();
         }
 
-        @ParameterizedTest
-        @CsvSource({
-                "#VALUE!",
-                "#REF!",
-                "TRUE",
-                "FALSE",
-                "AZERTY",
-                "Hello World"
-        })
-        public void shouldNotBeANumeric(final String givenValue) {
-            assertThat(new Value(givenValue).isNumeric()).isFalse();
+        @Test
+        public void shouldNotAvailableNotBeANumeric() {
+            assertThat(Value.ofNotAvailable().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldUnknownRefNotBeANumericTest() {
+            assertThat(Value.ofUnknownRef().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldNotANumericalValueNotBeANumericTest() {
+            assertThat(Value.ofNumericalValueExpected().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldDivByZeroNotBeANumericTest() {
+            assertThat(Value.ofDividedByZero().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldNotALogicalValueNotBeANumericTest() {
+            assertThat(Value.ofLogicalValueExpected().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldTrueNotBeANumericTest() {
+            assertThat(Value.ofTrue().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldFalseNotBeANumericTest() {
+            assertThat(Value.ofFalse().isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldAzertyNotBeANumericTest() {
+            assertThat(new Value("Azerty").isNumeric()).isFalse();
+        }
+
+        @Test
+        public void shouldHelloSpaceWorldNotBeANumericTest() {
+            assertThat(new Value("Hello World").isNumeric()).isFalse();
         }
     }
-
+    // FCK lot of things to implements !
 }

@@ -12,15 +12,15 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.Objects;
 
-public final class AntlrParserProcessing implements ParserProcessing {
+public final class AntlrParserMapping implements ParserMapping {
     private final EvaluatedAtProvider evaluatedAtProvider;
 
-    public AntlrParserProcessing(final EvaluatedAtProvider evaluatedAtProvider) {
+    public AntlrParserMapping(final EvaluatedAtProvider evaluatedAtProvider) {
         this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
     }
 
     @Override
-    public Uni<ProcessingResult> process(final Formula formula) {
+    public Uni<MappingResult> map(final Formula formula) {
         return Uni.createFrom().item(() -> {
             final EvaluatedAtStart evaluatedAtStart = evaluatedAtProvider.now();
             final FormulaLexer lexer = new FormulaLexer(CharStreams.fromString(formula.formula()));
@@ -36,7 +36,7 @@ public final class AntlrParserProcessing implements ParserProcessing {
             final AntlrExpressionMapperVisitor antlrExpressionMapperVisitor = new AntlrExpressionMapperVisitor();
             final Expression expression = antlrExpressionMapperVisitor.visit(tree);
             final EvaluatedAtEnd evaluatedAtEnd = evaluatedAtProvider.now();
-            return new ProcessingResult(expression, new ParserEvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd));
+            return new MappingResult(expression, new ParserEvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd));
         });
     }
 }

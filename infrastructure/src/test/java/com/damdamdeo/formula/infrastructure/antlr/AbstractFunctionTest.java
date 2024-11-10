@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.infrastructure.antlr;
 
 import com.damdamdeo.formula.domain.EvaluationResult;
-import com.damdamdeo.formula.domain.Formula;
+import com.damdamdeo.formula.domain.evaluation.provider.EvaluationTestResolver;
 import com.damdamdeo.formula.domain.provider.StubbedEvaluatedAtProviderTestProvider;
 import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import io.quarkus.cache.Cache;
@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 
+@ExtendWith(EvaluationTestResolver.class)
 @ExtendWith(StubbedEvaluatedAtProviderTestProvider.class)
 public abstract class AbstractFunctionTest {
     protected AntlrParser antlrExecutor;
@@ -22,12 +23,8 @@ public abstract class AbstractFunctionTest {
     @BeforeEach
     public void setup(final EvaluatedAtProvider evaluatedAtProvider) {
         this.antlrExecutor = new AntlrParser(evaluatedAtProvider, new DefaultAntlrParseTreeGenerator(evaluatedAtProvider),
-                mock(ParserProcessing.class), mock(Cache.class));
+                mock(ParserMapping.class), mock(Cache.class));
         this.evaluatedAtProvider = evaluatedAtProvider;
-    }
-
-    protected Formula formula4Test(final String formula) {
-        return new Formula(formula);
     }
 
     protected void assertOnExecutionResultReceived(final Uni<EvaluationResult> executionResult, final Consumer<EvaluationResult> assertionLogic) {

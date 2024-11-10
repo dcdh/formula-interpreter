@@ -16,16 +16,16 @@ public final class AntlrParser implements Parser {
 
     private final EvaluatedAtProvider evaluatedAtProvider;
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
-    private final ParserProcessing parserProcessing;
+    private final ParserMapping parserMapping;
     private final Cache cache;
 
     public AntlrParser(final EvaluatedAtProvider evaluatedAtProvider,
                        final AntlrParseTreeGenerator antlrParseTreeGenerator,
-                       final ParserProcessing parserProcessing,
+                       final ParserMapping parserMapping,
                        final Cache cache) {
         this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
         this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
-        this.parserProcessing = Objects.requireNonNull(parserProcessing);
+        this.parserMapping = Objects.requireNonNull(parserMapping);
         this.cache = Objects.requireNonNull(cache);
     }
 
@@ -54,12 +54,12 @@ public final class AntlrParser implements Parser {
     }
 
     @Override
-    public Uni<ProcessingResult> process(final Formula formula) {
+    public Uni<MappingResult> mapToExpression(final Formula formula) {
         return Uni.createFrom().context(context -> {
             context.put(PUT_IN_CACHE, false);
             return cache.getAsync(formula, (__) -> {
                 context.put(PUT_IN_CACHE, true);
-                return parserProcessing.process(formula);
+                return parserMapping.map(formula);
             });
         });
     }

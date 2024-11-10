@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// FCK extraire parce que c'est de l'évaluation avec du mapping ...
+// ceci c'est le legacy degeu ... parce que je dois parler de evaluation ...
 public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
     @ParameterizedTest
     @MethodSource("provideLogicalFunctionsWithExpectedValues")
@@ -135,6 +137,7 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
         );
     }
 
+    doit provenir di domain !
     private static Stream<Arguments> provideLogicalFunctionsWithExpectedValues() {
         return Stream.of(
                         LogicalBooleanFunctionTestProvider.provideAnd()

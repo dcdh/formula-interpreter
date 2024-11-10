@@ -17,27 +17,27 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(StubbedEvaluatedAtProviderTestProvider.class)
-class AntlrParserProcessingTest {
+class AntlrParserMappingTest {
 
-    private AntlrParserProcessing antlrParserProcessing;
+    private AntlrParserMapping antlrParserProcessing;
 
     @BeforeEach
     void setup(final EvaluatedAtProvider evaluatedAtProvider) {
-        antlrParserProcessing = new AntlrParserProcessing(evaluatedAtProvider);
+        antlrParserProcessing = new AntlrParserMapping(evaluatedAtProvider);
     }
 
     @ParameterizedTest
     @MethodSource({
             "com.damdamdeo.formula.domain.evaluation.provider.EvaluationTestProvider#provideExpressions"
     })
-    void shouldProcessExpression(final Formula formula, final Expression expression, final Value value) {
+    void shouldMapExpression(final Formula formula, final Expression expression, final Value value) {
         // When
-        final Uni<ProcessingResult> processed = antlrParserProcessing.process(formula);
+        final Uni<MappingResult> processed = antlrParserProcessing.map(formula);
 
         // Then
         assertOnExecutionResultReceived(processed, processedToAssert ->
                 assertThat(processedToAssert).isEqualTo(
-                        new ProcessingResult(expression,
+                        new MappingResult(expression,
                                 new ParserEvaluationProcessedIn(
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
                                         new EvaluatedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]"))
@@ -45,11 +45,11 @@ class AntlrParserProcessingTest {
         );
     }
 
-    protected void assertOnExecutionResultReceived(final Uni<ProcessingResult> processingResult, final Consumer<ProcessingResult> assertionLogic) {
-        final UniAssertSubscriber<ProcessingResult> subscriber = processingResult
+    protected void assertOnExecutionResultReceived(final Uni<MappingResult> processingResult, final Consumer<MappingResult> assertionLogic) {
+        final UniAssertSubscriber<MappingResult> subscriber = processingResult
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create());
-        final ProcessingResult processingResultToAssert = subscriber.awaitItem().getItem();
-        assertionLogic.accept(processingResultToAssert);
+        final MappingResult mappingResultToAssert = subscriber.awaitItem().getItem();
+        assertionLogic.accept(mappingResultToAssert);
     }
 }

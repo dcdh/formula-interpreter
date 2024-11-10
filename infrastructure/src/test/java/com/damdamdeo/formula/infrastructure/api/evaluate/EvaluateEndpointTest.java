@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.infrastructure.api;
+package com.damdamdeo.formula.infrastructure.api.evaluate;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.usecase.EvaluateCommand;
@@ -11,26 +11,29 @@ import io.smallrye.mutiny.Uni;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
 
+// TODO FCK !!!
 @QuarkusTest
 public class EvaluateEndpointTest {
 
     @InjectMock
     EvaluateUseCase evaluateUseCase;
 
+    je dois mocker aussi le EvaluateAtProvider !!!
+
     @Test
     public void shouldProcess() throws JSONException {
         // Given
         doReturn(
+                ok donc il me faut le test qui va bien qui me retourne ceci coté domain !
                 Uni.createFrom().item(new EvaluationResult(
                         new Value("true"),
                         new ParserEvaluationProcessedIn(
@@ -56,7 +59,7 @@ public class EvaluateEndpointTest {
                         List.of(
                                 new StructuredReference(new Reference("ref"), new Value("val"))),
                         DebugFeature.ACTIVE,
-                        EvaluateOn.ANTLR));
+                        EvaluateOn.ANTLR));ce n'est pas la bonne formule ... fuck !!!
         //language=JSON
         final String request = """
                 {
@@ -70,46 +73,7 @@ public class EvaluateEndpointTest {
                 """;
 
         // When && Then
-        //language=JSON
-        final String expectedBody = """
-                {
-                     "result": "true",
-                     "exactProcessedInNanos": 3000000000,
-                     "parserEvaluationProcessedIn": {
-                         "evaluatedAtStart": "2023-12-25T10:14:58+01:00",
-                         "evaluatedAtEnd": "2023-12-25T10:14:59+01:00",
-                         "processedInNanos": 1000000000
-                     },
-                     "evaluationProcessedIn": {
-                         "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
-                         "evaluatedAtEnd": "2023-12-25T10:15:02+01:00",
-                         "processedInNanos": 2000000000
-                     },
-                     "intermediateResults": [
-                         {
-                             "evaluatedAtStart": "2023-12-25T10:15:00+01:00",
-                             "evaluatedAtEnd": "2023-12-25T10:15:01+01:00",
-                             "processedInNanos": 1000000000,
-                             "positionedAt": {
-                                 "start": 4,
-                                 "end": 5
-                             },
-                             "inputs": [
-                                 {
-                                     "name": "reference",
-                                     "value": "ref",
-                                     "positionedAt": {
-                                         "start": 2,
-                                         "end": 3
-                                     }
-                                 }
-                             ],
-                             "result": "10"
-                         }
-                     ]
-                }
-                """;
-        final String actualBody = given()
+        given()
                 .contentType("application/vnd.formula-evaluate-v1+json")
                 .accept("application/vnd.formula-evaluated-v1+json")
                 .body(request)
@@ -119,8 +83,26 @@ public class EvaluateEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType("application/vnd.formula-evaluated-v1+json")
-                .extract().response().body().asString();
-        JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
+                .body("result", equalTo("true"))
+                .body("exactProcessedInNanos", equalTo(3000000000L))
+                .body("parserExecutionProcessedIn.executedAtStart", equalTo("2023-12-25T10:14:58+01:00"))
+                .body("parserExecutionProcessedIn.executedAtEnd", equalTo("2023-12-25T10:14:59+01:00"))
+                .body("parserExecutionProcessedIn.processedInNanos", equalTo(1000000000))
+                .body("executionProcessedIn.executedAtStart", equalTo("2023-12-25T10:15:00+01:00"))
+                .body("executionProcessedIn.executedAtEnd", equalTo("2023-12-25T10:15:02+01:00"))
+                .body("executionProcessedIn.processedInNanos", equalTo(2000000000))
+                .body("elementExecutions.size()", equalTo(1))
+                .body("elementExecutions[0].executedAtStart", equalTo("2023-12-25T10:15:00+01:00"))
+                .body("elementExecutions[0].executedAtEnd", equalTo("2023-12-25T10:15:01+01:00"))
+                .body("elementExecutions[0].processedInNanos", equalTo(1000000000))
+                .body("elementExecutions[0].range.start", equalTo(4))
+                .body("elementExecutions[0].range.end", equalTo(5))
+                .body("elementExecutions[0].inputs.size()", equalTo(1))
+                .body("elementExecutions[0].inputs[0].name", equalTo("reference"))
+                .body("elementExecutions[0].inputs[0].value", equalTo("ref"))
+                .body("elementExecutions[0].inputs[0].range.start", equalTo(2))
+                .body("elementExecutions[0].inputs[0].range.end", equalTo(3))
+                .body("elementExecutions[0].result", equalTo("10"));
     }
 
     @Test

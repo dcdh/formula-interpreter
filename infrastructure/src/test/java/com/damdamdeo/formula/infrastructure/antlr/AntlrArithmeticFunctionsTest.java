@@ -22,6 +22,9 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
                                                                                              final String givenOperation,
                                                                                              final Value rightValue,
                                                                                              final Value expectedValue) {
+putain comment faire ????
+je devrais retourner une liste depuis mes evaluations ...
+ou alors bah je dois rajouter des entrées ... rhoo lol !!!
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final List<StructuredReference> givenStructuredReferences = List.of(
@@ -107,6 +110,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
         );
     }
 
+    nice reprendre côté domain ! youpii !!!
     private static Stream<Arguments> provideOperationsWithExpectedValues() {
         return Stream.of(
                         ArithmeticFunctionTestProvider.provideAddition()

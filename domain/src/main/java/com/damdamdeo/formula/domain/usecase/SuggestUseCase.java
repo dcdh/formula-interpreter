@@ -8,14 +8,14 @@ import java.util.Objects;
 
 public final class SuggestUseCase implements UseCase<SuggestionsCompletion, SuggestCommand> {
 
-    private final SuggestCompletion autoSuggestCompletion;
+    private final SuggestCompletion suggestCompletion;
 
     public SuggestUseCase(final SuggestCompletion suggestCompletion) {
-        this.autoSuggestCompletion = Objects.requireNonNull(suggestCompletion);
+        this.suggestCompletion = Objects.requireNonNull(suggestCompletion);
     }
 
     @Override
     public Uni<SuggestionsCompletion> execute(final SuggestCommand command) {
-        return autoSuggestCompletion.suggest(command.suggestedFormula());
+        return suggestCompletion.suggest(command.suggestedFormula());
     }
 }

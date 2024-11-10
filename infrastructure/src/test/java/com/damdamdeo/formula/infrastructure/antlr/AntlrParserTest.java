@@ -12,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+// TODO reuse ...
 public class AntlrParserTest extends AbstractFunctionTest {
     private AntlrParser antlrExecutor;
 
@@ -19,7 +20,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
     public void setup(final EvaluatedAtProvider evaluatedAtProvider) {
         antlrExecutor = new AntlrParser(evaluatedAtProvider,
                 new DefaultAntlrParseTreeGenerator(evaluatedAtProvider),
-                mock(ParserProcessing.class),
+                mock(ParserMapping.class),
                 mock(Cache.class));
     }
 
@@ -73,6 +74,7 @@ public class AntlrParserTest extends AbstractFunctionTest {
         // Then
         assertOnExecutionResultReceived(executionResult, executionResultToAssert ->
                 assertThat(executionResultToAssert.intermediateResults()).isNotEmpty()
+                FCK tester et je pense que j'ai un soucis avec le evaluatedAtProvider qui est reinit !!!
         );
     }
 

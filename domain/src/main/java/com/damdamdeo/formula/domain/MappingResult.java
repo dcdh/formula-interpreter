@@ -4,9 +4,9 @@ import com.damdamdeo.formula.domain.evaluation.Expression;
 
 import java.util.Objects;
 
-public record ProcessingResult(Expression expression,
-                               ParserEvaluationProcessedIn parserEvaluationProcessedIn) {
-    public ProcessingResult {
+public record MappingResult(Expression expression,
+                            ParserEvaluationProcessedIn parserEvaluationProcessedIn) {
+    public MappingResult {
         Objects.requireNonNull(expression);
     }
 }

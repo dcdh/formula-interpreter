@@ -310,7 +310,9 @@
                 "examples" : {
                   "List of suggested tokens" : {
                     "description" : "List of suggested tokens",
-                    "value" : [ "(" ]
+                    "value" : {
+                      "tokens" : [ "(" ]
+                    }
                   }
                 }
               }
@@ -639,6 +641,18 @@
           "end" : {
             "format" : "int32",
             "type" : "integer"
+          }
+        }
+      },
+      "Suggestions" : {
+        "required" : [ "tokens", "tokens" ],
+        "type" : "object",
+        "properties" : {
+          "tokens" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },

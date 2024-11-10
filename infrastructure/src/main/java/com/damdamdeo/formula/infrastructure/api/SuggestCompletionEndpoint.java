@@ -17,7 +17,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import java.util.List;
 import java.util.Objects;
 
 @Path("/suggestCompletion")
@@ -64,16 +63,17 @@ public final class SuggestCompletionEndpoint {
                                     description = "List of suggested tokens",
                                     //language=JSON
                                     value = """
-                                            [
-                                                "("
-                                            ]
+                                            {
+                                              "tokens":["("]
+                                            }
                                             """
                             )
                     )
             )
     )
-    public Uni<List<String>> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
+    public Uni<SuggestionsDTO> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
         return suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula)))
-                .map(SuggestionsCompletion::suggestions);
+                .map(SuggestionsCompletion::tokens)
+                .map(SuggestionsDTO::new);
     }
 }
