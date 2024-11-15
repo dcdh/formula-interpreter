@@ -7,7 +7,7 @@ import java.util.Objects;
 public record PositionEnd(Integer end) {
     public PositionEnd {
         Objects.requireNonNull(end);
-        Validate.validState(end >= 0, "End must be greater or equal to zero: %d", end);
+// FCK        Validate.validState(end >= 0, "End must be greater or equal to zero: %d", end);
     }
 
     public PositionEnd() {

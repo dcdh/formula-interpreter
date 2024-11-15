@@ -25,6 +25,7 @@ public class AntlrArithmeticFunctionsTest extends AbstractFunctionTest {
 putain comment faire ????
 je devrais retourner une liste depuis mes evaluations ...
 ou alors bah je dois rajouter des entrées ... rhoo lol !!!
+                DONE
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
         final List<StructuredReference> givenStructuredReferences = List.of(
@@ -45,6 +46,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
+    DONE
     public void shouldEvaluateOperationForStructuredReferenceLeftAndValueRight(final Value leftValue,
                                                                                final String givenOperation,
                                                                                final Value rightValue,
@@ -66,6 +68,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
         );
     }
 
+    DONE
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
     public void shouldEvaluateOperationForValueLeftAndStructuredReferenceRight(final Value leftValue,
@@ -91,6 +94,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperationsWithExpectedValues")
+    DONE
     public void shouldEvaluateOperationForValueLeftAndValueRight(final Value leftValue,
                                                                  final String givenOperation,
                                                                  final Value rightValue,
@@ -144,6 +148,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperations")
+    TODO failing case
     public void shouldBeUnknownWhenOneStructuredReferenceIsUnknown(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -164,6 +169,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperations")
+    TODO failing case
     public void shouldBeNotAvailableWhenLeftStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -185,6 +191,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperations")
+    TODO failing case
     public void shouldBeNotAvailableWhenRightStructuredReferenceIsNull(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -206,6 +213,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
 
     @ParameterizedTest
     @MethodSource("provideOperations")
+    TODO failing case
     public void shouldBeInErrorWhenOneStructuredReferenceIsNotANumerical(final String givenOperation) {
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenOperation);
@@ -235,6 +243,7 @@ ou alors bah je dois rajouter des entrées ... rhoo lol !!!
     }
 
     @Test
+    TODO failing case
     public void shouldDivideByZeroProduceAnError() {
         // Given
         final String givenFormula = "DIV(10,0)";

@@ -33,7 +33,7 @@ public final class Evaluator implements ExpressionVisitor {
             return new Evaluated(
                     evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -56,7 +56,7 @@ public final class Evaluator implements ExpressionVisitor {
             final PositionedAt positionedAt = comparisonExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -81,7 +81,7 @@ public final class Evaluator implements ExpressionVisitor {
             final PositionedAt positionedAt = logicalBooleanExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -106,7 +106,7 @@ public final class Evaluator implements ExpressionVisitor {
             final PositionedAt positionedAt = logicalComparisonExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofComparisonValue(),
                                     comparison.value(),
@@ -123,7 +123,7 @@ public final class Evaluator implements ExpressionVisitor {
             final PositionedAt positionedAt = stateExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofValue(),
                                     argument.value(),
@@ -141,7 +141,7 @@ public final class Evaluator implements ExpressionVisitor {
             final PositionedAt positionedAt = structuredReferencesExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofStructuredReference(),
                                     structuredReferencesFunction.reference(),

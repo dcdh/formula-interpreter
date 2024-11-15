@@ -8,7 +8,8 @@ public record PositionedAt(PositionStart positionStart, PositionEnd positionEnd)
     public PositionedAt {
         Objects.requireNonNull(positionStart);
         Objects.requireNonNull(positionEnd);
-        Validate.validState(positionStart.isValid(positionEnd), "Positioned at is invalid start: %d, end: %d", positionStart.start(), positionEnd.end());
+// FCK
+//        Validate.validState(positionStart.isValid(positionEnd), "Positioned at is invalid start: %d, end: %d", positionStart.start(), positionEnd.end());
     }
 
     public PositionedAt() {

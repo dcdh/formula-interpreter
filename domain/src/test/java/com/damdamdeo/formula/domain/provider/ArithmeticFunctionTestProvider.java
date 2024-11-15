@@ -3,37 +3,50 @@ package com.damdamdeo.formula.domain.provider;
 import com.damdamdeo.formula.domain.Value;
 import org.junit.jupiter.params.provider.Arguments;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class ArithmeticFunctionTestProvider {
 
     public static Stream<Arguments> provideAddition() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("920"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("920"))
+                ),
+                provideCommonResponses().stream()
         );
     }
 
     public static Stream<Arguments> provideSubtraction() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("400"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("400"))
+                ),
+                provideCommonResponses().stream()
         );
     }
 
     public static Stream<Arguments> provideDivision() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("2.538462")),
-                Arguments.of(new Value("660"), new Value("0"), new Value("#DIV/0!"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("2.538462")),
+                        Arguments.of(new Value("660"), new Value("0"), new Value("#DIV/0!"))
+                ),
+                provideCommonResponses().stream()
         );
     }
 
     public static Stream<Arguments> provideMultiplication() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("171600"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("171600"))
+                ),
+                provideCommonResponses().stream()
         );
     }
 
-    public static Stream<Arguments> provideCommonResponses() {
-        return Stream.of(
+    private static List<Arguments> provideCommonResponses() {
+        return List.of(
                 Arguments.of(new Value("azerty"), new Value("260"), new Value("#NUM!")),
                 Arguments.of(new Value("true"), new Value("260"), new Value("#NUM!")),
                 Arguments.of(new Value("false"), new Value("260"), new Value("#NUM!")),

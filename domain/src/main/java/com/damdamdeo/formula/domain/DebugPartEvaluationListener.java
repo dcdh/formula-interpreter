@@ -28,7 +28,7 @@ public final class DebugPartEvaluationListener implements PartEvaluationListener
         intermediateResultsByExecutionId.put(partEvaluationId,
                 IntermediateResult.Builder.newBuilder()
                         .withValue(evaluated.value())
-                        .withInputs(evaluated.inputs().get())
+                        .withInputs(evaluated.inputs())
                         .withPositionedAt(evaluated.positionedAt())
                         .withEvaluatedAtStart(evaluatedAtStartsByExecutionId.get(partEvaluationId))
                         .withEvaluatedAtEnd(evaluatedAtProvider.now())

@@ -32,7 +32,7 @@ public class AntlrLogicalComparisonFunctionsTest extends AbstractFunctionTest {
                         .isEqualTo(expectedValue)
         );
     }
-
+TODO
     private static Stream<Arguments> provideLogicalComparisonFunctions() {
         return Stream.of(
                         LogicalComparisonFunctionTestProvider.provideIf()

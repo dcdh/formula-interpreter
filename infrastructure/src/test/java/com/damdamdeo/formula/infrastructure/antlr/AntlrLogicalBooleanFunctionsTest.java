@@ -25,6 +25,8 @@ public class AntlrLogicalBooleanFunctionsTest extends AbstractFunctionTest {
             final String givenLogicalFunction,
             final Value rightValue,
             final Value expectedValue) {
+        FCK reprendre
+                putain il y a du boulot !!!
         // Given
         final String givenFormula = String.format("%s([@[North Sales Amount]],[@[South Sales Amount]])", givenLogicalFunction);
         final List<StructuredReference> givenStructuredReferences = List.of(

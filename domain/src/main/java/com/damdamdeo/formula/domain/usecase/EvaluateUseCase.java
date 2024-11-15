@@ -31,7 +31,7 @@ public final class EvaluateUseCase implements UseCase<EvaluationResult, Evaluate
         return switch (command.evaluateOn()) {
             case ANTLR ->
                     parser.process(command.formula(), new PartEvaluationCallback(partEvaluationListener, numericalContext, command.structuredReferences()));
-            case ANTLR_MAPPING_DOMAIN_EVAL -> parser.process(command.formula())
+            case ANTLR_MAPPING_DOMAIN_EVAL -> parser.mapToExpression(command.formula())
                     .map(processingResult -> {
                         final EvaluatedAtStart evaluatedAtStart = evaluatedAtProvider.now();
                         final Evaluator evaluator = new Evaluator(new NumericalContext(), command.structuredReferences(), partEvaluationListener);

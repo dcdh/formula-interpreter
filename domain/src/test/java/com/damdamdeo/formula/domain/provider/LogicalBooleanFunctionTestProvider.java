@@ -7,32 +7,34 @@ import java.util.stream.Stream;
 
 public class LogicalBooleanFunctionTestProvider {
     public static Stream<Arguments> provideOr() {
-        return Stream.of(
-                Arguments.of(new Value("0"), new Value("0"), new Value("false")),
-                Arguments.of(new Value("0"), new Value("1"), new Value("true")),
-                Arguments.of(new Value("1"), new Value("0"), new Value("true")),
-                Arguments.of(new Value("1"), new Value("1"), new Value("true")),
-                Arguments.of(new Value("1"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("1"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("0"), new Value("true"), new Value("true"))
-        );
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("0"), new Value("0"), new Value("false")),
+                        Arguments.of(new Value("0"), new Value("1"), new Value("true")),
+                        Arguments.of(new Value("1"), new Value("0"), new Value("true")),
+                        Arguments.of(new Value("1"), new Value("1"), new Value("true")),
+                        Arguments.of(new Value("1"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("1"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("0"), new Value("true"), new Value("true"))
+                ), provideCommonResponses());
     }
 
     public static Stream<Arguments> provideAnd() {
-        return Stream.of(
-                Arguments.of(new Value("0"), new Value("0"), new Value("false")),
-                Arguments.of(new Value("0"), new Value("1"), new Value("false")),
-                Arguments.of(new Value("1"), new Value("0"), new Value("false")),
-                Arguments.of(new Value("1"), new Value("1"), new Value("true")),
-                Arguments.of(new Value("1"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("1"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("0"), new Value("true"), new Value("false"))
-        );
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("0"), new Value("0"), new Value("false")),
+                        Arguments.of(new Value("0"), new Value("1"), new Value("false")),
+                        Arguments.of(new Value("1"), new Value("0"), new Value("false")),
+                        Arguments.of(new Value("1"), new Value("1"), new Value("true")),
+                        Arguments.of(new Value("1"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("1"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("0"), new Value("true"), new Value("false"))
+                ), provideCommonResponses());
     }
 
-    public static Stream<Arguments> provideCommonResponses() {
+    private static Stream<Arguments> provideCommonResponses() {
         return Stream.of(
                 Arguments.of(new Value("azerty"), new Value("260"), new Value("#LOG!")),
                 Arguments.of(new Value("true"), new Value("260"), new Value("#LOG!")),

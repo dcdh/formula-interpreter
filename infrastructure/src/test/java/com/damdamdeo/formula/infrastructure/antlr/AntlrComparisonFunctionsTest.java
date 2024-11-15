@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
+    FCK reprendre
     @ParameterizedTest
     @MethodSource("provideComparisonsWithExpectedValues")
     public void shouldEvaluateComparisonForStructuredReferenceLeftAndStructuredReferenceRight(final Value leftValue,
@@ -42,6 +43,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
     }
 
+    FCK reprendre
     @ParameterizedTest
     @MethodSource("provideComparisonsWithExpectedValues")
     public void shouldEvaluateComparisonForStructuredReferenceLeftAndValueRight(final Value leftValue,
@@ -72,6 +74,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
     }
 
+    FCK reprendre
     @ParameterizedTest
     @MethodSource("provideComparisonsWithExpectedValues")
     public void shouldEvaluateComparisonForValueLeftAndStructuredReferenceRight(final Value leftValue,
@@ -136,6 +139,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
         );
     }
 
+    FCR reprendre
     private static Stream<Arguments> provideComparisonsWithExpectedValues() {
         return Stream.of(
                         NumericalComparisonFunctionTestProvider.provideGreaterThan()
@@ -277,6 +281,7 @@ public class AntlrComparisonFunctionsTest extends AbstractFunctionTest {
     }
 
     private static Stream<Arguments> provideComparatorFunctionsUsingArithmeticsFunction() {
+        reprendre  dnas compound ...
         return Stream.of(
                 Arguments.of("LTE(ADD(100,160),ADD(100,160))"));
     }
