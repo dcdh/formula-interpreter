@@ -438,21 +438,33 @@ components:
     EvaluationResult:
       required:
       - result
-      - exactProcessedInNanos
-      - formulaCacheRetrieval
-      - parserEvaluationProcessedIn
-      - evaluationProcessedIn
+      - processingMetrics
       - intermediateResults
       - result
-      - exactProcessedInNanos
-      - formulaCacheRetrieval
-      - parserEvaluationProcessedIn
-      - evaluationProcessedIn
+      - processingMetrics
       - intermediateResults
       type: object
       properties:
         result:
           type: string
+        processingMetrics:
+          $ref: "#/components/schemas/EvaluationResult1"
+        intermediateResults:
+          type: array
+          items:
+            $ref: "#/components/schemas/IntermediateResult"
+    EvaluationResult1:
+      required:
+      - exactProcessedInNanos
+      - formulaCacheRetrieval
+      - parserEvaluationProcessedIn
+      - evaluationProcessedIn
+      - exactProcessedInNanos
+      - formulaCacheRetrieval
+      - parserEvaluationProcessedIn
+      - evaluationProcessedIn
+      type: object
+      properties:
         exactProcessedInNanos:
           format: int64
           type: integer
@@ -462,10 +474,6 @@ components:
           $ref: "#/components/schemas/EvaluationLoadingProcessedIn"
         evaluationProcessedIn:
           $ref: "#/components/schemas/EvaluationProcessedInDTO"
-        intermediateResults:
-          type: array
-          items:
-            $ref: "#/components/schemas/IntermediateResult"
     FormulaCacheRetrieval:
       enum:
       - IN

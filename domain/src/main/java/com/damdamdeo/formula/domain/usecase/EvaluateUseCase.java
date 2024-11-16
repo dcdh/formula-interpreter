@@ -103,9 +103,11 @@ public final class EvaluateUseCase<A extends AntlrLoaded, E extends AntlrMapping
                     .map(evaluatedStageResult -> new EvaluationResult(
                             evaluatedStageResult.value(),
                             partEvaluationListener.intermediateResults(),
-                            evaluatedStageResult.formulaCacheRetrieval,
-                            evaluatedStageResult.evaluationLoadingProcessedIn,
-                            evaluatedStageResult.evaluationProcessedIn
+                            new ProcessingMetrics(
+                                    evaluatedStageResult.formulaCacheRetrieval,
+                                    evaluatedStageResult.evaluationLoadingProcessedIn,
+                                    evaluatedStageResult.evaluationProcessedIn
+                            )
                     ))
                     .onFailure(Exception.class)
                     .transform(EvaluationException::new);

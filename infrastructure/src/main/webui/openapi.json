@@ -556,12 +556,27 @@
         }
       },
       "EvaluationResult" : {
-        "required" : [ "result", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "intermediateResults", "result", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "intermediateResults" ],
+        "required" : [ "result", "processingMetrics", "intermediateResults", "result", "processingMetrics", "intermediateResults" ],
         "type" : "object",
         "properties" : {
           "result" : {
             "type" : "string"
           },
+          "processingMetrics" : {
+            "$ref" : "#/components/schemas/EvaluationResult1"
+          },
+          "intermediateResults" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/IntermediateResult"
+            }
+          }
+        }
+      },
+      "EvaluationResult1" : {
+        "required" : [ "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn" ],
+        "type" : "object",
+        "properties" : {
           "exactProcessedInNanos" : {
             "format" : "int64",
             "type" : "integer"
@@ -574,12 +589,6 @@
           },
           "evaluationProcessedIn" : {
             "$ref" : "#/components/schemas/EvaluationProcessedInDTO"
-          },
-          "intermediateResults" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/IntermediateResult"
-            }
           }
         }
       },
