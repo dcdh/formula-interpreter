@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class Evaluator implements ExpressionVisitor {
+public final class DefaultExpressionVisitor implements ExpressionVisitor {
     private final NumericalContext numericalContext;
     private final List<StructuredReference> structuredReferences;
     private final PartEvaluationListener partEvaluationListener;
     private PartEvaluationId currentPartEvaluationId;
 
-    public Evaluator(final NumericalContext numericalContext,
-                     final List<StructuredReference> structuredReferences,
-                     final PartEvaluationListener partEvaluationListener) {
+    public DefaultExpressionVisitor(final NumericalContext numericalContext,
+                                    final List<StructuredReference> structuredReferences,
+                                    final PartEvaluationListener partEvaluationListener) {
         this.numericalContext = Objects.requireNonNull(numericalContext);
         this.structuredReferences = Objects.requireNonNull(structuredReferences);
         this.currentPartEvaluationId = new PartEvaluationId(-1);

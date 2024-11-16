@@ -15,8 +15,8 @@ class EvaluationTest {
             "com.damdamdeo.formula.domain.evaluation.provider.EvaluationTestProvider#provideExpressions"
     })
     void shouldProcessExpression(final Formula formula, final Expression expression, final Value value) {
-        final Evaluator evaluator = new Evaluator(new NumericalContext(), List.of(), new NoOpPartEvaluationListener());
-        final Evaluated accept = expression.accept(evaluator);
+        final DefaultExpressionVisitor defaultExpressionVisitor = new DefaultExpressionVisitor(new NumericalContext(), List.of(), new NoOpPartEvaluationListener());
+        final Evaluated accept = expression.accept(defaultExpressionVisitor);
 
         assertThat(accept.value()).isEqualTo(value);
     }

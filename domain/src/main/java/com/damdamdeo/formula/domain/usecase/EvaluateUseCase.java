@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.domain.usecase;
 
 import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.evaluation.Evaluator;
+import com.damdamdeo.formula.domain.evaluation.DefaultExpressionVisitor;
 import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
 import com.damdamdeo.formula.domain.spi.Parser;
 import io.smallrye.mutiny.Uni;
@@ -34,9 +34,9 @@ public final class EvaluateUseCase implements UseCase<EvaluationResult, Evaluate
             case ANTLR_MAPPING_DOMAIN_EVAL -> parser.process(command.formula())
                     .map(processingResult -> {
                         final EvaluatedAtStart evaluatedAtStart = evaluatedAtProvider.now();
-                        final Evaluator evaluator = new Evaluator(new NumericalContext(), command.structuredReferences(), partEvaluationListener);
-                        final Evaluated evaluated = processingResult.expression().accept(evaluator);
-                        final List<IntermediateResult> intermediateResults = evaluator.intermediateResults();
+                        final DefaultExpressionVisitor defaultExpressionVisitor = new DefaultExpressionVisitor(new NumericalContext(), command.structuredReferences(), partEvaluationListener);
+                        final Evaluated evaluated = processingResult.expression().accept(defaultExpressionVisitor);
+                        final List<IntermediateResult> intermediateResults = defaultExpressionVisitor.intermediateResults();
                         final EvaluatedAtEnd evaluatedAtEnd = evaluatedAtProvider.now();
                         return new EvaluationResult(evaluated.value(),
                                 processingResult.parserEvaluationProcessedIn(),
