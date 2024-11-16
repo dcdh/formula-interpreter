@@ -8,7 +8,7 @@ import com.damdamdeo.formula.domain.spi.Validator;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
-import com.damdamdeo.formula.infrastructure.antlr.*;
+import com.damdamdeo.formula.infrastructure.parser.antlr.*;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import jakarta.enterprise.context.ApplicationScoped;
