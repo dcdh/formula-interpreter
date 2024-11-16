@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.infrastructure;
 
-import com.damdamdeo.formula.domain.provider.ListOfEvaluatedAtParameterResolver;
+import com.damdamdeo.formula.domain.provider.ListOfProcessedAtParameterResolver;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
-@ExtendWith(ListOfEvaluatedAtParameterResolver.class)
+@ExtendWith(ListOfProcessedAtParameterResolver.class)
 public class ApplicationTest {
     @Test
     public void shouldEvaluate() {

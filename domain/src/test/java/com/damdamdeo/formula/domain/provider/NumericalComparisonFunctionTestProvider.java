@@ -7,31 +7,43 @@ import java.util.stream.Stream;
 
 public class NumericalComparisonFunctionTestProvider {
     public static Stream<Arguments> provideGreaterThan() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("false")));
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("false"))),
+                provideCommonResponses()
+        );
     }
 
     public static Stream<Arguments> provideGreaterThanOrEqualTo() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("true")));
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("true"))),
+                provideCommonResponses()
+        );
     }
 
     public static Stream<Arguments> provideLessThan() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("false")));
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("false"))),
+                provideCommonResponses()
+        );
     }
 
     public static Stream<Arguments> provideLessThanOrEqualTo() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("true")));
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("true"))),
+                provideCommonResponses()
+        );
     }
 
     public static Stream<Arguments> provideCommonResponses() {

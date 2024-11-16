@@ -8,30 +8,36 @@ import java.util.stream.Stream;
 public class EqualityComparisonFunctionTestProvider {
 
     public static Stream<Arguments> provideEqual() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("false")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("true")),
-                Arguments.of(new Value("toto"), new Value("toto"), new Value("true")),
-                Arguments.of(new Value("tata"), new Value("toto"), new Value("false")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("false"), new Value("false")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("false"), new Value("false"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("false")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("true")),
+                        Arguments.of(new Value("toto"), new Value("toto"), new Value("true")),
+                        Arguments.of(new Value("tata"), new Value("toto"), new Value("false")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("false"), new Value("false")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("false"), new Value("false"))
+                ),
+                provideCommonResponses()
         );
     }
 
     public static Stream<Arguments> provideNotEqual() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("660"), new Value("true")),
-                Arguments.of(new Value("260"), new Value("260"), new Value("false")),
-                Arguments.of(new Value("toto"), new Value("toto"), new Value("false")),
-                Arguments.of(new Value("tata"), new Value("toto"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("false")),
-                Arguments.of(new Value("true"), new Value("false"), new Value("true")),
-                Arguments.of(new Value("true"), new Value("true"), new Value("false")),
-                Arguments.of(new Value("true"), new Value("false"), new Value("true"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("660"), new Value("true")),
+                        Arguments.of(new Value("260"), new Value("260"), new Value("false")),
+                        Arguments.of(new Value("toto"), new Value("toto"), new Value("false")),
+                        Arguments.of(new Value("tata"), new Value("toto"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("false")),
+                        Arguments.of(new Value("true"), new Value("false"), new Value("true")),
+                        Arguments.of(new Value("true"), new Value("true"), new Value("false")),
+                        Arguments.of(new Value("true"), new Value("false"), new Value("true"))
+                ),
+                provideCommonResponses()
         );
     }
 

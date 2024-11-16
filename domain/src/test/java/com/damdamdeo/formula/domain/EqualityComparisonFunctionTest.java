@@ -7,10 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EqualityComparisonFunctionTest {
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideEqual",
-            "com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideEqual")
     void shouldOrReturnExpectedValue(final Value givenLeftValue,
                                      final Value givenRightValue,
                                      final Value expectedValue) {
@@ -25,10 +22,7 @@ public class EqualityComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideNotEqual",
-            "com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.EqualityComparisonFunctionTestProvider#provideNotEqual")
     void shouldAndReturnExpectedValue(final Value givenLeftValue,
                                       final Value givenRightValue,
                                       final Value expectedValue) {

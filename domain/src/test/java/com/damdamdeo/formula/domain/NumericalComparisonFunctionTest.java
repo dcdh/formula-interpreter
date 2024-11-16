@@ -7,10 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumericalComparisonFunctionTest {
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThan",
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThan")
     void shouldGreaterThanReturnExpectedValue(final Value givenLeftValue,
                                               final Value givenRightValue,
                                               final Value expectedValue) {
@@ -25,10 +22,7 @@ public class NumericalComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThanOrEqualTo",
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThanOrEqualTo")
     void shouldGreaterThanOrEqualToReturnExpectedValue(final Value givenLeftValue,
                                                        final Value givenRightValue,
                                                        final Value expectedValue) {
@@ -43,10 +37,7 @@ public class NumericalComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThan",
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThan")
     void shouldLessThanReturnExpectedValue(final Value givenLeftValue,
                                            final Value givenRightValue,
                                            final Value expectedValue) {
@@ -61,10 +52,7 @@ public class NumericalComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThanOrEqualTo",
-            "com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThanOrEqualTo")
     void shouldLessThanOrEqualToReturnExpectedValue(final Value givenLeftValue,
                                                     final Value givenRightValue,
                                                     final Value expectedValue) {

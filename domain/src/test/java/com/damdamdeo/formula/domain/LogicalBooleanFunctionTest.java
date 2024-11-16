@@ -7,10 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LogicalBooleanFunctionTest {
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideOr",
-            "com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideOr")
     void shouldOrReturnExpectedValue(final Value givenLeftValue,
                                      final Value givenRightValue,
                                      final Value expectedValue) {
@@ -25,10 +22,7 @@ public class LogicalBooleanFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideAnd",
-            "com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideAnd")
     void shouldAndReturnExpectedValue(final Value givenLeftValue,
                                       final Value givenRightValue,
                                       final Value expectedValue) {

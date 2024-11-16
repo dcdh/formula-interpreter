@@ -8,27 +8,39 @@ import java.util.stream.Stream;
 public class ArithmeticFunctionTestProvider {
 
     public static Stream<Arguments> provideAddition() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("920"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("920"))
+                ),
+                provideCommonResponses()
         );
     }
 
     public static Stream<Arguments> provideSubtraction() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("400"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("400"))
+                ),
+                provideCommonResponses()
         );
     }
 
     public static Stream<Arguments> provideDivision() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("2.538462")),
-                Arguments.of(new Value("660"), new Value("0"), new Value("#DIV/0!"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("2.538462")),
+                        Arguments.of(new Value("660"), new Value("0"), new Value("#DIV/0!"))
+                ),
+                provideCommonResponses()
         );
     }
 
     public static Stream<Arguments> provideMultiplication() {
-        return Stream.of(
-                Arguments.of(new Value("660"), new Value("260"), new Value("171600"))
+        return Stream.concat(
+                Stream.of(
+                        Arguments.of(new Value("660"), new Value("260"), new Value("171600"))
+                ),
+                provideCommonResponses()
         );
     }
 

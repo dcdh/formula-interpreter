@@ -7,10 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ArithmeticFunctionTest {
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideAddition",
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideAddition")
     void shouldAdditionReturnExpectedValue(final Value givenLeftValue,
                                            final Value givenRightValue,
                                            final Value expectedValue) {
@@ -25,10 +22,7 @@ class ArithmeticFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideSubtraction",
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideSubtraction")
     void shouldSubtractionReturnExpectedValue(final Value givenLeftValue,
                                               final Value givenRightValue,
                                               final Value expectedValue) {
@@ -43,10 +37,7 @@ class ArithmeticFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideDivision",
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideDivision")
     void shouldDivisionReturnExpectedValue(final Value givenLeftValue,
                                            final Value givenRightValue,
                                            final Value expectedValue) {
@@ -61,10 +52,7 @@ class ArithmeticFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideMultiplication",
-            "com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideCommonResponses"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideMultiplication")
     void shouldMultiplicationReturnExpectedValue(final Value givenLeftValue,
                                                  final Value givenRightValue,
                                                  final Value expectedValue) {

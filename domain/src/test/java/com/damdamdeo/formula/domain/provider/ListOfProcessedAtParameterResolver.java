@@ -11,8 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public final class ListOfEvaluatedAtParameterResolver implements ParameterResolver {
-    public static final ListOfEvaluatedAt LIST_OF_EXECUTED_ATS = new ListOfEvaluatedAt(
+public final class ListOfProcessedAtParameterResolver implements ParameterResolver {
+    public static final ListOfProcessedAt LIST_OF_EXECUTED_ATS = new ListOfProcessedAt(
             List.of(
                     new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:00+01:00[Europe/Paris]")),
                     new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:01+01:00[Europe/Paris]")),
@@ -40,21 +40,21 @@ public final class ListOfEvaluatedAtParameterResolver implements ParameterResolv
     @Override
     public boolean supportsParameter(final ParameterContext parameterContext,
                                      final ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ListOfEvaluatedAt.class.equals(parameterContext.getParameter().getType());
+        return ListOfProcessedAt.class.equals(parameterContext.getParameter().getType());
     }
 
     @Override
     public Object resolveParameter(final ParameterContext parameterContext,
                                    final ExtensionContext extensionContext) throws ParameterResolutionException {
-        if (ListOfEvaluatedAt.class.equals(parameterContext.getParameter().getType())) {
+        if (ListOfProcessedAt.class.equals(parameterContext.getParameter().getType())) {
             return LIST_OF_EXECUTED_ATS;
         } else {
             throw new IllegalStateException("Should not be here: unsupported parameter type");
         }
     }
 
-    public record ListOfEvaluatedAt(List<ProcessedAt> listOf) {
-        public ListOfEvaluatedAt {
+    public record ListOfProcessedAt(List<ProcessedAt> listOf) {
+        public ListOfProcessedAt {
             Objects.requireNonNull(listOf);
             Validate.isTrue(!listOf.isEmpty());
         }

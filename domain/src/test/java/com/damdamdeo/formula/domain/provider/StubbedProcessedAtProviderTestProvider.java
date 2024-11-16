@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.util.Iterator;
 
-public final class StubbedEvaluatedAtProviderTestProvider implements ParameterResolver {
+public final class StubbedProcessedAtProviderTestProvider implements ParameterResolver {
     @Override
     public boolean supportsParameter(final ParameterContext parameterContext,
                                      final ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -19,14 +19,14 @@ public final class StubbedEvaluatedAtProviderTestProvider implements ParameterRe
     @Override
     public Object resolveParameter(final ParameterContext parameterContext,
                                    final ExtensionContext extensionContext) throws ParameterResolutionException {
-        return new StubbedProcessedAtProvider(ListOfEvaluatedAtParameterResolver.LIST_OF_EXECUTED_ATS);
+        return new StubbedProcessedAtProvider(ListOfProcessedAtParameterResolver.LIST_OF_EXECUTED_ATS);
     }
 
     private static final class StubbedProcessedAtProvider implements ProcessedAtProvider {
         private final Iterator<ProcessedAt> responseIterator;
 
-        private StubbedProcessedAtProvider(final ListOfEvaluatedAtParameterResolver.ListOfEvaluatedAt listOfEvaluatedAts) {
-            this.responseIterator = listOfEvaluatedAts.listOf().iterator();
+        private StubbedProcessedAtProvider(final ListOfProcessedAtParameterResolver.ListOfProcessedAt listOfProcessedAts) {
+            this.responseIterator = listOfProcessedAts.listOf().iterator();
         }
 
         @Override

@@ -11,9 +11,7 @@ public class LogicalComparisonFunctionTest {
     final ValueProvider givenOnFalse = Value::ofFalse;
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIf"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIf")
     void shouldIfReturnExpectedValue(final Value givenComparison,
                                      final Value expectedResult) {
         // Given
@@ -27,9 +25,7 @@ public class LogicalComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfError"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfError")
     void shouldIfErrorReturnExpectedValue(final Value givenComparison,
                                           final Value expectedResult) {
         // Given
@@ -43,9 +39,7 @@ public class LogicalComparisonFunctionTest {
     }
 
     @ParameterizedTest
-    @MethodSource({
-            "com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfNotAvailable"
-    })
+    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfNotAvailable")
     void shouldIfNotAvailableReturnExpectedValue(final Value givenComparison,
                                                  final Value expectedResult) {
         // Given

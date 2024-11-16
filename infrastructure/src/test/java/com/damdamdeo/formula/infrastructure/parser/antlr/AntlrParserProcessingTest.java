@@ -1,22 +1,11 @@
 package com.damdamdeo.formula.infrastructure.parser.antlr;
 
-import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.infrastructure.evaluation.expression.Expression;
-import com.damdamdeo.formula.domain.provider.StubbedEvaluatedAtProviderTestProvider;
-import com.damdamdeo.formula.domain.spi.ProcessedAtProvider;
-import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
-import org.junit.jupiter.api.BeforeEach;
+import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderTestProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.time.ZonedDateTime;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(StubbedEvaluatedAtProviderTestProvider.class)
+@ExtendWith(StubbedProcessedAtProviderTestProvider.class)
 class AntlrParserProcessingTest {
 
 //    private AntlrParserProcessing antlrParserProcessing;

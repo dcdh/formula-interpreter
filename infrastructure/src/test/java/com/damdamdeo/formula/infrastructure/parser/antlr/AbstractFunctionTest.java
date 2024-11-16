@@ -1,20 +1,11 @@
 package com.damdamdeo.formula.infrastructure.parser.antlr;
 
-import com.damdamdeo.formula.domain.EvaluationResult;
-import com.damdamdeo.formula.domain.Formula;
-import com.damdamdeo.formula.domain.provider.StubbedEvaluatedAtProviderTestProvider;
-import com.damdamdeo.formula.domain.spi.ProcessedAtProvider;
-import io.quarkus.cache.Cache;
-import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
-import org.junit.jupiter.api.BeforeEach;
+import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderTestProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 
-@ExtendWith(StubbedEvaluatedAtProviderTestProvider.class)
+@ExtendWith(StubbedProcessedAtProviderTestProvider.class)
 public abstract class AbstractFunctionTest {
 //    protected AntlrParser antlrExecutor;
 //    protected ProcessedAtProvider processedAtProvider;
