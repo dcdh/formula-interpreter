@@ -1,6 +1,6 @@
 package com.damdamdeo.formula.domain;
 
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
+import com.damdamdeo.formula.domain.spi.ProcessedAtProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,19 +8,19 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class DebugPartEvaluationListener implements PartEvaluationListener {
-    private final EvaluatedAtProvider evaluatedAtProvider;
+    private final ProcessedAtProvider processedAtProvider;
     private final Map<PartEvaluationId, IntermediateResult> intermediateResultsByExecutionId;
-    private final Map<PartEvaluationId, EvaluatedAtStart> evaluatedAtStartsByExecutionId;
+    private final Map<PartEvaluationId, ProcessedAtStart> evaluatedAtStartsByExecutionId;
 
-    public DebugPartEvaluationListener(final EvaluatedAtProvider evaluatedAtProvider) {
-        this.evaluatedAtProvider = Objects.requireNonNull(evaluatedAtProvider);
+    public DebugPartEvaluationListener(final ProcessedAtProvider processedAtProvider) {
+        this.processedAtProvider = Objects.requireNonNull(processedAtProvider);
         this.intermediateResultsByExecutionId = new HashMap<>();
         this.evaluatedAtStartsByExecutionId = new HashMap<>();
     }
 
     @Override
     public void onBeforePartEvaluation(final PartEvaluationId partEvaluationId) {
-        evaluatedAtStartsByExecutionId.put(partEvaluationId, evaluatedAtProvider.now());
+        evaluatedAtStartsByExecutionId.put(partEvaluationId, processedAtProvider.now());
     }
 
     @Override
@@ -31,7 +31,7 @@ public final class DebugPartEvaluationListener implements PartEvaluationListener
                         .withInputs(evaluated.inputs().get())
                         .withPositionedAt(evaluated.positionedAt())
                         .withEvaluatedAtStart(evaluatedAtStartsByExecutionId.get(partEvaluationId))
-                        .withEvaluatedAtEnd(evaluatedAtProvider.now())
+                        .withEvaluatedAtEnd(processedAtProvider.now())
                         .build());
     }
 

@@ -106,13 +106,14 @@ paths:
                   value:
                     result: "26"
                     exactProcessedInNanos: 28231378
-                    parserEvaluationProcessedIn:
-                      evaluatedAtStart: 2024-05-05T01:09:39.695736969+02:00
-                      evaluatedAtEnd: 2024-05-05T01:09:39.717878532+02:00
+                    formulaCacheRetrieval: IN
+                    evaluationLoadingProcessedIn:
+                      processedAtStart: 2024-05-05T01:09:39.695736969+02:00
+                      processedAtEnd: 2024-05-05T01:09:39.717878532+02:00
                       processedInNanos: 22141563
                     evaluationProcessedIn:
-                      evaluatedAtStart: 2024-05-05T01:09:39.722660591+02:00
-                      evaluatedAtEnd: 2024-05-05T01:09:39.728750406+02:00
+                      processedAtStart: 2024-05-05T01:09:39.722660591+02:00
+                      processedAtEnd: 2024-05-05T01:09:39.728750406+02:00
                       processedInNanos: 6089815
                     intermediateResults:
                     - evaluatedAtStart: 2024-05-05T01:09:39.724292501+02:00
@@ -392,10 +393,10 @@ components:
       - ANTLR
       - ANTLR_MAPPING_DOMAIN_EVAL
       type: string
-    EvaluationProcessedInDTO:
+    EvaluationLoadingProcessedIn:
       required:
-      - evaluatedAtStart
-      - evaluatedAtEnd
+      - processedAtStart
+      - processedAtEnd
       - processedInNanos
       - evaluatedAtStart
       - evaluatedAtEnd
@@ -413,14 +414,39 @@ components:
         processedInNanos:
           format: int64
           type: integer
+    EvaluationProcessedInDTO:
+      required:
+      - processedAtStart
+      - processedAtEnd
+      - processedInNanos
+      - processedAtStart
+      - processedAtEnd
+      - processedInNanos
+      type: object
+      properties:
+        processedAtStart:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedAtEnd:
+          type: string
+          allOf:
+          - $ref: "#/components/schemas/ZonedDateTime"
+        processedInNanos:
+          format: int64
+          type: integer
     EvaluationResult:
       required:
       - result
       - exactProcessedInNanos
+      - formulaCacheRetrieval
+      - parserEvaluationProcessedIn
       - evaluationProcessedIn
       - intermediateResults
       - result
       - exactProcessedInNanos
+      - formulaCacheRetrieval
+      - parserEvaluationProcessedIn
       - evaluationProcessedIn
       - intermediateResults
       type: object
@@ -430,14 +456,21 @@ components:
         exactProcessedInNanos:
           format: int64
           type: integer
+        formulaCacheRetrieval:
+          $ref: "#/components/schemas/FormulaCacheRetrieval"
         parserEvaluationProcessedIn:
-          $ref: "#/components/schemas/ParserEvaluationProcessedIn"
+          $ref: "#/components/schemas/EvaluationLoadingProcessedIn"
         evaluationProcessedIn:
           $ref: "#/components/schemas/EvaluationProcessedInDTO"
         intermediateResults:
           type: array
           items:
             $ref: "#/components/schemas/IntermediateResult"
+    FormulaCacheRetrieval:
+      enum:
+      - IN
+      - MISSED
+      type: string
     Input:
       required:
       - name
@@ -489,27 +522,6 @@ components:
             $ref: "#/components/schemas/Input"
         result:
           type: string
-    ParserEvaluationProcessedIn:
-      required:
-      - evaluatedAtStart
-      - evaluatedAtEnd
-      - processedInNanos
-      - evaluatedAtStart
-      - evaluatedAtEnd
-      - processedInNanos
-      type: object
-      properties:
-        evaluatedAtStart:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
-        evaluatedAtEnd:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
-        processedInNanos:
-          format: int64
-          type: integer
     PositionedAt:
       required:
       - start

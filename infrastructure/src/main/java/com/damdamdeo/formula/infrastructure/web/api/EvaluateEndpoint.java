@@ -2,6 +2,8 @@ package com.damdamdeo.formula.infrastructure.web.api;
 
 import com.damdamdeo.formula.domain.EvaluationException;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
+import com.damdamdeo.formula.infrastructure.evaluation.antlr.DefaultAntlrLoaded;
+import com.damdamdeo.formula.infrastructure.evaluation.expression.DefaultAntlrMappingExpressionLoaded;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -18,9 +20,9 @@ import java.util.Objects;
 
 @Path("/evaluate")
 public final class EvaluateEndpoint {
-    private final EvaluateUseCase evaluateUseCase;
+    private final EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase;
 
-    public EvaluateEndpoint(final EvaluateUseCase evaluateUseCase) {
+    public EvaluateEndpoint(final EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase) {
         this.evaluateUseCase = Objects.requireNonNull(evaluateUseCase);
     }
 
@@ -158,14 +160,15 @@ public final class EvaluateEndpoint {
                                             {
                                               "result": "26",
                                               "exactProcessedInNanos": 28231378,
-                                              "parserEvaluationProcessedIn": {
-                                                "evaluatedAtStart": "2024-05-05T01:09:39.695736969+02:00",
-                                                "evaluatedAtEnd": "2024-05-05T01:09:39.717878532+02:00",
+                                              "formulaCacheRetrieval": "IN",
+                                              "evaluationLoadingProcessedIn": {
+                                                "processedAtStart": "2024-05-05T01:09:39.695736969+02:00",
+                                                "processedAtEnd": "2024-05-05T01:09:39.717878532+02:00",
                                                 "processedInNanos": 22141563
                                               },
                                               "evaluationProcessedIn": {
-                                                "evaluatedAtStart": "2024-05-05T01:09:39.722660591+02:00",
-                                                "evaluatedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
+                                                "processedAtStart": "2024-05-05T01:09:39.722660591+02:00",
+                                                "processedAtEnd": "2024-05-05T01:09:39.728750406+02:00",
                                                 "processedInNanos": 6089815
                                               },
                                               "intermediateResults": [

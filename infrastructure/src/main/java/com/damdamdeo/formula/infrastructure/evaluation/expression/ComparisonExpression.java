@@ -1,15 +1,15 @@
-package com.damdamdeo.formula.domain.evaluation;
+package com.damdamdeo.formula.infrastructure.evaluation.expression;
 
-import com.damdamdeo.formula.domain.ArithmeticFunction;
+import com.damdamdeo.formula.domain.ComparisonFunction;
 import com.damdamdeo.formula.domain.Evaluated;
 import com.damdamdeo.formula.domain.PositionedAt;
 
 import java.util.Objects;
 
-public record ArithmeticExpression(ArithmeticFunction.Function arithmeticFunction, Expression left,
+public record ComparisonExpression(ComparisonFunction.Comparison comparisonFunction, Expression left,
                                    Expression right, PositionedAt positionedAt) implements Expression {
-    public ArithmeticExpression {
-        Objects.requireNonNull(arithmeticFunction);
+    public ComparisonExpression {
+        Objects.requireNonNull(comparisonFunction);
         Objects.requireNonNull(left);
         Objects.requireNonNull(right);
         Objects.requireNonNull(positionedAt);

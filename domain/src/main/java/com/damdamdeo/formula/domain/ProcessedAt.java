@@ -3,8 +3,8 @@ package com.damdamdeo.formula.domain;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-public record EvaluatedAt(ZonedDateTime at) implements EvaluatedAtStart, EvaluatedAtEnd {
-    public EvaluatedAt {
+public record ProcessedAt(ZonedDateTime at) implements ProcessedAtStart, ProcessedAtEnd {
+    public ProcessedAt {
         Objects.requireNonNull(at);
     }
 }

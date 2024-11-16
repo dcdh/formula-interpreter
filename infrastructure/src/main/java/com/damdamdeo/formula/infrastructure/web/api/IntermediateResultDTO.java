@@ -17,8 +17,8 @@ public record IntermediateResultDTO(@Schema(required = true) ZonedDateTime evalu
 
     public IntermediateResultDTO(final IntermediateResult intermediateResult) {
         this(
-                intermediateResult.evaluationProcessedIn().evaluatedAtStart().at(),
-                intermediateResult.evaluationProcessedIn().evaluatedAtEnd().at(),
+                intermediateResult.evaluationProcessedIn().processedAtStart().at(),
+                intermediateResult.evaluationProcessedIn().processedAtEnd().at(),
                 intermediateResult.evaluationProcessedIn().in().toNanos(),
                 new PositionedAtDTO(intermediateResult.positionedAt()),
                 intermediateResult.inputs().stream()

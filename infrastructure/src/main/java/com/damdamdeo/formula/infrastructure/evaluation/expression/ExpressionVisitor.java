@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.domain.evaluation;
+package com.damdamdeo.formula.infrastructure.evaluation.expression;
 
 import com.damdamdeo.formula.domain.Evaluated;
 

@@ -1,4 +1,4 @@
-package com.damdamdeo.formula.domain.evaluation;
+package com.damdamdeo.formula.infrastructure.evaluation.expression;
 
 import com.damdamdeo.formula.domain.*;
 
@@ -169,9 +169,5 @@ public final class DefaultExpressionVisitor implements ExpressionVisitor {
         final Evaluated evaluated = evaluatedSupplier.get();
         this.partEvaluationListener.onAfterPartEvaluation(partEvaluationId, evaluated);
         return evaluated;
-    }
-
-    public List<IntermediateResult> intermediateResults() {
-        return this.partEvaluationListener.intermediateResults();
     }
 }

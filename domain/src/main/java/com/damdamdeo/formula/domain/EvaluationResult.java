@@ -6,18 +6,20 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public record EvaluationResult(Value value,
-                               ParserEvaluationProcessedIn parserEvaluationProcessedIn,// can be null
                                List<IntermediateResult> intermediateResults,
+                               FormulaCacheRetrieval formulaCacheRetrieval,
+                               EvaluationLoadingProcessedIn evaluationLoadingProcessedIn,
                                EvaluationProcessedIn evaluationProcessedIn) {
     public EvaluationResult {
         Objects.requireNonNull(value);
         Objects.requireNonNull(intermediateResults);
+        Objects.requireNonNull(formulaCacheRetrieval);
+        Objects.requireNonNull(evaluationLoadingProcessedIn);
         Objects.requireNonNull(evaluationProcessedIn);
     }
 
     public long exactProcessedInNanos() {
-        return Stream.of(parserEvaluationProcessedIn, evaluationProcessedIn)
-                .filter(Objects::nonNull)
+        return Stream.of(evaluationLoadingProcessedIn, evaluationProcessedIn)
                 .map(ProcessedIn::in)
                 .map(Duration::toNanos)
                 .reduce(0L, Long::sum);

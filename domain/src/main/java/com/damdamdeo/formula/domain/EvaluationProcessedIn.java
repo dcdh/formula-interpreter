@@ -2,10 +2,10 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public record EvaluationProcessedIn(EvaluatedAtStart evaluatedAtStart,
-                                    EvaluatedAtEnd evaluatedAtEnd) implements ProcessedIn {
+public record EvaluationProcessedIn(ProcessedAtStart processedAtStart,
+                                    ProcessedAtEnd processedAtEnd) implements ProcessedIn {
     public EvaluationProcessedIn {
-        Objects.requireNonNull(evaluatedAtStart);
-        Objects.requireNonNull(evaluatedAtEnd);
+        Objects.requireNonNull(processedAtStart);
+        Objects.requireNonNull(processedAtEnd);
     }
 }

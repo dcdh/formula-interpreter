@@ -4,10 +4,12 @@ import com.damdamdeo.formula.domain.Formula;
 import com.damdamdeo.formula.domain.ValidationException;
 import com.damdamdeo.formula.domain.spi.Validator;
 import io.smallrye.mutiny.Uni;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.Objects;
 import java.util.Optional;
 
+@ApplicationScoped
 public class AntlrValidator implements Validator<AntlrSyntaxError> {
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
 
@@ -17,11 +19,10 @@ public class AntlrValidator implements Validator<AntlrSyntaxError> {
 
     @Override
     public Uni<Optional<AntlrSyntaxError>> validate(final Formula formula) {
-        return this.antlrParseTreeGenerator.generate(formula)
-                .onItem().transform(AntlrParseTreeGenerator.GeneratorResult::parseTree)
-                .onItem().transform(parseTree -> Optional.<AntlrSyntaxError>empty())
+        return Uni.createFrom().item(() -> this.antlrParseTreeGenerator.generate(formula))
+                .map(toto -> Optional.<AntlrSyntaxError>empty())
                 .onFailure(AntlrSyntaxErrorException.class)
-                .recoverWithUni(syntaxErrorException -> Uni.createFrom().item(Optional.of(((AntlrSyntaxErrorException) syntaxErrorException).syntaxError())))
+                .recoverWithItem(antlrSyntaxErrorException -> Optional.of(((AntlrSyntaxErrorException) antlrSyntaxErrorException).antlrSyntaxError()))
                 .onFailure(Exception.class)
                 .transform(ValidationException::new);
     }

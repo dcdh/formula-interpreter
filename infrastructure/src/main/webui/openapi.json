@@ -126,14 +126,15 @@
                     "value" : {
                       "result" : "26",
                       "exactProcessedInNanos" : 28231378,
-                      "parserEvaluationProcessedIn" : {
-                        "evaluatedAtStart" : "2024-05-05T01:09:39.695736969+02:00",
-                        "evaluatedAtEnd" : "2024-05-05T01:09:39.717878532+02:00",
+                      "formulaCacheRetrieval" : "IN",
+                      "evaluationLoadingProcessedIn" : {
+                        "processedAtStart" : "2024-05-05T01:09:39.695736969+02:00",
+                        "processedAtEnd" : "2024-05-05T01:09:39.717878532+02:00",
                         "processedInNanos" : 22141563
                       },
                       "evaluationProcessedIn" : {
-                        "evaluatedAtStart" : "2024-05-05T01:09:39.722660591+02:00",
-                        "evaluatedAtEnd" : "2024-05-05T01:09:39.728750406+02:00",
+                        "processedAtStart" : "2024-05-05T01:09:39.722660591+02:00",
+                        "processedAtEnd" : "2024-05-05T01:09:39.728750406+02:00",
                         "processedInNanos" : 6089815
                       },
                       "intermediateResults" : [ {
@@ -510,8 +511,8 @@
         "enum" : [ "ANTLR", "ANTLR_MAPPING_DOMAIN_EVAL" ],
         "type" : "string"
       },
-      "EvaluationProcessedInDTO" : {
-        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
+      "EvaluationLoadingProcessedIn" : {
+        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
         "type" : "object",
         "properties" : {
           "evaluatedAtStart" : {
@@ -532,8 +533,30 @@
           }
         }
       },
+      "EvaluationProcessedInDTO" : {
+        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos", "processedAtStart", "processedAtEnd", "processedInNanos" ],
+        "type" : "object",
+        "properties" : {
+          "processedAtStart" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ZonedDateTime"
+            } ]
+          },
+          "processedAtEnd" : {
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ZonedDateTime"
+            } ]
+          },
+          "processedInNanos" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }
+      },
       "EvaluationResult" : {
-        "required" : [ "result", "exactProcessedInNanos", "evaluationProcessedIn", "intermediateResults", "result", "exactProcessedInNanos", "evaluationProcessedIn", "intermediateResults" ],
+        "required" : [ "result", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "intermediateResults", "result", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "intermediateResults" ],
         "type" : "object",
         "properties" : {
           "result" : {
@@ -543,8 +566,11 @@
             "format" : "int64",
             "type" : "integer"
           },
+          "formulaCacheRetrieval" : {
+            "$ref" : "#/components/schemas/FormulaCacheRetrieval"
+          },
           "parserEvaluationProcessedIn" : {
-            "$ref" : "#/components/schemas/ParserEvaluationProcessedIn"
+            "$ref" : "#/components/schemas/EvaluationLoadingProcessedIn"
           },
           "evaluationProcessedIn" : {
             "$ref" : "#/components/schemas/EvaluationProcessedInDTO"
@@ -556,6 +582,10 @@
             }
           }
         }
+      },
+      "FormulaCacheRetrieval" : {
+        "enum" : [ "IN", "MISSED" ],
+        "type" : "string"
       },
       "Input" : {
         "required" : [ "name", "value", "positionedAt", "name", "value", "positionedAt" ],
@@ -603,28 +633,6 @@
           },
           "result" : {
             "type" : "string"
-          }
-        }
-      },
-      "ParserEvaluationProcessedIn" : {
-        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
-        "type" : "object",
-        "properties" : {
-          "evaluatedAtStart" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
-          },
-          "evaluatedAtEnd" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
-          },
-          "processedInNanos" : {
-            "format" : "int64",
-            "type" : "integer"
           }
         }
       },

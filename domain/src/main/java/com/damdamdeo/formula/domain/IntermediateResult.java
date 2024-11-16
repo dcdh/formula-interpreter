@@ -16,8 +16,8 @@ public record IntermediateResult(Value value,
 
     public static final class Builder {
 
-        EvaluatedAtStart evaluatedAtStart;
-        EvaluatedAtEnd evaluatedAtEnd;
+        ProcessedAtStart processedAtStart;
+        ProcessedAtEnd processedAtEnd;
         PositionedAt positionedAt;
         List<Input> inputs;
         Value value;
@@ -31,13 +31,13 @@ public record IntermediateResult(Value value,
             return this;
         }
 
-        public IntermediateResult.Builder withEvaluatedAtStart(final EvaluatedAtStart evaluatedAtStart) {
-            this.evaluatedAtStart = evaluatedAtStart;
+        public IntermediateResult.Builder withEvaluatedAtStart(final ProcessedAtStart processedAtStart) {
+            this.processedAtStart = processedAtStart;
             return this;
         }
 
-        public IntermediateResult.Builder withEvaluatedAtEnd(final EvaluatedAtEnd evaluatedAtEnd) {
-            this.evaluatedAtEnd = evaluatedAtEnd;
+        public IntermediateResult.Builder withEvaluatedAtEnd(final ProcessedAtEnd processedAtEnd) {
+            this.processedAtEnd = processedAtEnd;
             return this;
         }
 
@@ -53,7 +53,7 @@ public record IntermediateResult(Value value,
 
         public IntermediateResult build() {
             return new IntermediateResult(
-                    value, positionedAt, inputs, new EvaluationProcessedIn(evaluatedAtStart, evaluatedAtEnd)
+                    value, positionedAt, inputs, new EvaluationProcessedIn(processedAtStart, processedAtEnd)
             );
         }
     }

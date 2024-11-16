@@ -12,12 +12,14 @@ import com.damdamdeo.formula.infrastructure.parser.antlr.autosuggest.LexerAndPar
 import com.damdamdeo.formula.infrastructure.parser.antlr.autosuggest.ReflectionLexerAndParserFactory;
 import io.smallrye.mutiny.Uni;
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class AntlrSuggestCompletion implements SuggestCompletion {
     @Override
     public Uni<SuggestionsCompletion> suggest(final SuggestedFormula suggestedFormula) {

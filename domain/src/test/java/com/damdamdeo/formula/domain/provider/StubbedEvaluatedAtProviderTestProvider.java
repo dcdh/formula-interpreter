@@ -1,7 +1,7 @@
 package com.damdamdeo.formula.domain.provider;
 
-import com.damdamdeo.formula.domain.EvaluatedAt;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
+import com.damdamdeo.formula.domain.ProcessedAt;
+import com.damdamdeo.formula.domain.spi.ProcessedAtProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -13,25 +13,25 @@ public final class StubbedEvaluatedAtProviderTestProvider implements ParameterRe
     @Override
     public boolean supportsParameter(final ParameterContext parameterContext,
                                      final ExtensionContext extensionContext) throws ParameterResolutionException {
-        return EvaluatedAtProvider.class.equals(parameterContext.getParameter().getType());
+        return ProcessedAtProvider.class.equals(parameterContext.getParameter().getType());
     }
 
     @Override
     public Object resolveParameter(final ParameterContext parameterContext,
                                    final ExtensionContext extensionContext) throws ParameterResolutionException {
-        return new StubbedEvaluatedAtProvider(ListOfEvaluatedAtParameterResolver.LIST_OF_EXECUTED_ATS);
+        return new StubbedProcessedAtProvider(ListOfEvaluatedAtParameterResolver.LIST_OF_EXECUTED_ATS);
     }
 
-    private static final class StubbedEvaluatedAtProvider implements EvaluatedAtProvider {
-        private final Iterator<EvaluatedAt> responseIterator;
+    private static final class StubbedProcessedAtProvider implements ProcessedAtProvider {
+        private final Iterator<ProcessedAt> responseIterator;
 
-        private StubbedEvaluatedAtProvider(final ListOfEvaluatedAtParameterResolver.ListOfEvaluatedAt listOfEvaluatedAts) {
+        private StubbedProcessedAtProvider(final ListOfEvaluatedAtParameterResolver.ListOfEvaluatedAt listOfEvaluatedAts) {
             this.responseIterator = listOfEvaluatedAts.listOf().iterator();
         }
 
         @Override
-        public EvaluatedAt now() {
-            final EvaluatedAt response;
+        public ProcessedAt now() {
+            final ProcessedAt response;
             if (responseIterator.hasNext()) {
                 response = responseIterator.next();
             } else {

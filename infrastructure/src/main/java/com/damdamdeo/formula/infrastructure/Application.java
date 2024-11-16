@@ -1,16 +1,15 @@
 package com.damdamdeo.formula.infrastructure;
 
-import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.spi.EvaluatedAtProvider;
-import com.damdamdeo.formula.domain.spi.Parser;
-import com.damdamdeo.formula.domain.spi.SuggestCompletion;
-import com.damdamdeo.formula.domain.spi.Validator;
+import com.damdamdeo.formula.domain.NumericalContext;
+import com.damdamdeo.formula.domain.ProcessedAt;
+import com.damdamdeo.formula.domain.spi.*;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
-import com.damdamdeo.formula.infrastructure.parser.antlr.*;
-import io.quarkus.cache.Cache;
-import io.quarkus.cache.CacheName;
+import com.damdamdeo.formula.infrastructure.evaluation.antlr.DefaultAntlrLoaded;
+import com.damdamdeo.formula.infrastructure.evaluation.expression.DefaultAntlrMappingExpressionLoaded;
+import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSuggestCompletion;
+import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSyntaxError;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
@@ -18,66 +17,27 @@ import java.time.ZonedDateTime;
 
 public class Application {
 
-    private static final class ZonedDateTimeEvaluatedAtProvider implements EvaluatedAtProvider {
+    private static final class ZonedDateTimeProcessedAtProvider implements ProcessedAtProvider {
         @Override
-        public EvaluatedAt now() {
-            return new EvaluatedAt(ZonedDateTime.now());
+        public ProcessedAt now() {
+            return new ProcessedAt(ZonedDateTime.now());
         }
     }
 
     @Produces
     @ApplicationScoped
-    public EvaluatedAtProvider evaluatedAddProviderProducer() {
-        return new ZonedDateTimeEvaluatedAtProvider();
+    public ProcessedAtProvider processedAtProviderProducer() {
+        return new ZonedDateTimeProcessedAtProvider();
     }
 
     @Produces
     @ApplicationScoped
-    @DefaultGenerator
-    public AntlrParseTreeGenerator defaultAntlrParseTreeGeneratorProducer(final EvaluatedAtProvider evaluatedAtProvider) {
-        return new DefaultAntlrParseTreeGenerator(evaluatedAtProvider);
-    }
-
-    @Produces
-    @ApplicationScoped
-    @CachedGenerator
-    public AntlrParseTreeGenerator cachedAntlrParseTreeGeneratorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator,
-                                                                         @CacheName("formula") final Cache cache) {
-        return new CachedAntlrParseTreeGenerator(antlrParseTreeGenerator, cache);
-    }
-
-    @Produces
-    @ApplicationScoped
-    public Validator<AntlrSyntaxError> validatorProducer(@DefaultGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator) {
-        return new AntlrValidator(antlrParseTreeGenerator);
-    }
-
-    @Produces
-    @ApplicationScoped
-    public Parser parserProducer(final EvaluatedAtProvider evaluatedAtProvider,
-                                 @CachedGenerator final AntlrParseTreeGenerator antlrParseTreeGenerator,
-                                 final ParserProcessing parserProcessing,
-                                 @CacheName("parser") final Cache cache) {
-        return new AntlrParser(evaluatedAtProvider, antlrParseTreeGenerator, parserProcessing, cache);
-    }
-
-    @Produces
-    @ApplicationScoped
-    public ParserProcessing parserProcessingProducer(final EvaluatedAtProvider evaluatedAtProvider) {
-        return new AntlrParserProcessing(evaluatedAtProvider);
-    }
-
-    @Produces
-    @ApplicationScoped
-    public EvaluateUseCase evaluateUseCaseProducer(final Parser parser,
-                                                   final EvaluatedAtProvider evaluatedAtProvider) {
-        return new EvaluateUseCase(parser, evaluatedAtProvider, new NumericalContext());
-    }
-
-    @Produces
-    @ApplicationScoped
-    public SuggestCompletion suggestCompletionProducer() {
-        return new AntlrSuggestCompletion();
+    public EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCaseProducer(final EvaluationPipeline<DefaultAntlrLoaded> antlrEvaluationPipeline,
+                                                                                                            final EvaluationPipeline<DefaultAntlrMappingExpressionLoaded> expressionEvaluationPipeline,
+                                                                                                            final CacheRepository cacheRepository,
+                                                                                                            final ProcessedAtProvider processedAtProvider) {
+        return new EvaluateUseCase<>(antlrEvaluationPipeline, expressionEvaluationPipeline, cacheRepository, processedAtProvider,
+                new NumericalContext());
     }
 
     @Produces
