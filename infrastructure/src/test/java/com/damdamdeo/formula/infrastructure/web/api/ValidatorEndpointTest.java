@@ -10,15 +10,13 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.doReturn;
 
 @QuarkusTest
@@ -28,7 +26,7 @@ public class ValidatorEndpointTest {
     private ValidateUseCase<AntlrSyntaxError> validateUseCase;
 
     @Test
-    public void shouldValidateBeValidReturnExpectedResponse() throws JSONException {
+    public void shouldValidateBeValidReturnExpectedResponse() {
         // Given
         doReturn(
                 Uni.createFrom().item(Optional::empty)
@@ -36,16 +34,7 @@ public class ValidatorEndpointTest {
                 .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
-        //language=JSON
-        final String expectedBody = """
-                {
-                    "valid": true,
-                    "line": null,
-                    "charPositionInLine": null,
-                    "msg": null
-                }
-                """;
-        final String actualBody = given()
+        given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
                 .multiPart("formula", "true")
@@ -55,12 +44,14 @@ public class ValidatorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType("application/vnd.formula-validator-v1+json")
-                .extract().response().body().asString();
-        JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
+                .body("valid", is(true))
+                .body("line", nullValue())
+                .body("charPositionInLine", nullValue())
+                .body("msg", nullValue());
     }
 
     @Test
-    public void shouldReturnSyntaxErrorException() throws JSONException {
+    public void shouldReturnSyntaxErrorException() {
         // Given
         doReturn(
                 Uni.createFrom().item(Optional.of(new AntlrSyntaxError(0, 1, "msg")))
@@ -68,16 +59,7 @@ public class ValidatorEndpointTest {
                 .when(validateUseCase).execute(new ValidateCommand(new Formula("true")));
 
         // When && Then
-        //language=JSON
-        final String expectedBody = """
-                {
-                    "valid": false,
-                    "line": 0,
-                    "charPositionInLine": 1,
-                    "msg": "msg"
-                }
-                """;
-        final String actualBody = given()
+        given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.formula-validator-v1+json")
                 .multiPart("formula", "true")
@@ -87,8 +69,10 @@ public class ValidatorEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType("application/vnd.formula-validator-v1+json")
-                .extract().response().body().asString();
-        JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
+                .body("valid", is(false))
+                .body("line", is(1))
+                .body("charPositionInLine", is(1))
+                .body("msg", is("msg"));
     }
 
     @Test

@@ -13,14 +13,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
 
@@ -31,7 +29,7 @@ public class SuggestCompletionEndpointTest {
     private SuggestUseCase suggestUseCase;
 
     @Test
-    public void shouldSuggestCompletion() throws JSONException {
+    public void shouldSuggestCompletion() {
         // Given
         doReturn(
                 Uni.createFrom().item(new SuggestionsCompletion(List.of("(")))
@@ -39,13 +37,7 @@ public class SuggestCompletionEndpointTest {
                 .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
 
         // When && Then
-        //language=JSON
-        final String expectedBody = """
-                [
-                    "("
-                ]
-                """;
-        final String actualBody = given()
+        given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
                 .multiPart("suggestedFormula", "IF")
@@ -55,8 +47,7 @@ public class SuggestCompletionEndpointTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType("application/vnd.suggest-completion-v1+json;charset=UTF-8")
-                .extract().response().body().asString();
-        JSONAssert.assertEquals(expectedBody, actualBody, JSONCompareMode.STRICT);
+                .body("tokens", contains("("));
     }
 
     @Test

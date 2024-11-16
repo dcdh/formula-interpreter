@@ -64,16 +64,17 @@ public final class SuggestCompletionEndpoint {
                                     description = "List of suggested tokens",
                                     //language=JSON
                                     value = """
-                                            [
-                                                "("
-                                            ]
+                                            {
+                                              "tokens":["("]
+                                            }
                                             """
                             )
                     )
             )
     )
-    public Uni<List<String>> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
+    public Uni<SuggestionsDTO> suggestCompletion(@FormParam("suggestedFormula") final String suggestedFormula) throws SuggestionException {
         return suggestUseCase.execute(new SuggestCommand(new SuggestedFormula(suggestedFormula)))
-                .map(SuggestionsCompletion::suggestions);
+                .map(SuggestionsCompletion::tokens)
+                .map(SuggestionsDTO::new);
     }
 }
