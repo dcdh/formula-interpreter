@@ -38,6 +38,7 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .log().all()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
                 .multiPart("suggestedFormula", "IF")
@@ -132,6 +133,7 @@ public class SuggestCompletionEndpointTest {
 
         // When && Then
         given()
+                .log().all()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
                 .multiPart("suggestedFormula", "IF")

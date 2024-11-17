@@ -1,0 +1,6 @@
+= Documentation
+
+== Testing
+
+include::swagger-request-validator-restassured.adoc[]
+

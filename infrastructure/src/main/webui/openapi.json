@@ -412,7 +412,7 @@
             "content" : {
               "application/vnd.formula-validator-v1+json" : {
                 "schema" : {
-                  "required" : [ "valid", "valid" ],
+                  "required" : [ "valid" ],
                   "type" : "object",
                   "properties" : {
                     "valid" : {
@@ -480,7 +480,7 @@
         "type" : "string"
       },
       "ErrorMessage" : {
-        "required" : [ "message", "message" ],
+        "required" : [ "message" ],
         "type" : "object",
         "properties" : {
           "message" : {
@@ -489,7 +489,7 @@
         }
       },
       "Evaluate" : {
-        "required" : [ "formula", "structuredReferences", "debugFeature", "evaluateOn", "formula", "structuredReferences", "debugFeature", "evaluateOn" ],
+        "required" : [ "formula", "structuredReferences", "debugFeature", "evaluateOn" ],
         "type" : "object",
         "properties" : {
           "formula" : {
@@ -514,20 +514,14 @@
         "type" : "string"
       },
       "EvaluationLoadingProcessedIn" : {
-        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos" ],
+        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos" ],
         "type" : "object",
         "properties" : {
-          "evaluatedAtStart" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+          "processedAtStart" : {
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
-          "evaluatedAtEnd" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+          "processedAtEnd" : {
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
           "processedInNanos" : {
             "format" : "int64",
@@ -536,20 +530,14 @@
         }
       },
       "EvaluationProcessedInDTO" : {
-        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos", "processedAtStart", "processedAtEnd", "processedInNanos" ],
+        "required" : [ "processedAtStart", "processedAtEnd", "processedInNanos" ],
         "type" : "object",
         "properties" : {
           "processedAtStart" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
           "processedAtEnd" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
           "processedInNanos" : {
             "format" : "int64",
@@ -558,7 +546,7 @@
         }
       },
       "EvaluationResult" : {
-        "required" : [ "result", "processingMetrics", "intermediateResults", "result", "processingMetrics", "intermediateResults" ],
+        "required" : [ "result", "processingMetrics", "intermediateResults" ],
         "type" : "object",
         "properties" : {
           "result" : {
@@ -576,7 +564,7 @@
         }
       },
       "EvaluationResult1" : {
-        "required" : [ "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn", "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn" ],
+        "required" : [ "exactProcessedInNanos", "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn" ],
         "type" : "object",
         "properties" : {
           "exactProcessedInNanos" : {
@@ -599,7 +587,7 @@
         "type" : "string"
       },
       "Input" : {
-        "required" : [ "name", "value", "positionedAt", "name", "value", "positionedAt" ],
+        "required" : [ "name", "value", "positionedAt" ],
         "type" : "object",
         "properties" : {
           "name" : {
@@ -614,20 +602,14 @@
         }
       },
       "IntermediateResult" : {
-        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "positionedAt", "inputs", "value", "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "positionedAt", "inputs", "result" ],
+        "required" : [ "evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "positionedAt", "inputs", "value" ],
         "type" : "object",
         "properties" : {
           "evaluatedAtStart" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
           "evaluatedAtEnd" : {
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/ZonedDateTime"
-            } ]
+            "$ref" : "#/components/schemas/ZonedDateTime"
           },
           "processedInNanos" : {
             "format" : "int64",
@@ -648,7 +630,7 @@
         }
       },
       "PositionedAt" : {
-        "required" : [ "start", "end", "start", "end" ],
+        "required" : [ "start", "end" ],
         "type" : "object",
         "properties" : {
           "start" : {
@@ -662,7 +644,7 @@
         }
       },
       "Suggestions" : {
-        "required" : [ "tokens", "tokens" ],
+        "required" : [ "tokens" ],
         "type" : "object",
         "properties" : {
           "tokens" : {
@@ -674,7 +656,7 @@
         }
       },
       "Validation" : {
-        "required" : [ "valid", "valid" ],
+        "required" : [ "valid" ],
         "type" : "object",
         "properties" : {
           "valid" : {

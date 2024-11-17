@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Schema(name = "EvaluationResult", required = true, requiredProperties = {"result", "processingMetrics", "intermediateResults"})
-public record EvaluationResultDTO(@Schema(required = true) String result,
-                                  @Schema(required = true) ProcessingMetricsDTO processingMetrics,
-                                  @Schema(required = true) List<IntermediateResultDTO> intermediateResults) {
+public record EvaluationResultDTO(String result,
+                                  ProcessingMetricsDTO processingMetrics,
+                                  List<IntermediateResultDTO> intermediateResults) {
     public EvaluationResultDTO(final EvaluationResult evaluationResult) {
         this(
                 evaluationResult.value().value(),

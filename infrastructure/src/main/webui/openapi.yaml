@@ -316,7 +316,6 @@ paths:
               schema:
                 required:
                 - valid
-                - valid
                 type: object
                 properties:
                   valid:
@@ -362,17 +361,12 @@ components:
     ErrorMessage:
       required:
       - message
-      - message
       type: object
       properties:
         message:
           type: string
     Evaluate:
       required:
-      - formula
-      - structuredReferences
-      - debugFeature
-      - evaluateOn
       - formula
       - structuredReferences
       - debugFeature
@@ -399,19 +393,12 @@ components:
       - processedAtStart
       - processedAtEnd
       - processedInNanos
-      - evaluatedAtStart
-      - evaluatedAtEnd
-      - processedInNanos
       type: object
       properties:
-        evaluatedAtStart:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
-        evaluatedAtEnd:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
+        processedAtStart:
+          $ref: "#/components/schemas/ZonedDateTime"
+        processedAtEnd:
+          $ref: "#/components/schemas/ZonedDateTime"
         processedInNanos:
           format: int64
           type: integer
@@ -420,27 +407,17 @@ components:
       - processedAtStart
       - processedAtEnd
       - processedInNanos
-      - processedAtStart
-      - processedAtEnd
-      - processedInNanos
       type: object
       properties:
         processedAtStart:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
+          $ref: "#/components/schemas/ZonedDateTime"
         processedAtEnd:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
+          $ref: "#/components/schemas/ZonedDateTime"
         processedInNanos:
           format: int64
           type: integer
     EvaluationResult:
       required:
-      - result
-      - processingMetrics
-      - intermediateResults
       - result
       - processingMetrics
       - intermediateResults
@@ -456,10 +433,6 @@ components:
             $ref: "#/components/schemas/IntermediateResult"
     EvaluationResult1:
       required:
-      - exactProcessedInNanos
-      - formulaCacheRetrieval
-      - parserEvaluationProcessedIn
-      - evaluationProcessedIn
       - exactProcessedInNanos
       - formulaCacheRetrieval
       - parserEvaluationProcessedIn
@@ -485,9 +458,6 @@ components:
       - name
       - value
       - positionedAt
-      - name
-      - value
-      - positionedAt
       type: object
       properties:
         name:
@@ -504,22 +474,12 @@ components:
       - positionedAt
       - inputs
       - value
-      - evaluatedAtStart
-      - evaluatedAtEnd
-      - processedInNanos
-      - positionedAt
-      - inputs
-      - result
       type: object
       properties:
         evaluatedAtStart:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
+          $ref: "#/components/schemas/ZonedDateTime"
         evaluatedAtEnd:
-          type: string
-          allOf:
-          - $ref: "#/components/schemas/ZonedDateTime"
+          $ref: "#/components/schemas/ZonedDateTime"
         processedInNanos:
           format: int64
           type: integer
@@ -535,8 +495,6 @@ components:
       required:
       - start
       - end
-      - start
-      - end
       type: object
       properties:
         start:
@@ -548,7 +506,6 @@ components:
     Suggestions:
       required:
       - tokens
-      - tokens
       type: object
       properties:
         tokens:
@@ -557,7 +514,6 @@ components:
             type: string
     Validation:
       required:
-      - valid
       - valid
       type: object
       properties:

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Schema(name = "Suggestions", required = true, requiredProperties = {"tokens"})
-public record SuggestionsDTO(@Schema(required = true) List<String> tokens) {
+public record SuggestionsDTO(List<String> tokens) {
     public SuggestionsDTO {
         Objects.requireNonNull(tokens);
     }

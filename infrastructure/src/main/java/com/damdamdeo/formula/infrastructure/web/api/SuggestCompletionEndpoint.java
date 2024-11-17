@@ -17,7 +17,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-import java.util.List;
 import java.util.Objects;
 
 @Path("/suggestCompletion")
@@ -34,6 +33,7 @@ public final class SuggestCompletionEndpoint {
     @RequestBody(
             required = true,
             content = @Content(
+                    mediaType = MediaType.MULTIPART_FORM_DATA,
                     schema = @Schema(
                             type = SchemaType.OBJECT,
                             required = true,

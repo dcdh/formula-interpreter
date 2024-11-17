@@ -4,10 +4,10 @@
  * infrastructure API
  * OpenAPI spec version: 1.0-SNAPSHOT
  */
-import type { Range } from "./range";
+import type { PositionedAt } from "./positionedAt";
 
 export interface Input {
   name: string;
-  range: Range;
+  positionedAt: PositionedAt;
   value: string;
 }

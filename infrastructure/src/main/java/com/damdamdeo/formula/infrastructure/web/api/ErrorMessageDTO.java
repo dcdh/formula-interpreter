@@ -8,7 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.util.Objects;
 
 @Schema(name = "ErrorMessage", required = true, requiredProperties = {"message"})
-public record ErrorMessageDTO(@Schema(required = true) String message) {
+public record ErrorMessageDTO(String message) {
 
     private final static String TEMPLATE =
             //language=JSON

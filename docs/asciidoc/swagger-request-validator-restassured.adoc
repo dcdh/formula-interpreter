@@ -1,0 +1,230 @@
+== swagger-request-validator-restassured
+
+:icons: font
+
+Sample documentation regarding the usage of **com.atlassian.oai:swagger-request-validator-restassured**
+
+[WARNING]
+It is not usable - use this doc as informal
+
+[WARNING]
+multipart is not supported. Please have a look to `RequestBodyValidator`
+
+=== Installation
+
+.pom.xml inside infrastructure module
+[source,xml]
+----
+        <dependency>
+            <groupId>com.atlassian.oai</groupId>
+            <artifactId>swagger-request-validator-restassured</artifactId>
+            <version>2.43.0</version>
+            <scope>test</scope>
+        </dependency>
+----
+
+=== Usage
+
+OpenApiValidationFilter injection into test method signature using a custom **ParameterResolver**
+
+This resolver depends on this Quarkus configuration regarding **openapi.json** generation location.
+
+.application.properties
+[source,properties]
+----
+quarkus.smallrye-openapi.store-schema-directory=src/main/webui/
+----
+
+Moreover, we cannot rely on the classloader to get the openapi.json because the file is generated in main and not in target. So, we need to get openapi.json using the absolute path.
+
+.OpenApiValidationFilterResolver
+[source,java]
+----
+package com.damdamdeo.formula.infrastructure.web.api;
+
+import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public final class OpenApiValidationFilterResolver implements ParameterResolver {
+
+    @Override
+    public boolean supportsParameter(final ParameterContext parameterContext,
+                                     final ExtensionContext extensionContext) throws ParameterResolutionException {
+        return OpenApiValidationFilter.class.equals(parameterContext.getParameter().getType());
+    }
+
+    @Override
+    public Object resolveParameter(final ParameterContext parameterContext,
+                                   final ExtensionContext extensionContext) throws ParameterResolutionException {
+        if (OpenApiValidationFilter.class.equals(parameterContext.getParameter().getType())) {
+            // Do not use the classloader because the openapi.json is generated inside main and not target
+            // so the classloader is not aware about it and worst, it will rely on previous version at each run.
+            // The best way to get it is by using the absolute path.
+            final Path openApiJson = Paths.get("src/main/webui/openapi.json").toAbsolutePath();
+            return new OpenApiValidationFilter("file:" + openApiJson);
+        } else {
+            throw new IllegalStateException("Should not be here: unsupported parameter type");
+        }
+    }
+}
+----
+
+Next we can use it this way inside our test
+
+[source,java]
+----
+@QuarkusTest
+@ExtendWith(OpenApiValidationFilterResolver.class)
+public class SuggestCompletionEndpointTest {
+
+    @InjectMock
+    private SuggestUseCase suggestUseCase;
+
+    @Test
+    public void shouldSuggestCompletion(final OpenApiValidationFilter validationFilter) {
+        // Given
+        doReturn(
+                Uni.createFrom().item(new SuggestionsCompletion(List.of("(")))
+        )
+                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+
+        // When && Then
+        given()
+                .filter(validationFilter)
+                .log().all()
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept("application/vnd.suggest-completion-v1+json")
+                .multiPart("suggestedFormula", "IF")
+                .when()
+                .post("/suggestCompletion")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType("application/vnd.suggest-completion-v1+json;charset=UTF-8")
+                .body("tokens", contains("("));
+    }
+----
+
+Important points:
+
+.Resolver declaration
+[source,java]
+----
+@ExtendWith(OpenApiValidationFilterResolver.class)
+----
+
+.Signature injection
+[source,java]
+----
+    public void shouldSuggestCompletion(final OpenApiValidationFilter validationFilter) {
+----
+
+.Restassured usage
+[source,java]
+----
+                .filter(validationFilter)
+----
+
+=== Tests result
+
+It is not working due to an issue while doing schema validation :/
+Too bad it is a nice way to validate our restassured query.
+
+----
+Request method:	POST
+Request URI:	http://localhost:8081/suggestCompletion
+Proxy:			<none>
+Request params:	<none>
+Query params:	<none>
+Form params:	<none>
+Path params:	<none>
+Headers:		Accept=application/vnd.suggest-completion-v1+json
+				Content-Type=multipart/form-data
+Cookies:		<none>
+Multiparts:		------------
+				Content-Disposition: form-data; name = suggestedFormula; filename = file
+				Content-Type: text/plain
+
+				IF
+Body:			<none>
+
+com.atlassian.oai.validator.restassured.OpenApiValidationFilter$OpenApiValidationException: {
+  "messages" : [ {
+    "key" : "validation.request.body.missing",
+    "level" : "ERROR",
+    "message" : "A request body is required but none found.",
+    "context" : {
+      "requestPath" : "/suggestCompletion",
+      "location" : "REQUEST",
+      "requestMethod" : "POST"
+    }
+  }, {
+    "key" : "validation.response.body.schema.unknownError",
+    "level" : "ERROR",
+    "message" : "An error occurred during schema validation - com.google.common.util.concurrent.UncheckedExecutionException: java.lang.NullPointerException.",
+    "context" : {
+      "requestPath" : "/suggestCompletion",
+      "responseStatus" : 200,
+      "location" : "RESPONSE",
+      "requestMethod" : "POST"
+    }
+  } ]
+}
+
+	at com.atlassian.oai.validator.restassured.OpenApiValidationFilter.filter(OpenApiValidationFilter.java:61)
+	at io.restassured.filter.Filter$filter.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:157)
+	at io.restassured.internal.filter.FilterContextImpl.next(FilterContextImpl.groovy:72)
+	at io.restassured.filter.FilterContext$next.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:148)
+	at io.restassured.internal.RequestSpecificationImpl.applyPathParamsAndSendRequest(RequestSpecificationImpl.groovy:1704)
+	at io.restassured.internal.RequestSpecificationImpl.this$2$applyPathParamsAndSendRequest(RequestSpecificationImpl.groovy)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:343)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:328)
+	at groovy.lang.MetaClassImpl.doInvokeMethod(MetaClassImpl.java:1333)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1088)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1007)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:790)
+	at io.restassured.internal.RequestSpecificationImpl.invokeMethod(RequestSpecificationImpl.groovy)
+	at org.codehaus.groovy.runtime.callsite.PogoInterceptableSite.call(PogoInterceptableSite.java:46)
+	at org.codehaus.groovy.runtime.callsite.PogoInterceptableSite.callCurrent(PogoInterceptableSite.java:57)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:171)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:203)
+	at io.restassured.internal.RequestSpecificationImpl.applyPathParamsAndSendRequest(RequestSpecificationImpl.groovy:1710)
+	at io.restassured.internal.RequestSpecificationImpl.this$2$applyPathParamsAndSendRequest(RequestSpecificationImpl.groovy)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:343)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:328)
+	at groovy.lang.MetaClassImpl.doInvokeMethod(MetaClassImpl.java:1333)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1088)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1007)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:790)
+	at io.restassured.internal.RequestSpecificationImpl.invokeMethod(RequestSpecificationImpl.groovy)
+	at org.codehaus.groovy.runtime.callsite.PogoInterceptableSite.call(PogoInterceptableSite.java:46)
+	at org.codehaus.groovy.runtime.callsite.PogoInterceptableSite.callCurrent(PogoInterceptableSite.java:57)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:171)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:203)
+	at io.restassured.internal.RequestSpecificationImpl.post(RequestSpecificationImpl.groovy:176)
+	at io.restassured.internal.RequestSpecificationImpl.post(RequestSpecificationImpl.groovy)
+	at com.damdamdeo.formula.infrastructure.web.api.SuggestCompletionEndpointTest.shouldSuggestCompletion(SuggestCompletionEndpointTest.java:50)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at io.quarkus.test.junit.QuarkusTestExtension.runExtensionMethod(QuarkusTestExtension.java:973)
+	at io.quarkus.test.junit.QuarkusTestExtension.interceptTestMethod(QuarkusTestExtension.java:823)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+----

@@ -8,12 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Schema(name = "IntermediateResult", required = true, requiredProperties = {"evaluatedAtStart", "evaluatedAtEnd", "processedInNanos", "positionedAt", "inputs", "value"})
-public record IntermediateResultDTO(@Schema(required = true) ZonedDateTime evaluatedAtStart,
-                                    @Schema(required = true) ZonedDateTime evaluatedAtEnd,
-                                    @Schema(required = true) long processedInNanos,
-                                    @Schema(required = true) PositionedAtDTO positionedAt,
-                                    @Schema(required = true) List<InputDTO> inputs,
-                                    @Schema(required = true) String result) {
+public record IntermediateResultDTO(ZonedDateTime evaluatedAtStart, ZonedDateTime evaluatedAtEnd,
+                                    long processedInNanos, PositionedAtDTO positionedAt,
+                                    List<InputDTO> inputs, String result) {
 
     public IntermediateResultDTO(final IntermediateResult intermediateResult) {
         this(

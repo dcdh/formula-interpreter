@@ -33,6 +33,7 @@ public final class ValidatorEndpoint {
     @RequestBody(
             required = true,
             content = @Content(
+                    mediaType = MediaType.MULTIPART_FORM_DATA,
                     schema = @Schema(
                             type = SchemaType.OBJECT,
                             required = true,

@@ -6,10 +6,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Schema(name = "EvaluationResult", required = true, requiredProperties = {"exactProcessedInNanos",
         "formulaCacheRetrieval", "parserEvaluationProcessedIn", "evaluationProcessedIn"})
-public record ProcessingMetricsDTO(@Schema(required = true) long exactProcessedInNanos,
-                                   @Schema(required = true) FormulaCacheRetrieval formulaCacheRetrieval,
-                                   @Schema(required = true) EvaluationLoadingProcessedInDTO parserEvaluationProcessedIn,
-                                   @Schema(required = true) EvaluationProcessedInDTO evaluationProcessedIn) {
+public record ProcessingMetricsDTO(long exactProcessedInNanos,
+                                   FormulaCacheRetrieval formulaCacheRetrieval,
+                                   EvaluationLoadingProcessedInDTO parserEvaluationProcessedIn,
+                                   EvaluationProcessedInDTO evaluationProcessedIn) {
     public ProcessingMetricsDTO(final ProcessingMetrics processingMetrics) {
         this(
                 processingMetrics.exactProcessedInNanos(),

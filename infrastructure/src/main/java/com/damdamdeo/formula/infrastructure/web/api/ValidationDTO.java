@@ -4,10 +4,7 @@ import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSyntaxError;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Schema(name = "Validation", required = true, requiredProperties = {"valid"})
-public record ValidationDTO(@Schema(required = true) Boolean valid,
-                            Integer line,
-                            Integer charPositionInLine,
-                            String msg) {
+public record ValidationDTO(Boolean valid, Integer line, Integer charPositionInLine, String msg) {
     public ValidationDTO() {
         this(Boolean.TRUE, null, null, null);
     }
