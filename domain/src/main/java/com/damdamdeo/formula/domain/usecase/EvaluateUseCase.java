@@ -19,25 +19,31 @@ public final class EvaluateUseCase<A extends AntlrLoaded, E extends AntlrMapping
     private final EvaluationPipeline<E> expressionEvaluationPipeline;
     private final CacheRepository cacheRepository;
     private final ProcessedAtProvider processedAtProvider;
+    private final DebugPartEvaluationListener debugPartEvaluationListener;
+    private final NoOpPartEvaluationListener noOpPartEvaluationListener;
     private final NumericalContext numericalContext;
 
     public EvaluateUseCase(final EvaluationPipeline<A> antlrEvaluationPipeline,
                            final EvaluationPipeline<E> expressionEvaluationPipeline,
                            final CacheRepository cacheRepository,
                            final ProcessedAtProvider processedAtProvider,
+                           final DebugPartEvaluationListener debugPartEvaluationListener,
+                           final NoOpPartEvaluationListener noOpPartEvaluationListener,
                            final NumericalContext numericalContext) {
         this.antlrEvaluationPipeline = Objects.requireNonNull(antlrEvaluationPipeline);
         this.expressionEvaluationPipeline = Objects.requireNonNull(expressionEvaluationPipeline);
         this.cacheRepository = Objects.requireNonNull(cacheRepository);
         this.processedAtProvider = Objects.requireNonNull(processedAtProvider);
+        this.debugPartEvaluationListener = Objects.requireNonNull(debugPartEvaluationListener);
+        this.noOpPartEvaluationListener = Objects.requireNonNull(noOpPartEvaluationListener);
         this.numericalContext = Objects.requireNonNull(numericalContext);
     }
 
     @Override
     public Uni<EvaluationResult> execute(final EvaluateCommand command) {
         final PartEvaluationListener partEvaluationListener = switch (command.debugFeature()) {
-            case ACTIVE -> new DebugPartEvaluationListener(processedAtProvider);
-            case INACTIVE -> new NoOpPartEvaluationListener();
+            case ACTIVE -> debugPartEvaluationListener;
+            case INACTIVE -> noOpPartEvaluationListener;
         };
         final List<StructuredReference> structuredReferences = command.structuredReferences();
         final EvaluatePipelineExecution<A> antlrEvaluatePipelineExecution = new EvaluatePipelineExecution<>(
@@ -109,7 +115,7 @@ public final class EvaluateUseCase<A extends AntlrLoaded, E extends AntlrMapping
                                     evaluatedStageResult.evaluationProcessedIn
                             )
                     ))
-                    .onFailure(Exception.class)
+                    .onFailure()
                     .transform(EvaluationException::new);
         }
     }

@@ -23,7 +23,7 @@ public class AntlrValidator implements Validator<AntlrSyntaxError> {
                 .map(toto -> Optional.<AntlrSyntaxError>empty())
                 .onFailure(AntlrSyntaxErrorException.class)
                 .recoverWithItem(antlrSyntaxErrorException -> Optional.of(((AntlrSyntaxErrorException) antlrSyntaxErrorException).antlrSyntaxError()))
-                .onFailure(Exception.class)
+                .onFailure()
                 .transform(ValidationException::new);
     }
 }

@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
-public final class AntlrEvaluationPipeline implements EvaluationPipeline<DefaultAntlrLoaded> {
+public final class DefaultAntlrEvaluationPipeline implements EvaluationPipeline<DefaultAntlrLoaded> {
 
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
 
-    public AntlrEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+    public DefaultAntlrEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
     }
 

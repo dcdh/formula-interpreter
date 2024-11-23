@@ -1,7 +1,8 @@
 package com.damdamdeo.formula.domain.usecase;
 
-import com.damdamdeo.formula.domain.spi.SuggestCompletion;
+import com.damdamdeo.formula.domain.SuggestionException;
 import com.damdamdeo.formula.domain.SuggestionsCompletion;
+import com.damdamdeo.formula.domain.spi.SuggestCompletion;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Objects;
@@ -16,6 +17,8 @@ public final class SuggestUseCase implements UseCase<SuggestionsCompletion, Sugg
 
     @Override
     public Uni<SuggestionsCompletion> execute(final SuggestCommand command) {
-        return autoSuggestCompletion.suggest(command.suggestedFormula());
+        return autoSuggestCompletion.suggest(command.suggestedFormula())
+                .onFailure()
+                .transform(SuggestionException::new);
     }
 }

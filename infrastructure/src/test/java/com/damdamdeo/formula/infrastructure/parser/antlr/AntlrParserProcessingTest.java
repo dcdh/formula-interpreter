@@ -1,11 +1,11 @@
 package com.damdamdeo.formula.infrastructure.parser.antlr;
 
-import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderTestProvider;
+import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderParameterResolver;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(StubbedProcessedAtProviderTestProvider.class)
+@ExtendWith(StubbedProcessedAtProviderParameterResolver.class)
 class AntlrParserProcessingTest {
 
 //    private AntlrParserProcessing antlrParserProcessing;

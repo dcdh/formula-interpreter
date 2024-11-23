@@ -44,7 +44,7 @@ public final class PartEvaluationCallback {
             final Evaluated right = rightSupplier.get();
             final Value value = ArithmeticFunction.of(arithmeticFunctionSupplier.get(), left.value(), right.value()).evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -72,7 +72,7 @@ public final class PartEvaluationCallback {
             final Value value = ComparisonFunction.of(comparisonFunctionSupplier.get(), left.value(), right.value())
                     .evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -99,7 +99,7 @@ public final class PartEvaluationCallback {
             final Evaluated right = rightSupplier.get();
             final Value value = LogicalBooleanFunction.of(logicalBooleanFunctionSupplier.get(), left.value(), right.value()).evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofLeft(),
                                     left.value(),
@@ -128,7 +128,7 @@ public final class PartEvaluationCallback {
                             onFalseSupplier.get())
                     .evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofComparisonValue(),
                                     comparison.value(),
@@ -148,7 +148,7 @@ public final class PartEvaluationCallback {
             final Evaluated state = stateSupplier.get();
             final Value value = StateFunction.of(stateFunctionSupplier.get(), state.value()).evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofValue(),
                                     state.value(),
@@ -166,7 +166,7 @@ public final class PartEvaluationCallback {
             final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredData, referenceSupplier.get());
             final Value value = structuredReferencesFunction.evaluate(numericalContext);
             return new Evaluated(value, positionedAtSupplier.get(),
-                    () -> List.of(
+                    List.of(
                             new Input(
                                     InputName.ofStructuredReference(),
                                     structuredReferencesFunction.reference(),

@@ -2,9 +2,9 @@ package com.damdamdeo.formula.infrastructure.web.api;
 
 import com.damdamdeo.formula.domain.SuggestedFormula;
 import com.damdamdeo.formula.domain.SuggestionException;
-import com.damdamdeo.formula.domain.SuggestionsCompletion;
 import com.damdamdeo.formula.domain.usecase.SuggestCommand;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
+import com.damdamdeo.formula.domain.usecase.resolver.SuggestCompletionParameterResolver;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrAutoSuggestUnavailableException;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrAutoSuggestionExecutionException;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrAutoSuggestionExecutionTimedOutException;
@@ -13,7 +13,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
@@ -23,18 +25,17 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
 
 @QuarkusTest
+@ExtendWith(SuggestCompletionEndpointTest.AntlrSuggestCompletionParameterResolver.class)
 public class SuggestCompletionEndpointTest {
 
     @InjectMock
     private SuggestUseCase suggestUseCase;
 
     @Test
-    public void shouldSuggestCompletion() {
+    public void shouldSuggestCompletion(final SuggestCompletionParameterResolver.GivenHappyPath givenHappyPath) {
         // Given
-        doReturn(
-                Uni.createFrom().item(new SuggestionsCompletion(List.of("(")))
-        )
-                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+        final SuggestedFormula givenSuggestedFormula = givenHappyPath.suggestedFormula();
+        doReturn(givenHappyPath.toUni()).when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
@@ -52,20 +53,18 @@ public class SuggestCompletionEndpointTest {
     }
 
     @Test
-    public void shouldHandleAutoSuggestionExecutionException() {
+    @Tag("AntlrAutoSuggestionExecutionException")
+    public void shouldHandleAntlrAutoSuggestionExecutionException(final SuggestCompletionParameterResolver.GivenFailing givenFailing) {
         // Given
-        final SuggestedFormula givenSuggestedFormula
-                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doReturn(
-                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestionExecutionException(givenSuggestedFormula, new RuntimeException("error"))))
-        )
+        final SuggestedFormula givenSuggestedFormula = givenFailing.suggestedFormula();
+        doReturn(Uni.createFrom().failure(new SuggestionException(givenFailing.cause())))
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", givenSuggestedFormula.formula())
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -76,20 +75,18 @@ public class SuggestCompletionEndpointTest {
     }
 
     @Test
-    public void shouldHandleAutoSuggestionExecutionTimedOutException() {
+    @Tag("AntlrAutoSuggestionExecutionTimedOutException")
+    public void shouldHandleAntlrAutoSuggestionExecutionTimedOutException(final SuggestCompletionParameterResolver.GivenFailing givenFailing) {
         // Given
-        final SuggestedFormula givenSuggestedFormula
-                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doReturn(
-                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestionExecutionTimedOutException(givenSuggestedFormula, new RuntimeException("error"))))
-        )
+        final SuggestedFormula givenSuggestedFormula = givenFailing.suggestedFormula();
+        doReturn(Uni.createFrom().failure(new SuggestionException(givenFailing.cause())))
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", givenSuggestedFormula.formula())
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -100,20 +97,18 @@ public class SuggestCompletionEndpointTest {
     }
 
     @Test
-    public void shouldHandleAutoSuggestUnavailableException() {
+    @Tag("AntlrAutoSuggestUnavailableException")
+    public void shouldHandleAntlrAutoSuggestUnavailableException(final SuggestCompletionParameterResolver.GivenFailing givenFailing) {
         // Given
-        final SuggestedFormula givenSuggestedFormula
-                = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
-        doReturn(
-                Uni.createFrom().failure(new SuggestionException(new AntlrAutoSuggestUnavailableException(givenSuggestedFormula, new RuntimeException("error"))))
-        )
+        final SuggestedFormula givenSuggestedFormula = givenFailing.suggestedFormula();
+        doReturn(Uni.createFrom().failure(new SuggestionException(givenFailing.cause())))
                 .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .multiPart("suggestedFormula", "IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)")
+                .multiPart("suggestedFormula", givenSuggestedFormula.formula())
                 .when()
                 .post("/suggestCompletion")
                 .then()
@@ -124,25 +119,47 @@ public class SuggestCompletionEndpointTest {
     }
 
     @Test
-    public void shouldHandleException() {
+    @Tag("Exception")
+    public void shouldHandleException(final SuggestCompletionParameterResolver.GivenFailing givenFailing) {
         // Given
-        doReturn(
-                Uni.createFrom().failure(new SuggestionException(new Exception("unexpected \"exception\"")))
-        )
-                .when(suggestUseCase).execute(new SuggestCommand(new SuggestedFormula("IF")));
+        final SuggestedFormula givenSuggestedFormula = givenFailing.suggestedFormula();
+        doReturn(Uni.createFrom().failure(new SuggestionException(givenFailing.cause())))
+                .when(suggestUseCase).execute(new SuggestCommand(givenSuggestedFormula));
 
         // When && Then
         given()
                 .log().all()
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.suggest-completion-v1+json")
-                .multiPart("suggestedFormula", "IF")
+                .multiPart("suggestedFormula", givenSuggestedFormula.formula())
                 .when()
                 .post("/suggestCompletion")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 .contentType("application/vnd.autosuggestion-unexpected-exception-v1+json")
-                .body("message", is("unexpected \"exception\""));
+                .body("message", is("unexpected \"cause\""));
     }
+
+    static class AntlrSuggestCompletionParameterResolver extends SuggestCompletionParameterResolver {
+        @Override
+        protected List<GivenFailing> givenFailings() {
+            final SuggestedFormula givenSuggestedFormula = new SuggestedFormula("IF(EQ([@[Sales Person]],\"Joe\"),MUL(MUL([@[Sales Amount]],DIV([@[% Commission]],100)),2),MUL([@[Sales Amount]],DIV([@[% Commission]],100)");
+            return List.of(
+                    new GivenFailing(
+                            givenSuggestedFormula,
+                            new AntlrAutoSuggestionExecutionException(givenSuggestedFormula, new RuntimeException("error"))),
+                    new GivenFailing(
+                            givenSuggestedFormula,
+                            new AntlrAutoSuggestionExecutionTimedOutException(givenSuggestedFormula, new RuntimeException("error"))),
+                    new GivenFailing(
+                            givenSuggestedFormula,
+                            new AntlrAutoSuggestUnavailableException(givenSuggestedFormula, new RuntimeException("error"))),
+                    new GivenFailing(
+                            givenSuggestedFormula,
+                            new Exception("unexpected \"cause\""))
+            );
+        }
+    }
+
 }

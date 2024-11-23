@@ -1,11 +1,11 @@
 package com.damdamdeo.formula.infrastructure.parser.antlr;
 
-import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderTestProvider;
+import com.damdamdeo.formula.domain.provider.StubbedProcessedAtProviderParameterResolver;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.mock;
 
-@ExtendWith(StubbedProcessedAtProviderTestProvider.class)
+@ExtendWith(StubbedProcessedAtProviderParameterResolver.class)
 public abstract class AbstractFunctionTest {
 //    protected AntlrParser antlrExecutor;
 //    protected ProcessedAtProvider processedAtProvider;

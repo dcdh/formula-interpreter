@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
-public final class AntlrMappingExpressionEvaluationPipeline implements EvaluationPipeline<DefaultAntlrMappingExpressionLoaded> {
+public final class DefaultAntlrMappingExpressionEvaluationPipeline implements EvaluationPipeline<DefaultAntlrMappingExpressionLoaded> {
 
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
 
-    public AntlrMappingExpressionEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+    public DefaultAntlrMappingExpressionEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
     }
 
