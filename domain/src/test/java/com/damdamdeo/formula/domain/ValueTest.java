@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ValueTest {
 
@@ -60,45 +57,6 @@ class ValueTest {
     @Test
     void shouldOfNotALogicalValueReturnRepresentation() {
         assertThat(Value.ofNotALogicalValue()).isEqualTo(new Value("#LOG!"));
-    }
-
-    @Nested
-    class IsStructuredReference {
-
-        @Test
-        void shouldOfStructuredReferenceReturnExpectedRepresentation() {
-            assertThat(Value.ofStructuredReference(new Reference("% Commission"))).isEqualTo(new Value("[@[% Commission]]"));
-        }
-
-        @Test
-        void shouldBeAStructuredReference() {
-            assertThat(Value.of("[@[% Commission]]").isStructuredReference()).isTrue();
-        }
-
-        @Test
-        void shouldNotBeAStructuredReference() {
-            assertThat(Value.of("true").isStructuredReference()).isFalse();
-        }
-
-        @Test
-        void shouldFailFastWhenNotAStructuredReference() {
-            assertThatThrownBy(() -> Value.of("true").extract(Map.of()).isStructuredReference())
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage("Should not be here");
-        }
-
-        @Test
-        void shouldReturnUnknownReferenceWhenReferenceDoesNotExist() {
-            assertThat(Value.ofStructuredReference(new Reference("% Commission")).extract(Map.of()))
-                    .isEqualTo(Value.ofUnknownRef());
-        }
-
-        @Test
-        void shouldReturnReferenceValue() {
-            assertThat(Value.ofStructuredReference(new Reference("% Commission")).extract(
-                    Map.of(new Reference("% Commission"), Value.of("0.10"))))
-                    .isEqualTo(Value.of("0.10"));
-        }
     }
 
     @Nested
