@@ -1,5 +1,6 @@
 package com.damdamdeo.formula.domain;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ValueTest {
+
+    @Test
+    void shouldVerifyEqualsVerifier() {
+        EqualsVerifier.forClass(Value.class).verify();
+    }
 
     @Test
     void shouldOfNotAvailableReturnExpectedRepresentation() {
@@ -59,6 +65,7 @@ class ValueTest {
         assertThat(Value.ofNotALogicalValue()).isEqualTo(new Value("#LOG!"));
     }
 
+    // TODO should use a provider
     @Nested
     class IsNumeric {
 

@@ -134,18 +134,16 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
 
     @Override
     public Evaluated visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return partEvaluationCallback.evaluateArgumentStructuredReference(
-                () -> new Reference(ctx.STRUCTURED_REFERENCE().getText()
-                        .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
-                        .substring(3)),
+        return partEvaluationCallback.evaluateArgument(
+                () -> Argument.ofStructuredReference(new Reference(ctx.STRUCTURED_REFERENCE().getText())),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
+    public Evaluated visitArgumentText(final FormulaParser.ArgumentTextContext ctx) {
         return partEvaluationCallback.evaluateArgument(
-                () -> Value.of(ctx.VALUE().getText()),
+                () -> Argument.ofText(Value.ofText(ctx.TEXT().getText())),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
@@ -153,7 +151,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     @Override
     public Evaluated visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return partEvaluationCallback.evaluateArgument(
-                () -> Value.of(ctx.NUMERIC().getText()),
+                () -> Argument.ofNumeric(Value.ofNumeric(ctx.NUMERIC().getText())),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
@@ -162,7 +160,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     public Evaluated visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
-                () -> Value.of(ctx.getText()),
+                () -> Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
@@ -171,7 +169,7 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
     public Evaluated visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return partEvaluationCallback.evaluateArgument(
-                () -> Value.of(ctx.getText()),
+                () -> Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }

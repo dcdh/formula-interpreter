@@ -431,8 +431,8 @@ public final class StateFunctionProviders {
                         new StateFunction(new GivenArgument(Value.ofFalse()), type.falseBoolean()),
                         new StateFunction(new GivenArgument(Value.ofZero()), type.zero()),
                         new StateFunction(new GivenArgument(Value.ofOne()), type.one()),
-                        new StateFunction(new GivenArgument(Value.of("660")), type.sixSixZero()),
-                        new StateFunction(new GivenArgument(Value.of("azerty")), type.azerty()),
+                        new StateFunction(new GivenArgument(Value.ofNumeric("660")), type.sixSixZero()),
+                        new StateFunction(new GivenArgument(Value.ofText("azerty")), type.azerty()),
                         new StateFunction(new GivenArgument(Value.ofEmpty()), type.empty())
                 )));
     }

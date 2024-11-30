@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Schema(name = "Evaluate", required = true, requiredProperties = {"formula", "structuredReferences", "debugFeature", "evaluateOn"})
-public record EvaluateDTO(String formula, Map<String, String> structuredReferences, DebugFeature debugFeature, EvaluateOn evaluateOn) {
+public record EvaluateDTO(String formula, Map<String, String> structuredReferences, DebugFeature debugFeature,
+                          EvaluateOn evaluateOn) {
 
     public EvaluateCommand toEvaluateCommand() {
         return new EvaluateCommand(
                 new Formula(formula),
                 structuredReferences.entrySet().stream()
-                        .map(structuredDatum -> new StructuredReference(new Reference(structuredDatum.getKey()), new Value(structuredDatum.getValue())))
+                        .map(structuredReference -> new StructuredReference(new ReferenceNaming(structuredReference.getKey()), Value.ofAny(structuredReference.getValue())))
                         .collect(Collectors.toList()),
                 debugFeature,
                 evaluateOn

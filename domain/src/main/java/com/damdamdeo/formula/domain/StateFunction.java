@@ -32,7 +32,7 @@ public record StateFunction(java.util.function.Function<Value, Boolean> function
     }
 
     public static StateFunction ofIsText(final Value argument) {
-        return new StateFunction(Value::isText, argument);
+        return new StateFunction(Value::isValidText, argument);
     }
 
     public static StateFunction ofIsBlank(final Value argument) {
@@ -40,7 +40,7 @@ public record StateFunction(java.util.function.Function<Value, Boolean> function
     }
 
     public static StateFunction ofIsLogical(final Value argument) {
-        return new StateFunction(Value::isLogical, argument);
+        return new StateFunction(Value::isBoolean, argument);
     }
 
     public static StateFunction of(final Function function, final Value argument) {

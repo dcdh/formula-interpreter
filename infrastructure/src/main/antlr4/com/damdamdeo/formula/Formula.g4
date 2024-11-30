@@ -11,7 +11,7 @@ expr: arithmetic_functions
     ;
 
 argument: STRUCTURED_REFERENCE  #argumentStructuredReference
-        | VALUE #argumentValue
+        | TEXT #argumentText
         | NUMERIC #argumentNumeric
         | TRUE #argumentBooleanTrue
         | FALSE #argumentBooleanFalse
@@ -88,6 +88,6 @@ IFNA: 'IFNA' ;
 TRUE: 'true'|'1';
 FALSE: 'false'|'0';
 STRUCTURED_REFERENCE : '[@['.*?']]' ;
-VALUE : '"'.*?'"' ;
+TEXT : '"'.*?'"' ;
 NUMERIC : '-'?[0-9]+'.'?[0-9]*('E'[0-9]+|'E+'[0-9]+|'E-'[0-9]+)? ;
 WS  : [ \t\r\n] -> skip ;

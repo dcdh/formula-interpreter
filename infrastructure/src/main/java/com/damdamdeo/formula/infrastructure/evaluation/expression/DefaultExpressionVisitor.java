@@ -133,31 +133,23 @@ public final class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public Evaluated visit(final StructuredReferencesExpression structuredReferencesExpression) {
-        return evaluate(() -> {
-            final Reference reference = structuredReferencesExpression.reference();
-            final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredReferences, reference);
-            final Value evaluated = structuredReferencesFunction.evaluate(numericalContext);
-            final PositionedAt positionedAt = structuredReferencesExpression.positionedAt();
-            return new Evaluated(evaluated,
-                    positionedAt,
-                    List.of(
-                            new Input(
-                                    InputName.ofStructuredReference(),
-                                    structuredReferencesFunction.reference(),
-                                    positionedAt.of(+3, -2)))
-            );
-        });
-    }
-
-    @Override
     public Evaluated visit(final ArgumentExpression argumentExpression) {
         return evaluate(() -> {
-            final Value value = argumentExpression.value();
-            return new Evaluated(
-                    value,
-                    argumentExpression.positionedAt()
-            );
+            final Value value = argumentExpression.resolveArgument(structuredReferences);
+            final PositionedAt positionedAt = argumentExpression.positionedAt();
+            if (argumentExpression.reference() != null) {
+                return new Evaluated(value,
+                        positionedAt,
+                        List.of(
+                                new Input(
+                                        InputName.ofStructuredReference(),
+                                        argumentExpression.reference(),
+                                        positionedAt.of(+3, -2))));
+            } else {
+                return new Evaluated(
+                        value,
+                        positionedAt);
+            }
         });
     }
 

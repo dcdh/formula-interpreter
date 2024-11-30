@@ -104,24 +104,22 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
 
     @Override
     public Expression visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return new StructuredReferencesExpression(
-                new Reference(ctx.STRUCTURED_REFERENCE().getText()
-                        .substring(0, ctx.STRUCTURED_REFERENCE().getText().length() - 2)
-                        .substring(3)),
+        return new ArgumentExpression(
+                Argument.ofStructuredReference(new Reference(ctx.STRUCTURED_REFERENCE().getText())),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentValue(final FormulaParser.ArgumentValueContext ctx) {
+    public Expression visitArgumentText(final FormulaParser.ArgumentTextContext ctx) {
         return new ArgumentExpression(
-                Value.of(ctx.VALUE().getText()),
+                Argument.ofText(Value.ofText(ctx.TEXT().getText())),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
     public Expression visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
         return new ArgumentExpression(
-                Value.of(ctx.NUMERIC().getText()),
+                Argument.ofNumeric(Value.ofNumeric(ctx.NUMERIC().getText())),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
@@ -129,7 +127,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
     public Expression visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
         return new ArgumentExpression(
-                Value.of(ctx.getText()),
+                Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
@@ -137,7 +135,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
     public Expression visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
         return new ArgumentExpression(
-                Value.of(ctx.getText()),
+                Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 

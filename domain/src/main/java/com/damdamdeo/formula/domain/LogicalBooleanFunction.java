@@ -17,7 +17,7 @@ public record LogicalBooleanFunction(Function function, Value left, Value right)
             return left;
         } else if (right.isError()) {
             return right;
-        } else if (!left.isLogical() || !right.isLogical()) {
+        } else if (!left.isBoolean() || !right.isBoolean()) {
             return Value.ofNotALogicalValue();
         } else {
             return function.evaluate(left, right);

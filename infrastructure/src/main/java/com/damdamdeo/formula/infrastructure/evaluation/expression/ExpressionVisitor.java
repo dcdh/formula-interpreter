@@ -13,7 +13,5 @@ public interface ExpressionVisitor {
 
     Evaluated visit(StateExpression stateExpression);
 
-    Evaluated visit(StructuredReferencesExpression structuredReferencesExpression);
-
     Evaluated visit(ArgumentExpression argumentExpression);
 }

@@ -58,7 +58,7 @@ public record LogicalComparisonFunction(Function function, Value comparison, Val
                            final ValueProvider onFalse) {
                 if (comparison.isError()) {
                     return comparison;
-                } else if (!comparison.isLogical()) {
+                } else if (!comparison.isBoolean()) {
                     return Value.ofNotALogicalValue();
                 } else if (comparison.isTrue()) {
                     return onTrue.provide();

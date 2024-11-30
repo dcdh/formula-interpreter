@@ -11,16 +11,16 @@ public final class PartEvaluationCallback {
     private final PartEvaluationListener partEvaluationListener;
     private PartEvaluationId currentPartEvaluationId;
     private final NumericalContext numericalContext;
-    private final List<StructuredReference> structuredData;
+    private final List<StructuredReference> structuredReferences;
     private Evaluated currentEvaluated = new Evaluated();
 
     public PartEvaluationCallback(final PartEvaluationListener partEvaluationListener,
                                   final NumericalContext numericalContext,
-                                  final List<StructuredReference> structuredData) {
+                                  final List<StructuredReference> structuredReferences) {
         this.partEvaluationListener = Objects.requireNonNull(partEvaluationListener);
         this.currentPartEvaluationId = new PartEvaluationId(-1);
         this.numericalContext = Objects.requireNonNull(numericalContext);
-        this.structuredData = Objects.requireNonNull(structuredData);
+        this.structuredReferences = Objects.requireNonNull(structuredReferences);
     }
 
     public void storeCurrentEvaluation(final Evaluated currentEvaluated) {
@@ -158,29 +158,29 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Evaluated evaluateArgumentStructuredReference(final Supplier<Reference> referenceSupplier,
-                                                         final Supplier<PositionedAt> positionedAtSupplier) {
-        Objects.requireNonNull(referenceSupplier);
-        Objects.requireNonNull(positionedAtSupplier);
-        return evaluate(() -> {
-            final StructuredReferencesFunction structuredReferencesFunction = new StructuredReferencesFunction(structuredData, referenceSupplier.get());
-            final Value value = structuredReferencesFunction.evaluate(numericalContext);
-            return new Evaluated(value, positionedAtSupplier.get(),
-                    List.of(
-                            new Input(
-                                    InputName.ofStructuredReference(),
-                                    structuredReferencesFunction.reference(),
-                                    positionedAtSupplier.get().of(+3, -2)
-                            )));
-        });
-    }
-
-    public Evaluated evaluateArgument(final Supplier<Value> valueSupplier,
+    public Evaluated evaluateArgument(final Supplier<Argument> argumentSupplier,
                                       final Supplier<PositionedAt> positionedAtSupplier) {
-        Objects.requireNonNull(valueSupplier);
+        Objects.requireNonNull(argumentSupplier);
         Objects.requireNonNull(positionedAtSupplier);
         return evaluate(
-                () -> new Evaluated(valueSupplier.get(), positionedAtSupplier.get()));
+                () -> {
+                    final Argument argument = argumentSupplier.get();
+                    final Value value = argument.resolveArgument(structuredReferences);
+                    final PositionedAt positionedAt = positionedAtSupplier.get();
+                    if (argument.reference() != null) {
+                        return new Evaluated(value,
+                                positionedAt,
+                                List.of(
+                                        new Input(
+                                                InputName.ofStructuredReference(),
+                                                argument.reference(),
+                                                positionedAt.of(+3, -2))));
+                    } else {
+                        return new Evaluated(
+                                value,
+                                positionedAt);
+                    }
+                });
     }
 
     private Evaluated evaluate(final Supplier<Evaluated> evaluatedSupplier) {
@@ -191,9 +191,5 @@ public final class PartEvaluationCallback {
         final Evaluated evaluated = evaluatedSupplier.get();
         this.partEvaluationListener.onAfterPartEvaluation(partEvaluationId, evaluated);
         return evaluated;
-    }
-
-    public List<IntermediateResult> intermediateResults() {
-        return this.partEvaluationListener.intermediateResults();
     }
 }

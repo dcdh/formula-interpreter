@@ -2,15 +2,15 @@ package com.damdamdeo.formula.domain;
 
 import java.util.Objects;
 
-public record StructuredReference(Reference reference, Value value) {
+public record StructuredReference(ReferenceNaming referenceNaming, Value value) {
     public StructuredReference {
-        Objects.requireNonNull(reference);
+        Objects.requireNonNull(referenceNaming);
         Objects.requireNonNull(value);
     }
 
-    public StructuredReference(final Reference reference, final String value) {
-        this(reference,
-                value != null ? Value.of(value) : Value.ofNotAvailable());
+    public StructuredReference(final ReferenceNaming referenceNaming, final String value) {
+        this(referenceNaming,
+                value != null ? Value.ofAny(value) : Value.ofNotAvailable());
     }
 
 }

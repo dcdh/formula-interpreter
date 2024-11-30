@@ -1,11 +1,13 @@
 package com.damdamdeo.formula.domain;
 
+import org.apache.commons.lang3.Validate;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public record Value(String value) implements InputValue {
+public final class Value implements InputValue {
     private static final Pattern IS_NUMERIC_PATTERN = Pattern.compile("^\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?$");
 
     private static final Value TRUE = new Value("true");
@@ -18,6 +20,8 @@ public record Value(String value) implements InputValue {
     private static final Value NOT_A_NUMERICAL_VALUE = new Value("#NUM!");
     private static final Value DIV_BY_ZERO = new Value("#DIV/0!");
     private static final Value NOT_A_LOGICAL_VALUE = new Value("#LOG!");
+
+    private final String value;
 
     public static Value ofNotAvailable() {
         return NOT_AVAILABLE;
@@ -59,20 +63,41 @@ public record Value(String value) implements InputValue {
         return NOT_A_LOGICAL_VALUE;
     }
 
-    public static Value of(final String value) {
-        return new Value(value);
+    public static Value ofText(final String text) {
+        final Value value = new Value(text);
+        Validate.validState(value.isText());
+        return value;
     }
 
+    public static Value ofNumeric(final String numeric) {
+        final Value value = new Value(numeric);
+        Validate.validState(value.isNumeric());
+        return value;
+    }
+
+    public static Value ofBoolean(final String booleanValue) {
+        final Value value = new Value(booleanValue);
+        Validate.validState(value.isBoolean());
+        return value;
+    }
+
+    public static Value ofAny(final String any) {
+        return new Value(any);
+    }
+
+    @Deprecated // TODO private
     public Value(final String value) {
         this.value = Objects.requireNonNull(value)
                 .replaceAll("^\"|\"$", "");
     }
 
-    public Value(BigDecimal value) {
+    @Deprecated(forRemoval = true)
+    public Value(final BigDecimal value) {
         this(value.stripTrailingZeros().toPlainString());
     }
 
-    public Value(Boolean value) {
+    @Deprecated(forRemoval = true)
+    public Value(final Boolean value) {
         this(value.toString());
     }
 
@@ -108,6 +133,10 @@ public record Value(String value) implements InputValue {
     }
 
     public boolean isText() {
+        return true;// by default always text
+    }
+
+    public boolean isValidText() {
         return !isNotAvailable()
                && !isUnknownRef()
                && !isNotANumericalValue()
@@ -136,7 +165,7 @@ public record Value(String value) implements InputValue {
         return "".equals(this.value);
     }
 
-    public boolean isLogical() {
+    public boolean isBoolean() {
         return isTrue() || isFalse();
     }
 
@@ -276,6 +305,23 @@ public record Value(String value) implements InputValue {
 
     public Value and(final Value valueToCheckAgainst) {
         return isTrue() && valueToCheckAgainst.isTrue() ? Value.TRUE : Value.FALSE;
+    }
+
+    @Override
+    public String value() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Value value1 = (Value) o;
+        return Objects.equals(value, value1.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 
     @Override

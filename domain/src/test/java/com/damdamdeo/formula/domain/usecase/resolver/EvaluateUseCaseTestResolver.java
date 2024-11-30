@@ -77,17 +77,17 @@ public abstract class EvaluateUseCaseTestResolver implements ParameterResolver {
             final List<IntermediateResult> intermediateResults = switch (debugFeature) {
                 case ACTIVE -> List.of(
                         new IntermediateResult(
-                                Value.of("false"),
+                                Value.ofFalse(),
                                 new PositionedAt(0, 7),
                                 List.of(
                                         new Input(
                                                 new InputName("left"),
-                                                Value.of("0"),
+                                                Value.ofZero(),
                                                 new PositionedAt(4, 4)
                                         ),
                                         new Input(
                                                 new InputName("right"),
-                                                Value.of("0"),
+                                                Value.ofZero(),
                                                 new PositionedAt(6, 6)
                                         )
                                 ),
@@ -95,14 +95,14 @@ public abstract class EvaluateUseCaseTestResolver implements ParameterResolver {
                                         new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:03+01:00[Europe/Paris]")),
                                         new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:08+01:00[Europe/Paris]")))),
                         new IntermediateResult(
-                                Value.of("0"),
+                                Value.ofZero(),
                                 new PositionedAt(4, 4),
                                 List.of(),
                                 new EvaluationProcessedIn(
                                         new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:04+01:00[Europe/Paris]")),
                                         new ProcessedAt(ZonedDateTime.parse("2023-12-25T10:15:05+01:00[Europe/Paris]")))),
                         new IntermediateResult(
-                                Value.of("0"),
+                                Value.ofZero(),
                                 new PositionedAt(6, 6),
                                 List.of(),
                                 new EvaluationProcessedIn(
