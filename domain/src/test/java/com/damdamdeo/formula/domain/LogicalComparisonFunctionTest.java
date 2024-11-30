@@ -1,8 +1,9 @@
 package com.damdamdeo.formula.domain;
 
+import com.damdamdeo.formula.domain.provider.Expected;
+import com.damdamdeo.formula.domain.provider.GivenComparison;
+import com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionArgumentsProviders;
 import com.damdamdeo.formula.domain.spi.ValueProvider;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,45 +11,39 @@ public class LogicalComparisonFunctionTest {
     final ValueProvider givenOnTrue = Value::ofTrue;
     final ValueProvider givenOnFalse = Value::ofFalse;
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIf")
-    void shouldIfReturnExpectedValue(final Value givenComparison,
-                                     final Value expectedResult) {
+    @LogicalComparisonFunctionArgumentsProviders.IfTest
+    void shouldIfReturnExpectedValue(final GivenComparison givenComparison, final Expected expected) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIf(givenComparison, givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIf(givenComparison.value(), givenOnTrue, givenOnFalse);
 
         // When
         final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfError")
-    void shouldIfErrorReturnExpectedValue(final Value givenComparison,
-                                          final Value expectedResult) {
+    @LogicalComparisonFunctionArgumentsProviders.IfErrorTest
+    void shouldIfErrorReturnExpectedValue(final GivenComparison givenComparison, final Expected expected) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfError(givenComparison, givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfError(givenComparison.value(), givenOnTrue, givenOnFalse);
 
         // When
         final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalComparisonFunctionTestProvider#provideIfNotAvailable")
-    void shouldIfNotAvailableReturnExpectedValue(final Value givenComparison,
-                                                 final Value expectedResult) {
+    @LogicalComparisonFunctionArgumentsProviders.IfNotAvailableTest
+    void shouldIfNotAvailableReturnExpectedValue(final GivenComparison givenComparison, final Expected expected) {
         // Given
-        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfNotAvailable(givenComparison, givenOnTrue, givenOnFalse);
+        final LogicalComparisonFunction logicalComparisonFunction = LogicalComparisonFunction.ofIfNotAvailable(givenComparison.value(), givenOnTrue, givenOnFalse);
 
         // When
         final Value evaluated = logicalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedResult);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 }

@@ -2,9 +2,7 @@ package com.damdamdeo.formula.infrastructure.evaluation.antlr;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.EvaluationPipeline;
-import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrEvalVisitor;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrParseTreeGenerator;
-import com.damdamdeo.formula.infrastructure.parser.antlr.PartEvaluationCallback;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -12,22 +10,22 @@ import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
-public final class DefaultAntlrEvaluationPipeline implements EvaluationPipeline<DefaultAntlrLoaded> {
+public final class ParseTreeAntlrLoadedEvaluationPipeline implements EvaluationPipeline<ParseTreeAntlrLoaded> {
 
     private final AntlrParseTreeGenerator antlrParseTreeGenerator;
 
-    public DefaultAntlrEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
+    public ParseTreeAntlrLoadedEvaluationPipeline(final AntlrParseTreeGenerator antlrParseTreeGenerator) {
         this.antlrParseTreeGenerator = Objects.requireNonNull(antlrParseTreeGenerator);
     }
 
     @Override
-    public DefaultAntlrLoaded load(final Formula formula) {
+    public ParseTreeAntlrLoaded load(final Formula formula) {
         final ParseTree parseTree = antlrParseTreeGenerator.generate(formula);
-        return new DefaultAntlrLoaded(parseTree);
+        return new ParseTreeAntlrLoaded(parseTree);
     }
 
     @Override
-    public Evaluated evaluate(final DefaultAntlrLoaded loaded,
+    public Evaluated evaluate(final ParseTreeAntlrLoaded loaded,
                               final PartEvaluationListener partEvaluationListener,
                               final List<StructuredReference> structuredReferences,
                               final NumericalContext numericalContext) {

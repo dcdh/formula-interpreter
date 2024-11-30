@@ -2,7 +2,7 @@ package com.damdamdeo.formula.infrastructure.web.api;
 
 import com.damdamdeo.formula.domain.EvaluationException;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
-import com.damdamdeo.formula.infrastructure.evaluation.antlr.DefaultAntlrLoaded;
+import com.damdamdeo.formula.infrastructure.evaluation.antlr.ParseTreeAntlrLoaded;
 import com.damdamdeo.formula.infrastructure.evaluation.expression.DefaultAntlrMappingExpressionLoaded;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
@@ -20,9 +20,9 @@ import java.util.Objects;
 
 @Path("/evaluate")
 public final class EvaluateEndpoint {
-    private final EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase;
+    private final EvaluateUseCase<ParseTreeAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase;
 
-    public EvaluateEndpoint(final EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase) {
+    public EvaluateEndpoint(final EvaluateUseCase<ParseTreeAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase) {
         this.evaluateUseCase = Objects.requireNonNull(evaluateUseCase);
     }
 

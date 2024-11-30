@@ -1,12 +1,64 @@
 package com.damdamdeo.formula.domain;
 
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ValueTest {
+
+    @Test
+    void shouldOfNotAvailableReturnExpectedRepresentation() {
+        assertThat(Value.ofNotAvailable()).isEqualTo(new Value("#NA!"));
+    }
+
+    @Test
+    void shouldOfUnknownRefReturnExpectedRepresentation() {
+        assertThat(Value.ofUnknownRef()).isEqualTo(new Value("#REF!"));
+    }
+
+    @Test
+    void shouldOfNumericalValueExpectedReturnExpectedRepresentation() {
+        assertThat(Value.ofNumericalValueExpected()).isEqualTo(new Value("#NUM!"));
+    }
+
+    @Test
+    void shouldOfDividedByZeroReturnExpectedRepresentation() {
+        assertThat(Value.ofDividedByZero()).isEqualTo(new Value("#DIV/0!"));
+    }
+
+    @Test
+    void shouldOfTrueReturnExpectedRepresentation() {
+        assertThat(Value.ofTrue()).isEqualTo(new Value("true"));
+    }
+
+    @Test
+    void shouldOfZeroReturnExpectedRepresentation() {
+        assertThat(Value.ofZero()).isEqualTo(new Value("0"));
+    }
+
+    @Test
+    void shouldOfFalseReturnExpectedRepresentation() {
+        assertThat(Value.ofFalse()).isEqualTo(new Value("false"));
+    }
+
+    @Test
+    void shouldOfOneReturnExpectedRepresentation() {
+        assertThat(Value.ofOne()).isEqualTo(new Value("1"));
+    }
+
+    @Test
+    void shouldOfEmptyReturnExpectedRepresentation() {
+        assertThat(Value.ofEmpty()).isEqualTo(new Value(""));
+    }
+
+    @Test
+    void shouldOfLogicalValueExpectedReturnExpectedRepresentation() {
+        assertThat(Value.ofLogicalValueExpected()).isEqualTo(new Value("#LOG!"));
+    }
+
     @Nested
     class IsNumeric {
 

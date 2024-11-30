@@ -2,7 +2,6 @@ package com.damdamdeo.formula.infrastructure.evaluation.expression;
 
 import com.damdamdeo.formula.domain.*;
 import com.damdamdeo.formula.domain.spi.EvaluationPipeline;
-import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrExpressionMapperVisitor;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrParseTreeGenerator;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.antlr.v4.runtime.tree.ParseTree;

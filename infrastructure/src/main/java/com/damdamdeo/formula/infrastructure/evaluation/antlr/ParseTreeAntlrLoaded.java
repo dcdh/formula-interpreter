@@ -5,8 +5,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.Objects;
 
-public record DefaultAntlrLoaded(ParseTree parseTree) implements AntlrLoaded {
-    public DefaultAntlrLoaded {
+public record ParseTreeAntlrLoaded(ParseTree parseTree) implements AntlrLoaded {
+    public ParseTreeAntlrLoaded {
         Objects.requireNonNull(parseTree);
     }
 }

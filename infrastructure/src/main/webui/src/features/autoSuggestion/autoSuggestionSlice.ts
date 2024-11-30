@@ -36,11 +36,11 @@ export const suggestTokens = createAsyncThunk<
             throw rejectWithValue({
               message: error.response.message
             });
-          case 'application/vnd.autosuggestion-execution-exception-v1+json':
+          case 'application/vnd.autosuggestion-execution-cause-v1+json':
             throw rejectWithValue({
               message: error.response.message
             });
-          case 'application/vnd.autosuggestion-unexpected-exception-v1+json':
+          case 'application/vnd.autosuggestion-unexpected-cause-v1+json':
             throw rejectWithValue({
               message: error.response.message
             });

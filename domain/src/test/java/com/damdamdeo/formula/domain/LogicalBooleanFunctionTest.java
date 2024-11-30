@@ -1,38 +1,34 @@
 package com.damdamdeo.formula.domain;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import com.damdamdeo.formula.domain.provider.Expected;
+import com.damdamdeo.formula.domain.provider.GivenLeft;
+import com.damdamdeo.formula.domain.provider.GivenRight;
+import com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionArgumentsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LogicalBooleanFunctionTest {
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideOr")
-    void shouldOrReturnExpectedValue(final Value givenLeftValue,
-                                     final Value givenRightValue,
-                                     final Value expectedValue) {
+class LogicalBooleanFunctionTest {
+    @LogicalBooleanFunctionArgumentsProvider.OrTest
+    void shouldOrReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofOr(givenLeftValue, givenRightValue);
+        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofOr(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = logicalBooleanFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.LogicalBooleanFunctionTestProvider#provideAnd")
-    void shouldAndReturnExpectedValue(final Value givenLeftValue,
-                                      final Value givenRightValue,
-                                      final Value expectedValue) {
+    @LogicalBooleanFunctionArgumentsProvider.AndTest
+    void shouldAndReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofAnd(givenLeftValue, givenRightValue);
+        final LogicalBooleanFunction logicalBooleanFunction = LogicalBooleanFunction.ofAnd(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = logicalBooleanFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 }

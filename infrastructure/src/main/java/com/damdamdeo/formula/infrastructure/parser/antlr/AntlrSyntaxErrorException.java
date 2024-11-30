@@ -25,6 +25,19 @@ public final class AntlrSyntaxErrorException extends RuntimeException {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AntlrSyntaxErrorException that = (AntlrSyntaxErrorException) o;
+        return Objects.equals(formula, that.formula)
+                && Objects.equals(antlrSyntaxError, that.antlrSyntaxError);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(formula, antlrSyntaxError);
+    }
+
+    @Override
     public String toString() {
         return "SyntaxErrorException{" +
                "formula=" + formula +

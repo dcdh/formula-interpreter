@@ -8,7 +8,7 @@ import com.damdamdeo.formula.domain.spi.*;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
 import com.damdamdeo.formula.domain.usecase.SuggestUseCase;
 import com.damdamdeo.formula.domain.usecase.ValidateUseCase;
-import com.damdamdeo.formula.infrastructure.evaluation.antlr.DefaultAntlrLoaded;
+import com.damdamdeo.formula.infrastructure.evaluation.antlr.ParseTreeAntlrLoaded;
 import com.damdamdeo.formula.infrastructure.evaluation.expression.DefaultAntlrMappingExpressionLoaded;
 import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSyntaxError;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -45,12 +45,12 @@ public class Application {
 
     @Produces
     @ApplicationScoped
-    public EvaluateUseCase<DefaultAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCaseProducer(final EvaluationPipeline<DefaultAntlrLoaded> antlrEvaluationPipeline,
-                                                                                                            final EvaluationPipeline<DefaultAntlrMappingExpressionLoaded> expressionEvaluationPipeline,
-                                                                                                            final CacheRepository cacheRepository,
-                                                                                                            final ProcessedAtProvider processedAtProvider,
-                                                                                                            final DebugPartEvaluationListener debugPartEvaluationListener,
-                                                                                                            final NoOpPartEvaluationListener noOpPartEvaluationListener) {
+    public EvaluateUseCase<ParseTreeAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCaseProducer(final EvaluationPipeline<ParseTreeAntlrLoaded> antlrEvaluationPipeline,
+                                                                                                              final EvaluationPipeline<DefaultAntlrMappingExpressionLoaded> expressionEvaluationPipeline,
+                                                                                                              final CacheRepository cacheRepository,
+                                                                                                              final ProcessedAtProvider processedAtProvider,
+                                                                                                              final DebugPartEvaluationListener debugPartEvaluationListener,
+                                                                                                              final NoOpPartEvaluationListener noOpPartEvaluationListener) {
         return new EvaluateUseCase<>(antlrEvaluationPipeline, expressionEvaluationPipeline, cacheRepository, processedAtProvider,
                 debugPartEvaluationListener, noOpPartEvaluationListener, new NumericalContext());
     }

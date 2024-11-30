@@ -1,93 +1,82 @@
 package com.damdamdeo.formula.domain;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import com.damdamdeo.formula.domain.provider.Expected;
+import com.damdamdeo.formula.domain.provider.GivenArgument;
+import com.damdamdeo.formula.domain.provider.StateFunctionArgumentsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StateFunctionTest {
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsNotAvailable")
-    void shouldIsNotAvailableReturnExpectedValue(final Value givenArgument,
-                                                 final Value expectedArgument) {
+class StateFunctionTest {
+    @StateFunctionArgumentsProvider.IsNotAvailableTest
+    void shouldIsNotAvailableReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNotAvailable(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsNotAvailable(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsError")
-    void shouldIsErrorReturnExpectedValue(final Value givenArgument,
-                                          final Value expectedArgument) {
+    @StateFunctionArgumentsProvider.IsErrorTest
+    void shouldIsErrorReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsError(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsError(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsNumeric")
-    void shouldIsNumericReturnExpectedValue(final Value givenArgument,
-                                            final Value expectedArgument) {
+    @StateFunctionArgumentsProvider.IsNumericTest
+    void shouldIsNumericReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNumeric(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsNumeric(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsText")
-    void shouldIsTextReturnExpectedValue(final Value givenArgument,
-                                         final Value expectedArgument) {
+    @StateFunctionArgumentsProvider.IsTextTest
+    void shouldIsTextReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsText(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsText(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsBlank")
-    void shouldIsBlankReturnExpectedValue(final Value givenArgument,
-                                          final Value expectedArgument) {
+    @StateFunctionArgumentsProvider.IsBlankTest
+    void shouldIsBlankReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsBlank(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsBlank(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.StateFunctionTestProvider#provideIsLogical")
-    void shouldIsLogicalReturnExpectedValue(final Value givenArgument,
-                                            final Value expectedArgument) {
+    @StateFunctionArgumentsProvider.IsLogicalTest
+    void shouldIsLogicalReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsLogical(givenArgument);
+        final StateFunction stateFunction = StateFunction.ofIsLogical(givenArgument.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedArgument);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
 }

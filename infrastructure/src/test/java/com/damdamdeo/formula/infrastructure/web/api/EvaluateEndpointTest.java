@@ -1,30 +1,42 @@
 package com.damdamdeo.formula.infrastructure.web.api;
 
-import com.damdamdeo.formula.domain.*;
-import com.damdamdeo.formula.domain.usecase.EvaluateCommand;
 import com.damdamdeo.formula.domain.usecase.EvaluateUseCase;
-import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSyntaxError;
-import com.damdamdeo.formula.infrastructure.parser.antlr.AntlrSyntaxErrorException;
-import io.quarkus.test.InjectMock;
+import com.damdamdeo.formula.infrastructure.evaluation.antlr.ParseTreeAntlrLoaded;
+import com.damdamdeo.formula.infrastructure.evaluation.expression.DefaultAntlrMappingExpressionLoaded;
 import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.mutiny.Uni;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.Test;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.Nested;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.doReturn;
-
+//@ExtendWith(EvaluateEndpointTest.InfraEvaluateUseCaseTestResolver.class)
 @QuarkusTest
 public class EvaluateEndpointTest {
+// ici je peux throw des exceptions directement parce que le test est deja fait en amont !!!
+    @Inject
+    EvaluateUseCase<ParseTreeAntlrLoaded, DefaultAntlrMappingExpressionLoaded> evaluateUseCase;
 
-    @InjectMock
-    EvaluateUseCase evaluateUseCase;
+    @Nested
+    class EvaluateUsingAntlr {
 
-//    @Test
+//        @EvaluateUseCaseTestResolver.DebugFeatureActiveTest
+//        void shouldEvaluateWithDebugFeatureActive(final Formula givenFormula, final Evaluated givenEvaluated,
+//                                                  final DebugFeature givenDebugFeature,
+//                                                  final EvaluationResult expectedEvaluationResult) {
+//
+//        }
+//
+//        @EvaluateUseCaseTestResolver.DebugFeatureInactiveTest
+//        void shouldEvaluateWithDebugFeatureInactive(final Formula givenFormula, final Evaluated givenEvaluated,
+//                                                    final DebugFeature givenDebugFeature,
+//                                                    final EvaluationResult expectedEvaluationResult) {
+//        }
+    }
+
+    @Nested
+    class EvaluateUsingAntlrMappingDomainEval {
+
+    }
+
+    //    @Test
 //    public void shouldProcess() throws JSONException {
 //        // Given
 //        doReturn(
@@ -165,7 +177,7 @@ public class EvaluateEndpointTest {
 //    public void shouldHandleException() {
 //        // Given
 //        doReturn(
-//                Uni.createFrom().failure(new EvaluationException(new Exception("unexpected \"exception\"")))
+//                Uni.createFrom().failure(new EvaluationException(new Exception("unexpected \"cause\"")))
 //        )
 //                .when(evaluateUseCase).execute(new EvaluateCommand(
 //                        new Formula("true"),
@@ -195,7 +207,10 @@ public class EvaluateEndpointTest {
 //                .then()
 //                .log().all()
 //                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-//                .contentType("application/vnd.evaluation-unexpected-exception-v1+json")
-//                .body("message", is("unexpected \"exception\""));
+//                .contentType("application/vnd.evaluation-unexpected-cause-v1+json")
+//                .body("message", is("unexpected \"cause\""));
+//    }
+//    static class InfraEvaluateUseCaseTestResolver extends EvaluateUseCaseTestResolver {
+//
 //    }
 }

@@ -132,7 +132,7 @@ export const executeFormulaOnSamples = createAsyncThunk<SampleState[], void
           case 'application/vnd.evaluation-syntax-error-v1+json':
             // TODO
             break;
-          case 'application/vnd.evaluation-unexpected-exception-v1+json':
+          case 'application/vnd.evaluation-unexpected-cause-v1+json':
             // TODO
             break;
           default:

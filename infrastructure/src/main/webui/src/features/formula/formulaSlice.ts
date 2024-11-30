@@ -35,7 +35,7 @@ export const validateFormula = createAsyncThunk<
       .then(response => response as Validate200)
       .catch(error => {
         if (error instanceof AjaxError) {
-          if ('application/vnd.validation-unexpected-exception-v1+json' === error.xhr.getResponseHeader('content-type')) {
+          if ('application/vnd.validation-unexpected-cause-v1+json' === error.xhr.getResponseHeader('content-type')) {
             throw rejectWithValue({
               message: error.response.message
             });

@@ -1,68 +1,60 @@
 package com.damdamdeo.formula.domain;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import com.damdamdeo.formula.domain.provider.*;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArithmeticFunctionTest {
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideAddition")
-    void shouldAdditionReturnExpectedValue(final Value givenLeftValue,
-                                           final Value givenRightValue,
-                                           final Value expectedValue) {
+    @ArithmeticFunctionArgumentsProvider.AddTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldAdditionReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofAddition(givenLeftValue, givenRightValue);
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofAddition(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideSubtraction")
-    void shouldSubtractionReturnExpectedValue(final Value givenLeftValue,
-                                              final Value givenRightValue,
-                                              final Value expectedValue) {
+    @ArithmeticFunctionArgumentsProvider.SubtractTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldSubtractionReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofSubtraction(givenLeftValue, givenRightValue);
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofSubtraction(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideDivision")
-    void shouldDivisionReturnExpectedValue(final Value givenLeftValue,
-                                           final Value givenRightValue,
-                                           final Value expectedValue) {
+    @ArithmeticFunctionArgumentsProvider.DivideTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldDivisionReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofDivision(givenLeftValue, givenRightValue);
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofDivision(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.ArithmeticFunctionTestProvider#provideMultiplication")
-    void shouldMultiplicationReturnExpectedValue(final Value givenLeftValue,
-                                                 final Value givenRightValue,
-                                                 final Value expectedValue) {
+    @ArithmeticFunctionArgumentsProvider.MultiplyTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldMultiplicationReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofMultiplication(givenLeftValue, givenRightValue);
+        final ArithmeticFunction arithmeticFunction = ArithmeticFunction.ofMultiplication(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = arithmeticFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 }

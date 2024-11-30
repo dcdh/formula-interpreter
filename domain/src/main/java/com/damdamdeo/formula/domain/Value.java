@@ -9,6 +9,7 @@ public record Value(String value) implements InputValue {
     private static final Value FALSE = new Value("false");
     private static final Value ZERO = new Value("0");
     private static final Value ONE = new Value("1");
+    private static final Value EMPTY = new Value("");
     private static final Value NOT_AVAILABLE = new Value("#NA!");
     private static final Value UNKNOWN_REF = new Value("#REF!");
     private static final Value NOT_A_NUMERICAL_VALUE = new Value("#NUM!");
@@ -23,6 +24,7 @@ public record Value(String value) implements InputValue {
         return UNKNOWN_REF;
     }
 
+    // TODO rename to ofNotANumericalValue
     public static Value ofNumericalValueExpected() {
         return NOT_A_NUMERICAL_VALUE;
     }
@@ -35,10 +37,23 @@ public record Value(String value) implements InputValue {
         return Value.TRUE;
     }
 
+    public static Value ofZero() {
+        return Value.ZERO;
+    }
+
     public static Value ofFalse() {
         return Value.FALSE;
     }
 
+    public static Value ofOne() {
+        return Value.ONE;
+    }
+
+    public static Value ofEmpty() {
+        return Value.EMPTY;
+    }
+
+    // TODO rename to ofNotALogicalValue
     public static Value ofLogicalValueExpected() {
         return NOT_A_LOGICAL_VALUE;
     }
@@ -100,6 +115,7 @@ public record Value(String value) implements InputValue {
                && !isFalse()
 //               && !isBlank()
                && !isNumeric()
+               && !isNotALogicalValue()
                 ;
     }
 

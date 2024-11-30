@@ -1,68 +1,61 @@
 package com.damdamdeo.formula.domain;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import com.damdamdeo.formula.domain.provider.*;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumericalComparisonFunctionTest {
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThan")
-    void shouldGreaterThanReturnExpectedValue(final Value givenLeftValue,
-                                              final Value givenRightValue,
-                                              final Value expectedValue) {
+class NumericalComparisonFunctionTest {
+
+    @NumericalComparisonFunctionArgumentsProvider.GreaterThanTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldGreaterThanReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThan(givenLeftValue, givenRightValue);
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThan(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideGreaterThanOrEqualTo")
-    void shouldGreaterThanOrEqualToReturnExpectedValue(final Value givenLeftValue,
-                                                       final Value givenRightValue,
-                                                       final Value expectedValue) {
+    @NumericalComparisonFunctionArgumentsProvider.GreaterThanOrEqualToTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldGreaterThanOrEqualToReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThanOrEqualTo(givenLeftValue, givenRightValue);
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofGreaterThanOrEqualTo(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThan")
-    void shouldLessThanReturnExpectedValue(final Value givenLeftValue,
-                                           final Value givenRightValue,
-                                           final Value expectedValue) {
+    @NumericalComparisonFunctionArgumentsProvider.LessThanTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldLessThanReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThan(givenLeftValue, givenRightValue);
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThan(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("com.damdamdeo.formula.domain.provider.NumericalComparisonFunctionTestProvider#provideLessThanOrEqualTo")
-    void shouldLessThanOrEqualToReturnExpectedValue(final Value givenLeftValue,
-                                                    final Value givenRightValue,
-                                                    final Value expectedValue) {
+    @NumericalComparisonFunctionArgumentsProvider.LessThanOrEqualToTest
+    @ArgumentsSource(BiFunctionCommonArgumentsProvider.class)
+    void shouldLessThanOrEqualToReturnExpectedValue(final GivenLeft givenLeft, final GivenRight givenRight, final Expected expected) {
         // Given
-        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThanOrEqualTo(givenLeftValue, givenRightValue);
+        final NumericalComparisonFunction numericalComparisonFunction = NumericalComparisonFunction.ofLessThanOrEqualTo(givenLeft.value(), givenRight.value());
 
         // When
         final Value evaluated = numericalComparisonFunction.evaluate(new NumericalContext());
 
         // Then
-        assertThat(evaluated).isEqualTo(expectedValue);
+        assertThat(evaluated).isEqualTo(expected.value());
     }
 }
