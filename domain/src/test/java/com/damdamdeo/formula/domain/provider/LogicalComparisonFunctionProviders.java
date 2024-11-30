@@ -25,7 +25,7 @@ public final class LogicalComparisonFunctionProviders {
 
             @Override
             Expected numericalValueExpected() {
-                return new Expected(Value.ofNumericalValueExpected());
+                return new Expected(Value.ofNotANumericalValue());
             }
 
             @Override
@@ -55,12 +55,12 @@ public final class LogicalComparisonFunctionProviders {
 
             @Override
             Expected sixSixZero() {
-                return new Expected(Value.ofLogicalValueExpected());
+                return new Expected(Value.ofNotALogicalValue());
             }
 
             @Override
             Expected empty() {
-                return new Expected(Value.ofLogicalValueExpected());
+                return new Expected(Value.ofNotALogicalValue());
             }
         },
         IF_ERROR {
@@ -207,7 +207,7 @@ public final class LogicalComparisonFunctionProviders {
                 List.of(
                         new LogicalComparisonFunction(new GivenComparison(Value.ofNotAvailable()), type.notAvailable()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofUnknownRef()), type.unknownRef()),
-                        new LogicalComparisonFunction(new GivenComparison(Value.ofNumericalValueExpected()), type.numericalValueExpected()),
+                        new LogicalComparisonFunction(new GivenComparison(Value.ofNotANumericalValue()), type.numericalValueExpected()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofDividedByZero()), type.dividedByZero()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofTrue()), type.trueBoolean()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofFalse()), type.falseBoolean()),

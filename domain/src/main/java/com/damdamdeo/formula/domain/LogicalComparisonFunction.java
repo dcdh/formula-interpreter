@@ -59,7 +59,7 @@ public record LogicalComparisonFunction(Function function, Value comparison, Val
                 if (comparison.isError()) {
                     return comparison;
                 } else if (!comparison.isLogical()) {
-                    return Value.ofLogicalValueExpected();
+                    return Value.ofNotALogicalValue();
                 } else if (comparison.isTrue()) {
                     return onTrue.provide();
                 } else if (comparison.isFalse()) {

@@ -18,7 +18,7 @@ public record NumericalComparisonFunction(Function function, Value left, Value r
         } else if (right.isError()) {
             return right;
         } else if (!left.isNumeric() || !right.isNumeric()) {
-            return Value.ofNumericalValueExpected();
+            return Value.ofNotANumericalValue();
         } else {
             return function.evaluate(left, right, numericalContext);
         }

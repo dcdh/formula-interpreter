@@ -64,19 +64,19 @@ public final class ArithmeticFunctionProviders {
 
     private Stream<ArithmeticFunction> common() {
         return Stream.of(
-                new ArithmeticFunction(new GivenLeft(new Value("azerty")), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
-                new ArithmeticFunction(new GivenLeft(Value.ofTrue()), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
-                new ArithmeticFunction(new GivenLeft(Value.ofFalse()), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
+                new ArithmeticFunction(new GivenLeft(new Value("azerty")), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
+                new ArithmeticFunction(new GivenLeft(Value.ofTrue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
+                new ArithmeticFunction(new GivenLeft(Value.ofFalse()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
                 new ArithmeticFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(new Value("260")), new Expected(Value.ofNotAvailable())),
                 new ArithmeticFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(new Value("260")), new Expected(Value.ofUnknownRef())),
-                new ArithmeticFunction(new GivenLeft(Value.ofNumericalValueExpected()), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
+                new ArithmeticFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
                 new ArithmeticFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(new Value("260")), new Expected(Value.ofDividedByZero())),
-                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("azerty")), new Expected(Value.ofNumericalValueExpected())),
-                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofTrue()), new Expected(Value.ofNumericalValueExpected())),
-                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofFalse()), new Expected(Value.ofNumericalValueExpected())),
+                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("azerty")), new Expected(Value.ofNotANumericalValue())),
+                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofTrue()), new Expected(Value.ofNotANumericalValue())),
+                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofFalse()), new Expected(Value.ofNotANumericalValue())),
                 new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
                 new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
-                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNumericalValueExpected()), new Expected(Value.ofNumericalValueExpected())),
+                new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
                 new ArithmeticFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
         );
     }

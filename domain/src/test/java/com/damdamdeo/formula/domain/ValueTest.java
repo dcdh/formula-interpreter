@@ -20,8 +20,8 @@ class ValueTest {
     }
 
     @Test
-    void shouldOfNumericalValueExpectedReturnExpectedRepresentation() {
-        assertThat(Value.ofNumericalValueExpected()).isEqualTo(new Value("#NUM!"));
+    void shouldOfNotANumericalValueReturnRepresentation() {
+        assertThat(Value.ofNotANumericalValue()).isEqualTo(new Value("#NUM!"));
     }
 
     @Test
@@ -55,8 +55,8 @@ class ValueTest {
     }
 
     @Test
-    void shouldOfLogicalValueExpectedReturnExpectedRepresentation() {
-        assertThat(Value.ofLogicalValueExpected()).isEqualTo(new Value("#LOG!"));
+    void shouldOfNotALogicalValueReturnRepresentation() {
+        assertThat(Value.ofNotALogicalValue()).isEqualTo(new Value("#LOG!"));
     }
 
     @Nested

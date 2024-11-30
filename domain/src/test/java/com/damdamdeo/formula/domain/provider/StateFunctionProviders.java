@@ -424,9 +424,9 @@ public final class StateFunctionProviders {
                 List.of(
                         new StateFunction(new GivenArgument(Value.ofNotAvailable()), type.notAvailable()),
                         new StateFunction(new GivenArgument(Value.ofUnknownRef()), type.unknownRef()),
-                        new StateFunction(new GivenArgument(Value.ofNumericalValueExpected()), type.notANumericalValue()),
+                        new StateFunction(new GivenArgument(Value.ofNotANumericalValue()), type.notANumericalValue()),
                         new StateFunction(new GivenArgument(Value.ofDividedByZero()), type.divByZero()),
-                        new StateFunction(new GivenArgument(Value.ofLogicalValueExpected()), type.notALogicalValue()),
+                        new StateFunction(new GivenArgument(Value.ofNotALogicalValue()), type.notALogicalValue()),
                         new StateFunction(new GivenArgument(Value.ofTrue()), type.trueBoolean()),
                         new StateFunction(new GivenArgument(Value.ofFalse()), type.falseBoolean()),
                         new StateFunction(new GivenArgument(Value.ofZero()), type.zero()),

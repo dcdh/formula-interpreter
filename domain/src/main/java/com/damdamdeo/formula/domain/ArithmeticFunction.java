@@ -44,7 +44,7 @@ public record ArithmeticFunction(Function function, Value left, Value right) imp
         } else if (right.isError()) {
             return right;
         } else if (!left.isNumeric() || !right.isNumeric()) {
-            return Value.ofNumericalValueExpected();
+            return Value.ofNotANumericalValue();
         } else if (right.isNumeric() && right.isZero() && Function.DIV.equals(function)) {
             return Value.ofDividedByZero();
         } else {

@@ -76,14 +76,14 @@ public final class NumericalComparisonFunctionProviders {
         return Stream.of(
                 new NumericalComparisonFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(new Value("260")), new Expected(Value.ofNotAvailable())),
                 new NumericalComparisonFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(new Value("260")), new Expected(Value.ofUnknownRef())),
-                new NumericalComparisonFunction(new GivenLeft(Value.ofNumericalValueExpected()), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
+                new NumericalComparisonFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
                 new NumericalComparisonFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(new Value("260")), new Expected(Value.ofDividedByZero())),
                 new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
                 new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
-                new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNumericalValueExpected()), new Expected(Value.ofNumericalValueExpected())),
+                new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
                 new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero())),
-                new NumericalComparisonFunction(new GivenLeft(new Value("azerty")), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
-                new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("azerty")), new Expected(Value.ofNumericalValueExpected())));
+                new NumericalComparisonFunction(new GivenLeft(new Value("azerty")), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
+                new NumericalComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("azerty")), new Expected(Value.ofNotANumericalValue())));
     }
 
     public record NumericalComparisonFunction(GivenLeft givenLeft, GivenRight givenRight, Expected expected) {

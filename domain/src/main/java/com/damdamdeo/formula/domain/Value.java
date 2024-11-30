@@ -24,8 +24,7 @@ public record Value(String value) implements InputValue {
         return UNKNOWN_REF;
     }
 
-    // TODO rename to ofNotANumericalValue
-    public static Value ofNumericalValueExpected() {
+    public static Value ofNotANumericalValue() {
         return NOT_A_NUMERICAL_VALUE;
     }
 
@@ -53,8 +52,7 @@ public record Value(String value) implements InputValue {
         return Value.EMPTY;
     }
 
-    // TODO rename to ofNotALogicalValue
-    public static Value ofLogicalValueExpected() {
+    public static Value ofNotALogicalValue() {
         return NOT_A_LOGICAL_VALUE;
     }
 

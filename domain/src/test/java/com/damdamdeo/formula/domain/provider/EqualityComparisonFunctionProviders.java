@@ -68,11 +68,11 @@ public final class EqualityComparisonFunctionProviders {
         return Stream.of(
                 new EqualityComparisonFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(new Value("260")), new Expected(Value.ofNotAvailable())),
                 new EqualityComparisonFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(new Value("260")), new Expected(Value.ofUnknownRef())),
-                new EqualityComparisonFunction(new GivenLeft(Value.ofNumericalValueExpected()), new GivenRight(new Value("260")), new Expected(Value.ofNumericalValueExpected())),
+                new EqualityComparisonFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
                 new EqualityComparisonFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(new Value("260")), new Expected(Value.ofDividedByZero())),
                 new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
                 new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
-                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNumericalValueExpected()), new Expected(Value.ofNumericalValueExpected())),
+                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
                 new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
         );
     }
