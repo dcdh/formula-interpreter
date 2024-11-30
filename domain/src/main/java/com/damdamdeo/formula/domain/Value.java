@@ -3,8 +3,11 @@ package com.damdamdeo.formula.domain;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public record Value(String value) implements InputValue {
+    private static final Pattern IS_NUMERIC_PATTERN = Pattern.compile("^\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?$");
+
     private static final Value TRUE = new Value("true");
     private static final Value FALSE = new Value("false");
     private static final Value ZERO = new Value("0");
@@ -101,7 +104,7 @@ public record Value(String value) implements InputValue {
         if (value.startsWith("#")) {
             return false;
         }
-        return value.matches("\\-?[0-9]+.?[0-9]*(E[0-9]+|E\\+[0-9]+|E\\-[0-9]+)?");
+        return IS_NUMERIC_PATTERN.matcher(value).matches();
     }
 
     public boolean isText() {
