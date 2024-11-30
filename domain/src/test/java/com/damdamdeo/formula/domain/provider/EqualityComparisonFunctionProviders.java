@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.domain.provider;
 
 import com.damdamdeo.formula.domain.Value;
+import com.damdamdeo.formula.domain.ValueTest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public final class EqualityComparisonFunctionProviders {
+
+    private static final Value TOTO = Value.ofText("toto");
+    private static final Value TATA = Value.ofText("tata");
 
     public enum Type {
         EQUAL, NOT_EQUAL;
@@ -34,11 +38,11 @@ public final class EqualityComparisonFunctionProviders {
                 Type.EQUAL,
                 Stream.concat(
                         Stream.of(
-                                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("260")), new Expected(Value.ofFalse())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("260")), new GivenRight(new Value("660")), new Expected(Value.ofFalse())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("260")), new GivenRight(new Value("260")), new Expected(Value.ofTrue())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("toto")), new GivenRight(new Value("toto")), new Expected(Value.ofTrue())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("tata")), new GivenRight(new Value("toto")), new Expected(Value.ofFalse())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofFalse())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.TWO_SIX_ZERO), new GivenRight(ValueTest.SIX_SIX_ZERO), new Expected(Value.ofFalse())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.TWO_SIX_ZERO), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofTrue())),
+                                new EqualityComparisonFunction(new GivenLeft(TOTO), new GivenRight(TOTO), new Expected(Value.ofTrue())),
+                                new EqualityComparisonFunction(new GivenLeft(TATA), new GivenRight(TOTO), new Expected(Value.ofFalse())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofTrue()), new Expected(Value.ofTrue())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofFalse()), new Expected(Value.ofFalse())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofTrue()), new Expected(Value.ofTrue())),
@@ -50,11 +54,11 @@ public final class EqualityComparisonFunctionProviders {
                 Type.NOT_EQUAL,
                 Stream.concat(
                         Stream.of(
-                                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("260")), new Expected(Value.ofTrue())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("260")), new GivenRight(new Value("660")), new Expected(Value.ofTrue())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("260")), new GivenRight(new Value("260")), new Expected(Value.ofFalse())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("toto")), new GivenRight(new Value("toto")), new Expected(Value.ofFalse())),
-                                new EqualityComparisonFunction(new GivenLeft(new Value("tata")), new GivenRight(new Value("toto")), new Expected(Value.ofTrue())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofTrue())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.TWO_SIX_ZERO), new GivenRight(ValueTest.SIX_SIX_ZERO), new Expected(Value.ofTrue())),
+                                new EqualityComparisonFunction(new GivenLeft(ValueTest.TWO_SIX_ZERO), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofFalse())),
+                                new EqualityComparisonFunction(new GivenLeft(TOTO), new GivenRight(TOTO), new Expected(Value.ofFalse())),
+                                new EqualityComparisonFunction(new GivenLeft(TATA), new GivenRight(TOTO), new Expected(Value.ofTrue())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofTrue()), new Expected(Value.ofFalse())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofFalse()), new Expected(Value.ofTrue())),
                                 new EqualityComparisonFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofTrue()), new Expected(Value.ofFalse())),
@@ -66,14 +70,14 @@ public final class EqualityComparisonFunctionProviders {
 
     private Stream<EqualityComparisonFunction> common() {
         return Stream.of(
-                new EqualityComparisonFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(new Value("260")), new Expected(Value.ofNotAvailable())),
-                new EqualityComparisonFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(new Value("260")), new Expected(Value.ofUnknownRef())),
-                new EqualityComparisonFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
-                new EqualityComparisonFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(new Value("260")), new Expected(Value.ofDividedByZero())),
-                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
-                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
-                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
-                new EqualityComparisonFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
+                new EqualityComparisonFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotAvailable())),
+                new EqualityComparisonFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofUnknownRef())),
+                new EqualityComparisonFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotANumericalValue())),
+                new EqualityComparisonFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofDividedByZero())),
+                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
+                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
+                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
+                new EqualityComparisonFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
         );
     }
 

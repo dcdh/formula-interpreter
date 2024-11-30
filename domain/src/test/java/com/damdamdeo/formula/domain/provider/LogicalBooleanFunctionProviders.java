@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.domain.provider;
 
 import com.damdamdeo.formula.domain.Value;
+import com.damdamdeo.formula.domain.ValueTest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,20 +63,20 @@ public final class LogicalBooleanFunctionProviders {
                 new LogicalBooleanFunction(new GivenLeft(Value.ofOne()), new GivenRight(Value.ofTrue()), new Expected(Value.ofTrue())),
                 new LogicalBooleanFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofOne()), new Expected(Value.ofTrue())),
                 new LogicalBooleanFunction(new GivenLeft(Value.ofTrue()), new GivenRight(Value.ofTrue()), new Expected(Value.ofTrue())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("azerty")), new GivenRight(new Value("260")), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofTrue()), new GivenRight(new Value("260")), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofFalse()), new GivenRight(new Value("260")), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(new Value("260")), new Expected(Value.ofNotAvailable())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(new Value("260")), new Expected(Value.ofUnknownRef())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(new Value("260")), new Expected(Value.ofNotANumericalValue())),
-                new LogicalBooleanFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(new Value("260")), new Expected(Value.ofDividedByZero())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(new Value("azerty")), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofTrue()), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofFalse()), new Expected(Value.ofNotALogicalValue())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
-                new LogicalBooleanFunction(new GivenLeft(new Value("660")), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.AZERTY), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofTrue()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofFalse()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofNotAvailable()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotAvailable())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofUnknownRef()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofUnknownRef())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofNotANumericalValue()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofNotANumericalValue())),
+                new LogicalBooleanFunction(new GivenLeft(Value.ofDividedByZero()), new GivenRight(ValueTest.TWO_SIX_ZERO), new Expected(Value.ofDividedByZero())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(ValueTest.AZERTY), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofTrue()), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofFalse()), new Expected(Value.ofNotALogicalValue())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofNotAvailable()), new Expected(Value.ofNotAvailable())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofUnknownRef()), new Expected(Value.ofUnknownRef())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofNotANumericalValue()), new Expected(Value.ofNotANumericalValue())),
+                new LogicalBooleanFunction(new GivenLeft(ValueTest.SIX_SIX_ZERO), new GivenRight(Value.ofDividedByZero()), new Expected(Value.ofDividedByZero()))
         );
     }
 

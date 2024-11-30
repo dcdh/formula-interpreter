@@ -85,19 +85,16 @@ public final class Value implements InputValue {
         return new Value(any);
     }
 
-    @Deprecated // TODO private
-    public Value(final String value) {
+    private Value(final String value) {
         this.value = Objects.requireNonNull(value)
                 .replaceAll("^\"|\"$", "");
     }
 
-    @Deprecated(forRemoval = true)
-    public Value(final BigDecimal value) {
+    private Value(final BigDecimal value) {
         this(value.stripTrailingZeros().toPlainString());
     }
 
-    @Deprecated(forRemoval = true)
-    public Value(final Boolean value) {
+    private Value(final Boolean value) {
         this(value.toString());
     }
 
@@ -138,14 +135,14 @@ public final class Value implements InputValue {
 
     public boolean isValidText() {
         return !isNotAvailable()
-               && !isUnknownRef()
-               && !isNotANumericalValue()
-               && !isDivByZero()
-               && !isTrue()
-               && !isFalse()
+                && !isUnknownRef()
+                && !isNotANumericalValue()
+                && !isDivByZero()
+                && !isTrue()
+                && !isFalse()
 //               && !isBlank()
-               && !isNumeric()
-               && !isNotALogicalValue()
+                && !isNumeric()
+                && !isNotALogicalValue()
                 ;
     }
 
@@ -227,9 +224,9 @@ public final class Value implements InputValue {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
-                       .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                               .setScale(numericalContext.scale(), numericalContext.roundingMode())) > 0 ? Value.TRUE : Value.FALSE;
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) > 0 ? Value.TRUE : Value.FALSE;
     }
 
     public Value greaterThanOrEqualTo(final Value valueToCheckAgainst,
@@ -238,9 +235,9 @@ public final class Value implements InputValue {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
-                       .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                               .setScale(numericalContext.scale(), numericalContext.roundingMode())) >= 0 ? Value.TRUE : Value.FALSE;
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) >= 0 ? Value.TRUE : Value.FALSE;
     }
 
     public Value equalTo(final Value valueToCheckAgainst,
@@ -253,9 +250,9 @@ public final class Value implements InputValue {
         }
         if (isNumeric() && isNumeric()) {
             return new BigDecimal(value)
-                           .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                           .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                                   .setScale(numericalContext.scale(), numericalContext.roundingMode())) == 0 ? Value.TRUE : Value.FALSE;
+                    .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                    .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                            .setScale(numericalContext.scale(), numericalContext.roundingMode())) == 0 ? Value.TRUE : Value.FALSE;
         }
         return value.equals(valueToCheckAgainst.value()) ? Value.TRUE : Value.FALSE;
     }
@@ -270,9 +267,9 @@ public final class Value implements InputValue {
         }
         if (isNumeric() && isNumeric()) {
             return new BigDecimal(value)
-                           .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                           .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                                   .setScale(numericalContext.scale(), numericalContext.roundingMode())) != 0 ? Value.TRUE : Value.FALSE;
+                    .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                    .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                            .setScale(numericalContext.scale(), numericalContext.roundingMode())) != 0 ? Value.TRUE : Value.FALSE;
         }
         return value.equals(valueToCheckAgainst.value()) ? Value.FALSE : Value.TRUE;
     }
@@ -283,9 +280,9 @@ public final class Value implements InputValue {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
-                       .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                               .setScale(numericalContext.scale(), numericalContext.roundingMode())) < 0 ? Value.TRUE : Value.FALSE;
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) < 0 ? Value.TRUE : Value.FALSE;
     }
 
     public Value lessThanOrEqualTo(final Value valueToCheckAgainst,
@@ -294,9 +291,9 @@ public final class Value implements InputValue {
             throw new IllegalStateException("Should not be here");
         }
         return new BigDecimal(value)
-                       .setScale(numericalContext.scale(), numericalContext.roundingMode())
-                       .compareTo(new BigDecimal(valueToCheckAgainst.value())
-                               .setScale(numericalContext.scale(), numericalContext.roundingMode())) <= 0 ? Value.TRUE : Value.FALSE;
+                .setScale(numericalContext.scale(), numericalContext.roundingMode())
+                .compareTo(new BigDecimal(valueToCheckAgainst.value())
+                        .setScale(numericalContext.scale(), numericalContext.roundingMode())) <= 0 ? Value.TRUE : Value.FALSE;
     }
 
     public Value or(final Value valueToCheckAgainst) {
@@ -327,7 +324,7 @@ public final class Value implements InputValue {
     @Override
     public String toString() {
         return "Value{" +
-               "value='" + value + '\'' +
-               '}';
+                "value='" + value + '\'' +
+                '}';
     }
 }

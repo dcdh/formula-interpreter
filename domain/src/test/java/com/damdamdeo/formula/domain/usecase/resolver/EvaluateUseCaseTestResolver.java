@@ -137,13 +137,13 @@ public abstract class EvaluateUseCaseTestResolver implements ParameterResolver {
                     FORMULA,
                     debugFeature,
                     new Evaluated(
-                            new Value("false"),
+                            Value.ofFalse(),
                             new PositionedAt(0, 7),
                             List.of(
                                     // FIXME TODO ...
                             )
                     ),
-                    new EvaluationResult(new Value("false"), intermediateResults, processingMetrics)
+                    new EvaluationResult(Value.ofFalse(), intermediateResults, processingMetrics)
             );
         } else if (GivenFailing.class.equals(type)) {
             return givenFailings()

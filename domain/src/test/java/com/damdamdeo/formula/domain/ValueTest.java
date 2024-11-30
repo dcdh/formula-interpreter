@@ -8,7 +8,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ValueTest {
+public class ValueTest {
+
+    public static final Value SIX_SIX_ZERO = Value.ofNumeric("660");
+    public static final Value TWO_SIX_ZERO = Value.ofNumeric("260");
+    public static final Value AZERTY = Value.ofText("azerty");
 
     @Test
     void shouldVerifyEqualsVerifier() {
@@ -17,52 +21,52 @@ class ValueTest {
 
     @Test
     void shouldOfNotAvailableReturnExpectedRepresentation() {
-        assertThat(Value.ofNotAvailable()).isEqualTo(new Value("#NA!"));
+        assertThat(Value.ofNotAvailable().value()).isEqualTo("#NA!");
     }
 
     @Test
     void shouldOfUnknownRefReturnExpectedRepresentation() {
-        assertThat(Value.ofUnknownRef()).isEqualTo(new Value("#REF!"));
+        assertThat(Value.ofUnknownRef().value()).isEqualTo("#REF!");
     }
 
     @Test
     void shouldOfNotANumericalValueReturnRepresentation() {
-        assertThat(Value.ofNotANumericalValue()).isEqualTo(new Value("#NUM!"));
+        assertThat(Value.ofNotANumericalValue().value()).isEqualTo("#NUM!");
     }
 
     @Test
     void shouldOfDividedByZeroReturnExpectedRepresentation() {
-        assertThat(Value.ofDividedByZero()).isEqualTo(new Value("#DIV/0!"));
+        assertThat(Value.ofDividedByZero().value()).isEqualTo("#DIV/0!");
     }
 
     @Test
     void shouldOfTrueReturnExpectedRepresentation() {
-        assertThat(Value.ofTrue()).isEqualTo(new Value("true"));
+        assertThat(Value.ofTrue().value()).isEqualTo("true");
     }
 
     @Test
     void shouldOfZeroReturnExpectedRepresentation() {
-        assertThat(Value.ofZero()).isEqualTo(new Value("0"));
+        assertThat(Value.ofZero().value()).isEqualTo("0");
     }
 
     @Test
     void shouldOfFalseReturnExpectedRepresentation() {
-        assertThat(Value.ofFalse()).isEqualTo(new Value("false"));
+        assertThat(Value.ofFalse().value()).isEqualTo("false");
     }
 
     @Test
     void shouldOfOneReturnExpectedRepresentation() {
-        assertThat(Value.ofOne()).isEqualTo(new Value("1"));
+        assertThat(Value.ofOne().value()).isEqualTo("1");
     }
 
     @Test
     void shouldOfEmptyReturnExpectedRepresentation() {
-        assertThat(Value.ofEmpty()).isEqualTo(new Value(""));
+        assertThat(Value.ofEmpty().value()).isEqualTo("");
     }
 
     @Test
     void shouldOfNotALogicalValueReturnRepresentation() {
-        assertThat(Value.ofNotALogicalValue()).isEqualTo(new Value("#LOG!"));
+        assertThat(Value.ofNotALogicalValue().value()).isEqualTo("#LOG!");
     }
 
     // TODO should use a provider
@@ -87,7 +91,7 @@ class ValueTest {
                 "-0"
         })
         public void shouldBeANumeric(final String givenValue) {
-            assertThat(new Value(givenValue).isNumeric()).isTrue();
+            assertThat(Value.ofAny(givenValue).isNumeric()).isTrue();
         }
 
         @ParameterizedTest
@@ -100,7 +104,7 @@ class ValueTest {
                 "Hello World"
         })
         public void shouldNotBeANumeric(final String givenValue) {
-            assertThat(new Value(givenValue).isNumeric()).isFalse();
+            assertThat(Value.ofAny(givenValue).isNumeric()).isFalse();
         }
     }
 

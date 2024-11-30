@@ -1,6 +1,7 @@
 package com.damdamdeo.formula.domain.provider;
 
 import com.damdamdeo.formula.domain.Value;
+import com.damdamdeo.formula.domain.ValueTest;
 
 import java.util.List;
 import java.util.Map;
@@ -213,7 +214,7 @@ public final class LogicalComparisonFunctionProviders {
                         new LogicalComparisonFunction(new GivenComparison(Value.ofFalse()), type.falseBoolean()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofZero()), type.zero()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofOne()), type.one()),
-                        new LogicalComparisonFunction(new GivenComparison(new Value("660")), type.sixSixZero()),
+                        new LogicalComparisonFunction(new GivenComparison(ValueTest.SIX_SIX_ZERO), type.sixSixZero()),
                         new LogicalComparisonFunction(new GivenComparison(Value.ofEmpty()), type.empty())
                 )));
     }
