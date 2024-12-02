@@ -10,6 +10,8 @@ expr: arithmetic_functions
     | argument
     ;
 
+// TODO argument => value ...
+// So delete Argument and use value instead ...
 argument: STRUCTURED_REFERENCE  #argumentStructuredReference
         | TEXT #argumentText
         | NUMERIC #argumentNumeric
@@ -61,7 +63,7 @@ logical_when: arithmetic_functions
             | argument
             ;
 
-state_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=argument')'
+state_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=STRUCTURED_REFERENCE')'
                ;
 
 ADD: 'ADD' ;

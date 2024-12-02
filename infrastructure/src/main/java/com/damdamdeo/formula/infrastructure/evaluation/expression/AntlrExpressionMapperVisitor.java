@@ -98,7 +98,7 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
         };
         return new StateExpression(
                 function,
-                this.visit(ctx.value),
+                new Reference(ctx.value.getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 

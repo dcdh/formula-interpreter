@@ -422,24 +422,24 @@ public final class StateFunctionProviders {
     public StateFunctionProviders() {
         FUNCTIONS_BY_TYPE = Stream.of(Type.values()).collect(Collectors.toMap(Function.identity(), type ->
                 List.of(
-                        new StateFunction(new GivenArgument(Value.ofNotAvailable()), type.notAvailable()),
-                        new StateFunction(new GivenArgument(Value.ofUnknownRef()), type.unknownRef()),
-                        new StateFunction(new GivenArgument(Value.ofNotANumericalValue()), type.notANumericalValue()),
-                        new StateFunction(new GivenArgument(Value.ofDividedByZero()), type.divByZero()),
-                        new StateFunction(new GivenArgument(Value.ofNotALogicalValue()), type.notALogicalValue()),
-                        new StateFunction(new GivenArgument(Value.ofTrue()), type.trueBoolean()),
-                        new StateFunction(new GivenArgument(Value.ofFalse()), type.falseBoolean()),
-                        new StateFunction(new GivenArgument(Value.ofZero()), type.zero()),
-                        new StateFunction(new GivenArgument(Value.ofOne()), type.one()),
-                        new StateFunction(new GivenArgument(Value.ofNumeric("660")), type.sixSixZero()),
-                        new StateFunction(new GivenArgument(Value.ofText("azerty")), type.azerty()),
-                        new StateFunction(new GivenArgument(Value.ofEmpty()), type.empty())
+                        new StateFunction(new GivenValue(Value.ofNotAvailable()), type.notAvailable()),
+                        new StateFunction(new GivenValue(Value.ofUnknownRef()), type.unknownRef()),
+                        new StateFunction(new GivenValue(Value.ofNotANumericalValue()), type.notANumericalValue()),
+                        new StateFunction(new GivenValue(Value.ofDividedByZero()), type.divByZero()),
+                        new StateFunction(new GivenValue(Value.ofNotALogicalValue()), type.notALogicalValue()),
+                        new StateFunction(new GivenValue(Value.ofTrue()), type.trueBoolean()),
+                        new StateFunction(new GivenValue(Value.ofFalse()), type.falseBoolean()),
+                        new StateFunction(new GivenValue(Value.ofZero()), type.zero()),
+                        new StateFunction(new GivenValue(Value.ofOne()), type.one()),
+                        new StateFunction(new GivenValue(Value.ofNumeric("660")), type.sixSixZero()),
+                        new StateFunction(new GivenValue(Value.ofText("\"azerty\"")), type.azerty()),
+                        new StateFunction(new GivenValue(Value.ofEmpty()), type.empty())
                 )));
     }
 
-    public record StateFunction(GivenArgument givenArgument, Expected expected) {
+    public record StateFunction(GivenValue givenValue, Expected expected) {
         public StateFunction {
-            Objects.requireNonNull(givenArgument);
+            Objects.requireNonNull(givenValue);
             Objects.requireNonNull(expected);
         }
     }

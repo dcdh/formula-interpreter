@@ -72,7 +72,7 @@ public final class StateFunctionArgumentsProvider implements ArgumentsProvider {
                 .orElseThrow(() -> new IllegalStateException("Should not be here: unknown type"));
         return StateFunctionProviders.byType(givenType)
                 .stream()
-                .map(stateFunction -> Arguments.of(stateFunction.givenArgument(), stateFunction.expected()));
+                .map(stateFunction -> Arguments.of(stateFunction.givenValue(), stateFunction.expected()));
     }
 
 }

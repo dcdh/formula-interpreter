@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public final class DefaultExpressionVisitor implements ExpressionVisitor {
     private final NumericalContext numericalContext;
-    private final List<StructuredReference> structuredReferences;
+    private final List<StructuredReference> structuredReferences;passer par un repo mutualizer avec Argument
     private final PartEvaluationListener partEvaluationListener;
     private PartEvaluationId currentPartEvaluationId;
 
@@ -118,7 +118,7 @@ public final class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public Evaluated visit(final StateExpression stateExpression) {
         return evaluate(() -> {
-            final Evaluated argument = stateExpression.argument().accept(this);
+            stateExpression.reference();
             final Value evaluated = StateFunction.of(stateExpression.stateFunction(), argument.value()).evaluate(numericalContext);
             final PositionedAt positionedAt = stateExpression.positionedAt();
             return new Evaluated(evaluated,

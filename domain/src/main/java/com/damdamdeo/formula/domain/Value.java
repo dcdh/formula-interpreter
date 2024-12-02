@@ -39,6 +39,10 @@ public final class Value implements InputValue {
         return DIV_BY_ZERO;
     }
 
+    public static Value ofNotALogicalValue() {
+        return NOT_A_LOGICAL_VALUE;
+    }
+
     public static Value ofTrue() {
         return Value.TRUE;
     }
@@ -57,10 +61,6 @@ public final class Value implements InputValue {
 
     public static Value ofEmpty() {
         return Value.EMPTY;
-    }
-
-    public static Value ofNotALogicalValue() {
-        return NOT_A_LOGICAL_VALUE;
     }
 
     public static Value ofText(final String text) {
@@ -86,16 +86,11 @@ public final class Value implements InputValue {
     }
 
     private Value(final String value) {
-        this.value = Objects.requireNonNull(value)
-                .replaceAll("^\"|\"$", "");
+        this.value = Objects.requireNonNull(value);
     }
 
     private Value(final BigDecimal value) {
         this(value.stripTrailingZeros().toPlainString());
-    }
-
-    private Value(final Boolean value) {
-        this(value.toString());
     }
 
     public boolean isNotAvailable() {
@@ -126,24 +121,14 @@ public final class Value implements InputValue {
         if (value.startsWith("#")) {
             return false;
         }
+        if (value.startsWith("\"")) {
+            return false;
+        }
         return IS_NUMERIC_PATTERN.matcher(value).matches();
     }
 
     public boolean isText() {
-        return true;// by default always text
-    }
-
-    public boolean isValidText() {
-        return !isNotAvailable()
-                && !isUnknownRef()
-                && !isNotANumericalValue()
-                && !isDivByZero()
-                && !isTrue()
-                && !isFalse()
-//               && !isBlank()
-                && !isNumeric()
-                && !isNotALogicalValue()
-                ;
+        return value.startsWith("\"") && value.endsWith("\"");
     }
 
     public boolean isTrue() {

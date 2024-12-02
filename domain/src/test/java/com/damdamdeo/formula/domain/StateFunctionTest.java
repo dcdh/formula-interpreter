@@ -1,16 +1,16 @@
 package com.damdamdeo.formula.domain;
 
 import com.damdamdeo.formula.domain.provider.Expected;
-import com.damdamdeo.formula.domain.provider.GivenArgument;
+import com.damdamdeo.formula.domain.provider.GivenValue;
 import com.damdamdeo.formula.domain.provider.StateFunctionArgumentsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StateFunctionTest {
     @StateFunctionArgumentsProvider.IsNotAvailableTest
-    void shouldIsNotAvailableReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsNotAvailableReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNotAvailable(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsNotAvailable(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
@@ -20,9 +20,9 @@ class StateFunctionTest {
     }
 
     @StateFunctionArgumentsProvider.IsErrorTest
-    void shouldIsErrorReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsErrorReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsError(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsError(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
@@ -32,9 +32,9 @@ class StateFunctionTest {
     }
 
     @StateFunctionArgumentsProvider.IsNumericTest
-    void shouldIsNumericReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsNumericReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsNumeric(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsNumeric(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
@@ -44,9 +44,9 @@ class StateFunctionTest {
     }
 
     @StateFunctionArgumentsProvider.IsTextTest
-    void shouldIsTextReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsTextReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsText(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsText(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
@@ -56,9 +56,9 @@ class StateFunctionTest {
     }
 
     @StateFunctionArgumentsProvider.IsBlankTest
-    void shouldIsBlankReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsBlankReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsBlank(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsBlank(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());
@@ -68,9 +68,9 @@ class StateFunctionTest {
     }
 
     @StateFunctionArgumentsProvider.IsLogicalTest
-    void shouldIsLogicalReturnExpectedValue(final GivenArgument givenArgument, final Expected expected) {
+    void shouldIsLogicalReturnExpectedValue(final GivenValue givenValue, final Expected expected) {
         // Given
-        final StateFunction stateFunction = StateFunction.ofIsLogical(givenArgument.value());
+        final StateFunction stateFunction = StateFunction.ofIsLogical(givenValue.value());
 
         // When
         final Value evaluated = stateFunction.evaluate(new NumericalContext());

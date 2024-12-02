@@ -5,6 +5,8 @@ import org.apache.commons.lang3.Validate;
 import java.util.List;
 import java.util.Objects;
 
+// NO ! not an Argument but a Value !
+// TODO merge into Value
 public record Argument(Kind kind, Value input, Reference reference) {
     public enum Kind {
         TEXT, NUMERIC, BOOLEAN, STRUCTURED_REFERENCE
@@ -47,6 +49,7 @@ public record Argument(Kind kind, Value input, Reference reference) {
                 yield input;
             }
             case STRUCTURED_REFERENCE -> {
+                // TODO have a method inside Value called ofStructuredReference(Reference reference, List<StructuredReference> structuredReferences)
                 final ReferenceNaming referenceNaming = reference.toReferenceNaming();
                 yield structuredReferences.stream()
                         .filter(structuredReference -> structuredReference.referenceNaming().equals(referenceNaming))

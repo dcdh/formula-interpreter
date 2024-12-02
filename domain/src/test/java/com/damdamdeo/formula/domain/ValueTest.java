@@ -1,18 +1,18 @@
 package com.damdamdeo.formula.domain;
 
+import com.damdamdeo.formula.domain.provider.GivenValue;
+import com.damdamdeo.formula.domain.provider.ValueArgumentsProvider;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ValueTest {
 
     public static final Value SIX_SIX_ZERO = Value.ofNumeric("660");
     public static final Value TWO_SIX_ZERO = Value.ofNumeric("260");
-    public static final Value AZERTY = Value.ofText("azerty");
+    public static final Value AZERTY = Value.ofText("\"azerty\"");
 
     @Test
     void shouldVerifyEqualsVerifier() {
@@ -69,43 +69,69 @@ public class ValueTest {
         assertThat(Value.ofNotALogicalValue().value()).isEqualTo("#LOG!");
     }
 
-    // TODO should use a provider
-    @Nested
-    class IsNumeric {
-
-        @ParameterizedTest
-        @CsvSource({
-                "0",
-                "0.00",
-                "123",
-                "-123",
-                "1.23E3",
-                "1.23E+3",
-                "12.3E+7",
-                "12.0",
-                "12.3",
-                "0.00123",
-                "-1.23E-12",
-                "1234.5E-4",
-                "0E+7",
-                "-0"
-        })
-        public void shouldBeANumeric(final String givenValue) {
-            assertThat(Value.ofAny(givenValue).isNumeric()).isTrue();
-        }
-
-        @ParameterizedTest
-        @CsvSource({
-                "#VALUE!",
-                "#REF!",
-                "TRUE",
-                "FALSE",
-                "AZERTY",
-                "Hello World"
-        })
-        public void shouldNotBeANumeric(final String givenValue) {
-            assertThat(Value.ofAny(givenValue).isNumeric()).isFalse();
-        }
+    @ValueArgumentsProvider.TextTest
+    void shouldBeAText(final GivenValue givenValue) {
+        assertThat(givenValue.value().isText()).isTrue();
     }
 
+    @ValueArgumentsProvider.NumericTest
+    void shouldBeANumeric(final GivenValue givenValue) {
+        assertThat(givenValue.value().isNumeric()).isTrue();
+    }
+
+    @ValueArgumentsProvider.BooleanTrueTest
+    void shouldBeABooleanTrue(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isBoolean()).isTrue(),
+                () -> assertThat(givenValue.value().isTrue()).isTrue()
+        );
+    }
+
+    @ValueArgumentsProvider.BooleanFalseTest
+    void shouldBeABooleanFalse(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isBoolean()).isTrue(),
+                () -> assertThat(givenValue.value().isFalse()).isTrue()
+        );
+    }
+
+    @ValueArgumentsProvider.NotAvailableTest
+    void shouldBeNotAvailable(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isNotAvailable()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("#NA!")
+        );
+    }
+
+    @ValueArgumentsProvider.UnknownRefTest
+    void shouldBeUnknownRef(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isUnknownRef()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("#REF!")
+        );
+    }
+
+    @ValueArgumentsProvider.NotANumericalTest
+    void shouldBeNotANumerical(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isNotANumericalValue()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("#NUM!")
+        );
+    }
+
+    @ValueArgumentsProvider.DividedByZeroTest
+    void shouldBeDividedByZero(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isDivByZero()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("#DIV/0!")
+        );
+    }
+
+    @ValueArgumentsProvider.NotALogicalValueTest
+    void shouldBeNotALogicalValue(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isNotALogicalValue()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("#LOG!")
+        );
+    }
 }

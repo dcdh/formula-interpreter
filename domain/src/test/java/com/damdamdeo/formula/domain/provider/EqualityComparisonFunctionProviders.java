@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 
 public final class EqualityComparisonFunctionProviders {
 
-    private static final Value TOTO = Value.ofText("toto");
-    private static final Value TATA = Value.ofText("tata");
+    private static final Value TOTO = Value.ofText("\"toto\"");
+    private static final Value TATA = Value.ofText("\"tata\"");
 
     public enum Type {
         EQUAL, NOT_EQUAL;

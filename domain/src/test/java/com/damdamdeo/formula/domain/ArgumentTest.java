@@ -1,48 +1,66 @@
 package com.damdamdeo.formula.domain;
 
-import org.junit.jupiter.api.Test;
+import com.damdamdeo.formula.domain.provider.GivenValue;
+import com.damdamdeo.formula.domain.provider.StructuredReferenceArgumentsProvider;
+import com.damdamdeo.formula.domain.provider.ValueArgumentsProvider;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+// TODO rename : not Argument but Value
 class ArgumentTest {
 
-    @Test
-    void shouldResolveTextArgument() {
+    @ValueArgumentsProvider.TextTest
+    void shouldResolveTextArgument(final GivenValue givenValue) {
         // Given
-        final Argument argument = Argument.ofText(Value.ofText("Hello World"));
+        final Argument argument = Argument.ofText(givenValue.value());
 
         // When
         final Value value = argument.resolveArgument(List.of());
 
         // Then
         assertAll(
-                () -> assertThat(argument).isEqualTo(new Argument(Argument.Kind.TEXT, Value.ofText("Hello World"), null)),
-                () -> assertThat(value).isEqualTo(Value.ofText("Hello World"))
+                () -> assertThat(argument).isEqualTo(new Argument(Argument.Kind.TEXT, givenValue.value(), null)),
+                () -> assertThat(value).isEqualTo(givenValue.value())
         );
     }
 
-    @Test
-    void shouldResolveNumericArgument() {
+    @ValueArgumentsProvider.NumericTest
+    void shouldResolveNumericArgument(final GivenValue givenValue) {
         // Given
-        final Argument argument = Argument.ofNumeric(Value.ofNumeric("660"));
+        final Argument argument = Argument.ofNumeric(givenValue.value());
 
         // When
         final Value value = argument.resolveArgument(List.of());
 
         // Then
         assertAll(
-                () -> assertThat(argument).isEqualTo(new Argument(Argument.Kind.NUMERIC, Value.ofNumeric("660"), null)),
-                () -> assertThat(value).isEqualTo(Value.ofNumeric("660"))
+                () -> assertThat(argument).isEqualTo(new Argument(Argument.Kind.NUMERIC, givenValue.value(), null)),
+                () -> assertThat(value).isEqualTo(givenValue.value())
         );
     }
 
-    @Test
-    void shouldResolveBooleanArgument() {
+    @ValueArgumentsProvider.BooleanTrueTest
+    void shouldResolveBooleanTrueArgument(final GivenValue givenValue) {
         // Given
-        final Argument argument = Argument.ofBoolean(Value.ofFalse());
+        final Argument argument = Argument.ofBoolean(givenValue.value());
+
+        // When
+        final Value value = argument.resolveArgument(List.of());
+
+        // Then
+        assertAll(
+                () -> assertThat(argument).isEqualTo(new Argument(Argument.Kind.BOOLEAN, Value.ofTrue(), null)),
+                () -> assertThat(value).isEqualTo(Value.ofTrue())
+        );
+    }
+
+    @ValueArgumentsProvider.BooleanFalseTest
+    void shouldResolveBooleanFalseArgument(final GivenValue givenValue) {
+        // Given
+        final Argument argument = Argument.ofBoolean(givenValue.value());
 
         // When
         final Value value = argument.resolveArgument(List.of());
@@ -54,17 +72,13 @@ class ArgumentTest {
         );
     }
 
-    @Test
-    void shouldResolveStructuredReferenceWhenPresent() {
+    @StructuredReferenceArgumentsProvider.ResolvedTest
+    void shouldResolveStructuredReferenceWhenPresent(final Reference reference, final List<StructuredReference> structuredReferences) {
         // Given
-        final Argument argument = Argument.ofStructuredReference(new Reference("[@[% Commission]]"));
+        final Argument argument = Argument.ofStructuredReference(reference);
 
         // When
-        final Value value = argument.resolveArgument(List.of(
-                new StructuredReference(
-                        new ReferenceNaming("% Commission"),
-                        Value.ofNumeric("0.10")
-                )));
+        final Value value = argument.resolveArgument(structuredReferences);
 
         // Then
         assertAll(
@@ -73,13 +87,13 @@ class ArgumentTest {
         );
     }
 
-    @Test
-    void shouldReturnUnknownRefWhenStructuredReferenceIsNotPresent() {
+    @StructuredReferenceArgumentsProvider.UnknownTest
+    void shouldReturnUnknownRefWhenStructuredReferenceIsNotPresent(final Reference reference, final List<StructuredReference> structuredReferences) {
         // Given
-        final Argument argument = Argument.ofStructuredReference(new Reference("[@[% Commission]]"));
+        final Argument argument = Argument.ofStructuredReference(reference);
 
         // When
-        final Value value = argument.resolveArgument(List.of());
+        final Value value = argument.resolveArgument(structuredReferences);
 
         // Then
         assertAll(
