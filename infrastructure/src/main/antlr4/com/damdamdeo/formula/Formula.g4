@@ -7,30 +7,28 @@ expr: arithmetic_functions
     | logical_boolean_functions
     | logical_comparison_functions
     | state_functions
-    | argument
+    | value
     ;
 
-// TODO argument => value ...
-// So delete Argument and use value instead ...
-argument: STRUCTURED_REFERENCE  #argumentStructuredReference
-        | TEXT #argumentText
-        | NUMERIC #argumentNumeric
-        | TRUE #argumentBooleanTrue
-        | FALSE #argumentBooleanFalse
-        ;
+value: STRUCTURED_REFERENCE  #valueStructuredReference
+     | TEXT #valueText
+     | NUMERIC #valueNumeric
+     | TRUE #valueBooleanTrue
+     | FALSE #valueBooleanFalse
+     ;
 
 // custom functions defined to simplify grammar
 arithmetic_functions: function=(ADD | SUB | DIV | MUL)'('left=operand','right=operand')'
                     ;
 
-operand: argument
+operand: value
        | arithmetic_functions
        ;
 
 comparison_functions: function=(EQ | NEQ | GT | GTE | LT | LTE)'('left=comparend','right=comparend')'
                     ;
 
-comparend: argument
+comparend: value
          | arithmetic_functions
          ;
 
@@ -38,7 +36,7 @@ comparend: argument
 logical_boolean_functions: function=(AND | OR)'('left=boolean_operand','right=boolean_operand')'
                  ;
 
-boolean_operand: argument
+boolean_operand: value
                | comparison_functions
                | logical_boolean_functions
                | logical_comparison_functions
@@ -48,7 +46,7 @@ boolean_operand: argument
 logical_comparison_functions: function=(IF | IFERROR | IFNA)'('comparison=logical_comparison','whenTrue=logical_when','whenFalse=logical_when')'
                  ;
 
-logical_comparison: argument
+logical_comparison: value
                   | comparison_functions
                   | logical_boolean_functions
                   | logical_comparison_functions
@@ -60,10 +58,11 @@ logical_when: arithmetic_functions
             | logical_boolean_functions
             | logical_comparison_functions
             | state_functions
-            | argument
+            | value
             ;
 
-state_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('value=STRUCTURED_REFERENCE')'
+// state function peux prendre n'importe laquelle expression en entrée !!!
+state_functions: function=(ISNA | ISERROR | ISNUM | ISTEXT | ISBLANK | ISLOGICAL)'('expr')'
                ;
 
 ADD: 'ADD' ;

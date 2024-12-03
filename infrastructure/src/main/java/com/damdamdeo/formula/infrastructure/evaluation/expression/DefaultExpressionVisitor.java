@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public final class DefaultExpressionVisitor implements ExpressionVisitor {
     private final NumericalContext numericalContext;
-    private final List<StructuredReference> structuredReferences;passer par un repo mutualizer avec Argument
+    private final List<StructuredReference> structuredReferences;
     private final PartEvaluationListener partEvaluationListener;
     private PartEvaluationId currentPartEvaluationId;
 
@@ -118,38 +118,45 @@ public final class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public Evaluated visit(final StateExpression stateExpression) {
         return evaluate(() -> {
-            stateExpression.reference();
-            final Value evaluated = StateFunction.of(stateExpression.stateFunction(), argument.value()).evaluate(numericalContext);
+            final Evaluated expression = stateExpression.expression().accept(this);
+            final Value evaluated = StateFunction.of(stateExpression.stateFunction(), expression.value()).evaluate(numericalContext);
             final PositionedAt positionedAt = stateExpression.positionedAt();
             return new Evaluated(evaluated,
                     positionedAt,
                     List.of(
                             new Input(
                                     InputName.ofValue(),
-                                    argument.value(),
-                                    argument.positionedAt()))
+                                    expression.value(),
+                                    expression.positionedAt()))
             );
         });
     }
 
     @Override
-    public Evaluated visit(final ArgumentExpression argumentExpression) {
+    public Evaluated visit(final ValueExpression valueExpression) {
         return evaluate(() -> {
-            final Value value = argumentExpression.resolveArgument(structuredReferences);
-            final PositionedAt positionedAt = argumentExpression.positionedAt();
-            if (argumentExpression.reference() != null) {
-                return new Evaluated(value,
-                        positionedAt,
-                        List.of(
-                                new Input(
-                                        InputName.ofStructuredReference(),
-                                        argumentExpression.reference(),
-                                        positionedAt.of(+3, -2))));
-            } else {
-                return new Evaluated(
-                        value,
-                        positionedAt);
-            }
+            final Value value = valueExpression.value();
+            return new Evaluated(
+                    value,
+                    valueExpression.positionedAt()
+            );
+        });
+    }
+
+    @Override
+    public Evaluated visit(final StructuredReferenceExpression structuredReferenceExpression) {
+        return evaluate(() -> {
+            final Reference reference = structuredReferenceExpression.reference();
+            final Value evaluated = structuredReferenceExpression.resolveValue(structuredReferences);
+            final PositionedAt positionedAt = structuredReferenceExpression.positionedAt();
+            return new Evaluated(evaluated,
+                    positionedAt,
+                    List.of(
+                            new Input(
+                                    InputName.ofStructuredReference(),
+                                    reference,
+                                    positionedAt.of(+3, -2)))
+            );
         });
     }
 

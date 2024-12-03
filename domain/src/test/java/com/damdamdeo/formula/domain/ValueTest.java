@@ -95,6 +95,35 @@ public class ValueTest {
         );
     }
 
+    @ValueArgumentsProvider.StructuredReferenceResolvedTextTest
+    void shouldResolveStructuredReferenceText(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isText()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("Joe")
+        );
+    }
+
+    @ValueArgumentsProvider.StructuredReferenceResolvedNumericTest
+    void shouldReturnUnknownRefWhenStructuredReferenceNumeric(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isNumeric()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("0.10")
+        );
+    }
+
+    @ValueArgumentsProvider.StructuredReferenceResolvedBooleanTest
+    void shouldReturnUnknownRefWhenStructuredReferenceBoolean(final GivenValue givenValue) {
+        assertAll(
+                () -> assertThat(givenValue.value().isBoolean()).isTrue(),
+                () -> assertThat(givenValue.value().value()).isEqualTo("true")
+        );
+    }
+
+    @ValueArgumentsProvider.StructuredReferenceUnknownTest
+    void shouldReturnUnknownRefWhenStructuredReferenceIsNotPresent(final GivenValue givenValue) {
+        assertThat(givenValue.value().isUnknownRef()).isTrue();
+    }
+
     @ValueArgumentsProvider.NotAvailableTest
     void shouldBeNotAvailable(final GivenValue givenValue) {
         assertAll(

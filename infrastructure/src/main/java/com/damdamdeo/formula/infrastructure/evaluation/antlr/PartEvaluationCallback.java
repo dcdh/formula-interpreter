@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+// TODO migrate inside AntrlEvalVisitor !!!
 public final class PartEvaluationCallback {
     private final PartEvaluationListener partEvaluationListener;
     private PartEvaluationId currentPartEvaluationId;
@@ -158,29 +159,29 @@ public final class PartEvaluationCallback {
         });
     }
 
-    public Evaluated evaluateArgument(final Supplier<Argument> argumentSupplier,
-                                      final Supplier<PositionedAt> positionedAtSupplier) {
-        Objects.requireNonNull(argumentSupplier);
+    public Evaluated evaluateStructuredReference(final Supplier<Reference> referenceSupplier,
+                                                 final Supplier<PositionedAt> positionedAtSupplier) {
+        Objects.requireNonNull(referenceSupplier);
+        Objects.requireNonNull(positionedAtSupplier);
+        return evaluate(() -> {
+            final Reference reference = referenceSupplier.get();
+            final Value value = Value.ofStructuredReference(reference, structuredReferences);
+            return new Evaluated(value, positionedAtSupplier.get(),
+                    List.of(
+                            new Input(
+                                    InputName.ofStructuredReference(),
+                                    reference,
+                                    positionedAtSupplier.get().of(+3, -2)
+                            )));
+        });
+    }
+
+    public Evaluated evaluateValue(final Supplier<Value> valueSupplier,
+                                   final Supplier<PositionedAt> positionedAtSupplier) {
+        Objects.requireNonNull(valueSupplier);
         Objects.requireNonNull(positionedAtSupplier);
         return evaluate(
-                () -> {
-                    final Argument argument = argumentSupplier.get();
-                    final Value value = argument.resolveArgument(structuredReferences);
-                    final PositionedAt positionedAt = positionedAtSupplier.get();
-                    if (argument.reference() != null) {
-                        return new Evaluated(value,
-                                positionedAt,
-                                List.of(
-                                        new Input(
-                                                InputName.ofStructuredReference(),
-                                                argument.reference(),
-                                                positionedAt.of(+3, -2))));
-                    } else {
-                        return new Evaluated(
-                                value,
-                                positionedAt);
-                    }
-                });
+                () -> new Evaluated(valueSupplier.get(), positionedAtSupplier.get()));
     }
 
     private Evaluated evaluate(final Supplier<Evaluated> evaluatedSupplier) {

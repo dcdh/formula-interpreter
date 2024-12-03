@@ -127,49 +127,49 @@ public final class AntlrEvalVisitor extends FormulaBaseVisitor<Evaluated> {
                     case FormulaParser.ISLOGICAL -> StateFunction.Function.IS_LOGICAL;
                     default -> throw new IllegalStateException("Should not be here");
                 },
-                () -> this.visit(ctx.value),
+                () -> this.visit(ctx.expr()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return partEvaluationCallback.evaluateArgument(
-                () -> Argument.ofStructuredReference(new Reference(ctx.STRUCTURED_REFERENCE().getText())),
+    public Evaluated visitValueStructuredReference(final FormulaParser.ValueStructuredReferenceContext ctx) {
+        return partEvaluationCallback.evaluateStructuredReference(
+                () -> new Reference(ctx.STRUCTURED_REFERENCE().getText()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentText(final FormulaParser.ArgumentTextContext ctx) {
-        return partEvaluationCallback.evaluateArgument(
-                () -> Argument.ofText(Value.ofText(ctx.TEXT().getText())),
+    public Evaluated visitValueText(final FormulaParser.ValueTextContext ctx) {
+        return partEvaluationCallback.evaluateValue(
+                () -> Value.ofText(ctx.TEXT().getText()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return partEvaluationCallback.evaluateArgument(
-                () -> Argument.ofNumeric(Value.ofNumeric(ctx.NUMERIC().getText())),
+    public Evaluated visitValueNumeric(final FormulaParser.ValueNumericContext ctx) {
+        return partEvaluationCallback.evaluateValue(
+                () -> Value.ofNumeric(ctx.NUMERIC().getText()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+    public Evaluated visitValueBooleanTrue(final FormulaParser.ValueBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return partEvaluationCallback.evaluateArgument(
-                () -> Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
+        return partEvaluationCallback.evaluateValue(
+                () -> Value.ofBoolean(ctx.getText()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }
 
     @Override
-    public Evaluated visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+    public Evaluated visitValueBooleanFalse(final FormulaParser.ValueBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return partEvaluationCallback.evaluateArgument(
-                () -> Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
+        return partEvaluationCallback.evaluateValue(
+                () -> Value.ofBoolean(ctx.getText()),
                 () -> AntlrDomainMapperHelper.toPositionedAt(ctx)
         );
     }

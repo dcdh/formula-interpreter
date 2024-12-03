@@ -31,7 +31,7 @@ public final class ParseTreeAntlrLoadedEvaluationPipeline implements EvaluationP
                               final NumericalContext numericalContext) {
         final PartEvaluationCallback partEvaluationCallback = new PartEvaluationCallback(
                 partEvaluationListener, numericalContext, structuredReferences);
-        final AntlrEvalVisitor antlrEvalVisitor = new AntlrEvalVisitor(partEvaluationCallback);
+        final AntlrEvalVisitor antlrEvalVisitor = new AntlrEvalVisitor(partEvaluationCallback, structuredReferences);
         return antlrEvalVisitor.visit(loaded.parseTree());
     }
 }

@@ -98,44 +98,44 @@ public final class AntlrExpressionMapperVisitor extends FormulaBaseVisitor<Expre
         };
         return new StateExpression(
                 function,
-                new Reference(ctx.value.getText()),
+                this.visit(ctx.expr()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentStructuredReference(final FormulaParser.ArgumentStructuredReferenceContext ctx) {
-        return new ArgumentExpression(
-                Argument.ofStructuredReference(new Reference(ctx.STRUCTURED_REFERENCE().getText())),
+    public Expression visitValueStructuredReference(final FormulaParser.ValueStructuredReferenceContext ctx) {
+        return new StructuredReferenceExpression(
+                new Reference(ctx.STRUCTURED_REFERENCE().getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentText(final FormulaParser.ArgumentTextContext ctx) {
-        return new ArgumentExpression(
-                Argument.ofText(Value.ofText(ctx.TEXT().getText())),
+    public Expression visitValueText(final FormulaParser.ValueTextContext ctx) {
+        return new ValueExpression(
+                Value.ofText(ctx.TEXT().getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentNumeric(final FormulaParser.ArgumentNumericContext ctx) {
-        return new ArgumentExpression(
-                Argument.ofNumeric(Value.ofNumeric(ctx.NUMERIC().getText())),
+    public Expression visitValueNumeric(final FormulaParser.ValueNumericContext ctx) {
+        return new ValueExpression(
+                Value.ofNumeric(ctx.NUMERIC().getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentBooleanTrue(final FormulaParser.ArgumentBooleanTrueContext ctx) {
+    public Expression visitValueBooleanTrue(final FormulaParser.ValueBooleanTrueContext ctx) {
         // Can be TRUE or 1 ... cannot return Value.ofTrue() because 1 will not be a numeric anymore
-        return new ArgumentExpression(
-                Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
+        return new ValueExpression(
+                Value.ofBoolean(ctx.getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 
     @Override
-    public Expression visitArgumentBooleanFalse(final FormulaParser.ArgumentBooleanFalseContext ctx) {
+    public Expression visitValueBooleanFalse(final FormulaParser.ValueBooleanFalseContext ctx) {
         // Can be FALSE or 0 ... cannot return Value.ofFalse() because 0 will not be a numeric anymore
-        return new ArgumentExpression(
-                Argument.ofBoolean(Value.ofBoolean(ctx.getText())),
+        return new ValueExpression(
+                Value.ofBoolean(ctx.getText()),
                 AntlrDomainMapperHelper.toPositionedAt(ctx));
     }
 

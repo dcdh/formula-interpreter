@@ -87,6 +87,38 @@ public final class ValueArgumentsProvider implements ArgumentsProvider {
     public @interface NotALogicalValueTest {
     }
 
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag("STRUCTURED_REFERENCE_RESOLVED_NUMERIC")
+    @ParameterizedTest
+    @ArgumentsSource(ValueArgumentsProvider.class)
+    public @interface StructuredReferenceResolvedNumericTest {
+    }
+
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag("STRUCTURED_REFERENCE_RESOLVED_BOOLEAN")
+    @ParameterizedTest
+    @ArgumentsSource(ValueArgumentsProvider.class)
+    public @interface StructuredReferenceResolvedBooleanTest {
+    }
+
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag("STRUCTURED_REFERENCE_RESOLVED_TEXT")
+    @ParameterizedTest
+    @ArgumentsSource(ValueArgumentsProvider.class)
+    public @interface StructuredReferenceResolvedTextTest {
+    }
+
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag("STRUCTURED_REFERENCE_UNKNOWN")
+    @ParameterizedTest
+    @ArgumentsSource(ValueArgumentsProvider.class)
+    public @interface StructuredReferenceUnknownTest {
+    }
+
     @Override
     public Stream<? extends Arguments> provideArguments(final ExtensionContext context) throws Exception {
         final ValueProviders.Type givenType = context.getTags().stream()

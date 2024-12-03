@@ -4,6 +4,7 @@ import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -64,7 +65,12 @@ public final class Value implements InputValue {
     }
 
     public static Value ofText(final String text) {
-        final Value value = new Value(text);
+        final Value value;
+        if (text.startsWith("\"") && text.endsWith("\"")) {
+            value = new Value(text.substring(2, text.length() - 2));
+        } else {
+            value = new Value(text);
+        }
         Validate.validState(value.isText());
         return value;
     }
@@ -79,6 +85,16 @@ public final class Value implements InputValue {
         final Value value = new Value(booleanValue);
         Validate.validState(value.isBoolean());
         return value;
+    }
+
+    public static Value ofStructuredReference(final Reference reference,
+                                              final List<StructuredReference> structuredReferences) {
+        final ReferenceNaming referenceNaming = reference.toReferenceNaming();
+        return structuredReferences.stream()
+                .filter(structuredReference -> structuredReference.referenceNaming().equals(referenceNaming))
+                .map(StructuredReference::value)
+                .findFirst()
+                .orElseGet(Value::ofUnknownRef);
     }
 
     public static Value ofAny(final String any) {
@@ -121,14 +137,11 @@ public final class Value implements InputValue {
         if (value.startsWith("#")) {
             return false;
         }
-        if (value.startsWith("\"")) {
-            return false;
-        }
         return IS_NUMERIC_PATTERN.matcher(value).matches();
     }
 
     public boolean isText() {
-        return value.startsWith("\"") && value.endsWith("\"");
+        return true;
     }
 
     public boolean isTrue() {

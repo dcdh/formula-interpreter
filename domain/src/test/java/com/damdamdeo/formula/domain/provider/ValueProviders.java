@@ -1,5 +1,8 @@
 package com.damdamdeo.formula.domain.provider;
 
+import com.damdamdeo.formula.domain.Reference;
+import com.damdamdeo.formula.domain.ReferenceNaming;
+import com.damdamdeo.formula.domain.StructuredReference;
 import com.damdamdeo.formula.domain.Value;
 
 import java.util.HashMap;
@@ -9,7 +12,10 @@ import java.util.Map;
 public final class ValueProviders {
 
     public enum Type {
-        TEXT, NUMERIC, BOOLEAN_TRUE, BOOLEAN_FALSE, NOT_AVAILABLE, UNKNOWN_REF, NOT_A_NUMERICAL, DIVIDED_BY_ZERO, NOT_A_LOGICAL_VALUE;
+        TEXT, NUMERIC, BOOLEAN_TRUE, BOOLEAN_FALSE,
+        STRUCTURED_REFERENCE_RESOLVED_TEXT, STRUCTURED_REFERENCE_RESOLVED_NUMERIC, STRUCTURED_REFERENCE_RESOLVED_BOOLEAN,
+        STRUCTURED_REFERENCE_UNKNOWN,
+        NOT_AVAILABLE, UNKNOWN_REF, NOT_A_NUMERICAL, DIVIDED_BY_ZERO, NOT_A_LOGICAL_VALUE;
 
         public static boolean matchTag(final String tag) {
             for (final Type type : Type.values()) {
@@ -73,6 +79,36 @@ public final class ValueProviders {
         ));
         VALUES_BY_TYPE.put(Type.NOT_A_LOGICAL_VALUE, List.of(
                 Value.ofNotALogicalValue()
+        ));
+        VALUES_BY_TYPE.put(Type.STRUCTURED_REFERENCE_RESOLVED_TEXT, List.of(
+                        Value.ofStructuredReference(
+                                new Reference("[@[Sales Person]]"),
+                                List.of(
+                                        new StructuredReference(
+                                                new ReferenceNaming("Sales Person"),
+                                                Value.ofText("Joe"))))
+                )
+        );
+        VALUES_BY_TYPE.put(Type.STRUCTURED_REFERENCE_RESOLVED_NUMERIC, List.of(
+                        Value.ofStructuredReference(
+                                new Reference("[@[% Commission]]"),
+                                List.of(
+                                        new StructuredReference(
+                                                new ReferenceNaming("% Commission"),
+                                                Value.ofNumeric("0.10"))))
+                )
+        );
+        VALUES_BY_TYPE.put(Type.STRUCTURED_REFERENCE_RESOLVED_BOOLEAN, List.of(
+                        Value.ofStructuredReference(
+                                new Reference("[@[Nb of sales reached]]"),
+                                List.of(
+                                        new StructuredReference(
+                                                new ReferenceNaming("Nb of sales reached"),
+                                                Value.ofTrue())))
+                )
+        );
+        VALUES_BY_TYPE.put(Type.STRUCTURED_REFERENCE_UNKNOWN, List.of(
+                Value.ofStructuredReference(new Reference("[@[% Commission]]"), List.of())
         ));
     }
 }
